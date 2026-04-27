@@ -4,6 +4,9 @@
 
 End-to-end learning repository for retail data engineering, analytics, machine learning, visualization, and repository publishing.
 
+GitHub repository:
+- `https://github.com/JoseCCFerreira/retail-analytics-learning-repo`
+
 It includes:
 - synthetic retail data generation;
 - OLTP storage in SQLite;
@@ -206,19 +209,9 @@ npm run validate:quick
 npm run validate:full
 ```
 
-## CI Badge
+## CI Status
 
-After publishing to GitHub, replace `[OWNER]` and `[REPO]` in the badge at the top of this file with your GitHub username and repository name:
-
-```
-![Cross Platform Validate](https://github.com/[OWNER]/[REPO]/actions/workflows/cross-platform-validate.yml/badge.svg)
-```
-
-Example for a repository at `github.com/jsmith/retail-analytics-study-case`:
-
-```
-![Cross Platform Validate](https://github.com/jsmith/retail-analytics-study-case/actions/workflows/cross-platform-validate.yml/badge.svg)
-```
+The badge at the top of this README already points to the live GitHub Actions workflow for this published repository.
 
 ## Cross-Platform CI
 
@@ -252,7 +245,7 @@ gh auth setup-git
 Create a new repository from the current folder and push immediately:
 
 ```bash
-gh repo create retail-analytics-study-case \
+gh repo create retail-analytics-learning-repo \
   --public \
   --description "Retail analytics study case with data pipeline, dbt, ML, Streamlit, and realistic Black Friday test case" \
   --source . \
@@ -263,7 +256,7 @@ gh repo create retail-analytics-study-case \
 If you want a private repository instead:
 
 ```bash
-gh repo create retail-analytics-study-case \
+gh repo create retail-analytics-learning-repo \
   --private \
   --description "Retail analytics study case with data pipeline, dbt, ML, Streamlit, and realistic Black Friday test case" \
   --source . \
@@ -286,7 +279,7 @@ npm run package:zip
 ```
 
 Generated file:
-- `dist/retail_case_repo_with_dynamic_beginner_html-package.zip`
+- `dist/retail_analytics_learning_repo-package.zip`
 
 The package excludes local-only content such as:
 - `.venv/`
