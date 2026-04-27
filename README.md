@@ -1,6 +1,6 @@
 # Retail Analytics Study Case
 
-![Cross Platform Validate](https://github.com/[OWNER]/[REPO]/actions/workflows/cross-platform-validate.yml/badge.svg)
+![Cross Platform Validate](https://github.com/JoseCCFerreira/retail-analytics-learning-repo/actions/workflows/cross-platform-validate.yml/badge.svg)
 
 End-to-end learning repository for retail data engineering, analytics, machine learning, visualization, and repository publishing.
 
