@@ -106,6 +106,80 @@
 
     .quick-nav a:hover { transform: translateY(-2px); filter: brightness(1.06); }
 
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .hero-panel {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      padding: 16px;
+    }
+
+    .hero-panel h3 {
+      margin: 0 0 8px;
+      color: #f2fbff;
+      font-size: 1rem;
+    }
+
+    .hero-panel ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .hero-actions a {
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-weight: 700;
+      font-size: .9rem;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+    }
+
+    .hero-actions a.primary {
+      color: #05202c;
+      background: var(--accent-2);
+      border-color: rgba(0,0,0,.1);
+    }
+
+    .hero-stats {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 12px;
+    }
+
+    .stat {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      color: #f4fbff;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
     .section {
       margin-top: 18px;
       border: 1px solid var(--line);
@@ -247,6 +321,8 @@
     @media (max-width: 780px) {
       .hero, .section { padding: 14px; border-radius: 14px; }
       .quick-nav a { padding: 6px 10px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -254,33 +330,60 @@
   <div class="wrap">
 
     <section class="hero">
-      <h1>Retail Analytics Hub — Tudo Centralizado</h1>
-      <p class="subtitle">Guia único com secções práticas para: Data, Data Modeling, Machine Learning, Data Visualization, Testes, e fluxo Git/GitHub.</p>
+      <div class="hero-grid">
+        <div>
+          <h1>Retail Analytics Hub</h1>
+          <p class="subtitle">Projeto de portefólio e aprendizagem para construir uma pipeline completa de retail analytics com SQLite, DuckDB, dbt, Streamlit, Machine Learning, Deep Learning e publicação em GitHub.</p>
 
-      <div class="chips">
-        <span class="chip">Data Pipeline</span>
-        <span class="chip">dbt Modeling</span>
-        <span class="chip">Supervised + Unsupervised ML</span>
-        <span class="chip">Streamlit + Plotly</span>
-        <span class="chip">PL/SQL + OLAP/OLTP</span>
-        <span class="chip">Git + GitHub</span>
-      </div>
+          <div class="chips">
+            <span class="chip">Data Pipeline</span>
+            <span class="chip">dbt Modeling</span>
+            <span class="chip">Supervised + Unsupervised ML</span>
+            <span class="chip">Streamlit + Plotly</span>
+            <span class="chip">PL/SQL + OLAP/OLTP</span>
+            <span class="chip">Git + GitHub</span>
+          </div>
 
-      <div class="quick-nav">
-        <a href="docs/retail_analytics_handbook.html">Handbook</a>
-        <a href="docs/retail_case_documento_unico.html">Documento Único</a>
-        <a href="docs/criar_tudo_do_zero_retail_case.html">Criar do Zero</a>
-        <a href="docs/aprender_deep_learning_pytorch_tensorflow.html">Deep Learning</a>
-        <a href="#sec-overview">Visão Geral</a>
-        <a href="#sec-git">Git & GitHub</a>
-        <a href="#sec-platform">Windows/macOS/Linux</a>
-        <a href="#sec-case">Caso Realista</a>
-        <a href="#sec-data">Data</a>
-        <a href="#sec-modeling">Data Modeling</a>
-        <a href="#sec-ml">Machine Learning</a>
-        <a href="#sec-viz">Data Visualization</a>
-        <a href="#sec-tests">Testes</a>
-        <a href="#sec-runall">Executar Tudo</a>
+          <div class="hero-actions">
+            <a class="primary" href="docs/retail_analytics_handbook.html">Abrir Handbook</a>
+            <a href="README.md">Ver README</a>
+            <a href="https://github.com/JoseCCFerreira/retail-analytics-learning-repo">Ver GitHub</a>
+          </div>
+
+          <div class="quick-nav">
+            <a href="docs/retail_case_documento_unico.html">Documento Único</a>
+            <a href="docs/criar_tudo_do_zero_retail_case.html">Criar do Zero</a>
+            <a href="docs/aprender_deep_learning_pytorch_tensorflow.html">Deep Learning</a>
+            <a href="#sec-overview">Visão Geral</a>
+            <a href="#sec-git">Git & GitHub</a>
+            <a href="#sec-platform">Windows/macOS/Linux</a>
+            <a href="#sec-case">Caso Realista</a>
+            <a href="#sec-data">Data</a>
+            <a href="#sec-modeling">Data Modeling</a>
+            <a href="#sec-ml">Machine Learning</a>
+            <a href="#sec-viz">Data Visualization</a>
+            <a href="#sec-tests">Testes</a>
+            <a href="#sec-runall">Executar Tudo</a>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <h3>O que este repositório demonstra</h3>
+          <ul>
+            <li>modelação OLTP e OLAP sobre o mesmo domínio de negócio;</li>
+            <li>governação de dados com dbt e testes automáticos;</li>
+            <li>dashboards operacionais com Streamlit e Plotly;</li>
+            <li>ML clássico e trilhas de Deep Learning sobre dados retail;</li>
+            <li>documentação pensada para onboarding e publicação.</li>
+          </ul>
+
+          <div class="hero-stats">
+            <div class="stat"><strong>5</strong><span>módulos principais</span></div>
+            <div class="stat"><strong>1</strong><span>handbook central</span></div>
+            <div class="stat"><strong>3</strong><span>camadas de dados</span></div>
+            <div class="stat"><strong>CI</strong><span>Windows, macOS, Linux</span></div>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -345,7 +448,7 @@
       </div>
 
       <div class="callout ok">
-        Recomendação: usar esta página como "cockpit" do projecto e abrir os guias detalhados nas secções abaixo.
+        Se alguém abrir este repositório pela primeira vez, o melhor caminho é: <strong>Handbook</strong>, depois <strong>Quick Start no README</strong>, e só depois os guias mais específicos.
       </div>
 
       <div class="grid" style="margin-top:12px;">

@@ -156,6 +156,30 @@
       background: #f5f3ff;
     }
 
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-actions a {
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .95rem;
+      border: 1px solid rgba(255,255,255,.24);
+      color: #fff;
+      background: rgba(255,255,255,.08);
+    }
+
+    .hero-actions a.primary {
+      background: #facc15;
+      color: #1f2937;
+      border-color: rgba(250,204,21,.45);
+    }
+
     code {
       background: #eef2f7;
       padding: 2px 5px;
@@ -213,6 +237,11 @@
         Documento único para construir, entender, executar, estudar e publicar um projeto de retail
         analytics com OLTP, OLAP, dbt, Streamlit, Machine Learning, Deep Learning, Git, GitHub e PL/SQL.
       </p>
+      <div class="hero-actions">
+        <a class="primary" href="../index.html">Abrir Hub do Projeto</a>
+        <a href="../README.md">Abrir README</a>
+        <a href="https://github.com/JoseCCFerreira/retail-analytics-learning-repo">Ver GitHub</a>
+      </div>
     </div>
   </header>
 
@@ -242,6 +271,9 @@
         Este handbook junta num só lugar a construção do projeto, a explicação das tecnologias,
         a base teórica mínima, os comandos de instalação e os casos práticos que podes executar.
       </p>
+      <div class="callout info">
+        Se estiveres a usar este repositório como peça de portefólio, esta página funciona como narrativa principal: problema, stack, execução, teoria, governança e publicação.
+      </div>
       <div class="grid">
         <div class="card">
           <strong>OLTP</strong>
@@ -266,6 +298,22 @@
         <div class="card">
           <strong>Deep Learning</strong>
           Trilhas práticas com PyTorch e TensorFlow sobre o mesmo dataset.
+        </div>
+      </div>
+
+      <h3>Como ler este handbook</h3>
+      <div class="grid">
+        <div class="card">
+          <strong>Quero executar</strong>
+          Vai primeiro a <code>Instalação</code>, depois <code>OLTP</code>, <code>OLAP</code>, <code>dbt</code> e <code>Streamlit</code>.
+        </div>
+        <div class="card">
+          <strong>Quero aprender teoria</strong>
+          Usa as secções <code>OLTP</code>, <code>OLAP</code>, <code>dbt</code>, <code>Machine Learning</code> e <code>PL/SQL</code>.
+        </div>
+        <div class="card">
+          <strong>Quero publicar</strong>
+          Lê <code>Git</code>, os atalhos de GitHub CLI e o checklist final.
         </div>
       </div>
     </section>
