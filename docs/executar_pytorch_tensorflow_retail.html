@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Executar PyTorch e TensorFlow no Retail Case</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6b76;
+      --line: #d8dee6;
+      --paper: #ffffff;
+      --soft: #f5f7fa;
+      --accent: #0f766e;
+      --accent2: #1d4ed8;
+      --codebg: #0f172a;
+      --codeink: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--paper); color: var(--ink); line-height: 1.58; }
+    header {
+      min-height: 72vh;
+      display: grid;
+      align-items: end;
+      padding: 56px 24px 44px;
+      color: #fff;
+      background:
+        linear-gradient(rgba(15,23,42,.52), rgba(15,23,42,.74)),
+        url("https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=1800&q=80") center/cover;
+    }
+    .hero, main, nav .inner { width: min(1120px, 100%); margin: 0 auto; }
+    h1 { margin: 0 0 12px; max-width: 860px; font-size: clamp(2.2rem, 5vw, 4.3rem); line-height: 1.02; }
+    .subtitle { max-width: 820px; margin: 0; color: #eef4ff; font-size: 1.14rem; }
+    nav { position: sticky; top: 0; z-index: 5; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(8px); }
+    nav .inner { padding: 10px 24px; display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; }
+    nav a { text-decoration: none; color: var(--ink); padding: 8px 10px; border-radius: 6px; font-size: .94rem; }
+    nav a:hover { background: var(--soft); }
+    main { padding: 32px 24px 72px; }
+    section { padding: 30px 0; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0 0 14px; font-size: 2rem; }
+    h3 { margin: 24px 0 8px; font-size: 1.2rem; }
+    p { margin: 0 0 12px; }
+    ul, ol { padding-left: 22px; }
+    li { margin: 7px 0; }
+    .callout { margin: 18px 0; padding: 14px 16px; border-left: 4px solid var(--accent); background: #ecfdf5; }
+    .warning { border-left-color: var(--accent2); background: #eff6ff; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 18px 0; }
+    .card { border: 1px solid var(--line); border-radius: 8px; padding: 16px; background: #fff; }
+    .card strong { display: block; margin-bottom: 6px; color: var(--accent); }
+    code { background: #eef2f7; padding: 2px 5px; border-radius: 4px; font-family: Consolas, Monaco, "Courier New", monospace; }
+    pre { background: var(--codebg); color: var(--codeink); padding: 16px; border-radius: 8px; overflow-x: auto; font-size: .92rem; line-height: 1.5; }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }
+    th { background: var(--soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <h1>Como Instalar e Executar PyTorch e TensorFlow no Retail Case</h1>
+      <p class="subtitle">
+        Guia prático com instalação, apoio teórico e casos reais de execução sobre o dataset do projeto.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="inner">
+      <a href="#instalar">Instalar</a>
+      <a href="#teoria">Teoria</a>
+      <a href="#pytorch">PyTorch</a>
+      <a href="#tensorflow">TensorFlow</a>
+      <a href="#casos">Casos Praticos</a>
+      <a href="#executar">Executar</a>
+      <a href="#outputs">Outputs</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="instalar">
+      <h2>1. Instalação</h2>
+      <p>Primeiro prepara a base do projeto:</p>
+      <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python python/run_pipeline.py</code></pre>
+
+      <p>Depois instala a stack opcional de Deep Learning:</p>
+      <pre><code>pip install -r requirements_deep_learning.txt</code></pre>
+
+      <div class="callout warning">
+        PyTorch e TensorFlow podem demorar mais a instalar e ocupam mais espaço. Faz sentido mantê-los
+        numa camada opcional, separada do projeto base.
+      </div>
+    </section>
+
+    <section id="teoria">
+      <h2>2. Apoio Teórico</h2>
+      <div class="grid">
+        <div class="card">
+          <strong>Regressão</strong>
+          Aqui queres prever um valor numérico. No projeto, o alvo principal é <code>net_amount</code>.
+        </div>
+        <div class="card">
+          <strong>Classificação</strong>
+          Aqui queres prever uma classe. No projeto, o alvo é o <code>customer_segment</code>.
+        </div>
+        <div class="card">
+          <strong>Rede neuronal densa</strong>
+          Boa escolha para começar quando tens dados tabulares com features numéricas e categóricas codificadas.
+        </div>
+        <div class="card">
+          <strong>Baseline primeiro</strong>
+          A metodologia certa continua a ser comparar sempre com scikit-learn antes de assumir que DL é melhor.
+        </div>
+      </div>
+    </section>
+
+    <section id="pytorch">
+      <h2>3. Caso prático com PyTorch</h2>
+      <p>Ficheiro: <code>deep_learning/pytorch_retail_examples.py</code></p>
+      <p>Este script faz duas coisas:</p>
+      <ul>
+        <li>treina uma rede neuronal simples para regressão do <code>net_amount</code>;</li>
+        <li>treina uma rede neuronal simples para classificação do segmento do cliente.</li>
+      </ul>
+
+      <h3>Executar</h3>
+      <pre><code>python deep_learning/pytorch_retail_examples.py</code></pre>
+
+      <h3>O que aprendes aqui</h3>
+      <ul>
+        <li>como transformar arrays em tensores;</li>
+        <li>como criar DataLoader;</li>
+        <li>como definir uma MLP;</li>
+        <li>como usar loss, optimizer e epochs;</li>
+        <li>como guardar métricas e pesos do modelo.</li>
+      </ul>
+    </section>
+
+    <section id="tensorflow">
+      <h2>4. Caso prático com TensorFlow / Keras</h2>
+      <p>Ficheiro: <code>deep_learning/tensorflow_retail_examples.py</code></p>
+      <p>Este script faz o mesmo tipo de problema, mas usando Keras.</p>
+
+      <h3>Executar</h3>
+      <pre><code>python deep_learning/tensorflow_retail_examples.py</code></pre>
+
+      <h3>O que aprendes aqui</h3>
+      <ul>
+        <li>como declarar um modelo em Sequential API;</li>
+        <li>como compilar com optimizer, loss e metrics;</li>
+        <li>como treinar com <code>fit()</code>;</li>
+        <li>como prever com <code>predict()</code>;</li>
+        <li>como guardar um modelo <code>.keras</code>.</li>
+      </ul>
+    </section>
+
+    <section id="casos">
+      <h2>5. Casos práticos para estudar a seguir</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Caso</th>
+            <th>Objetivo</th>
+            <th>Primeira metodologia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Previsão de valor da compra</td>
+            <td>Estimar <code>net_amount</code> de uma linha de venda.</td>
+            <td>Random Forest vs MLP.</td>
+          </tr>
+          <tr>
+            <td>Previsão do segmento</td>
+            <td>Antecipar se o cliente é budget, family, premium ou business.</td>
+            <td>Logistic Regression vs MLP.</td>
+          </tr>
+          <tr>
+            <td>Previsão de receita mensal</td>
+            <td>Entrar no mundo temporal.</td>
+            <td>Baseline de média móvel, depois LSTM/TCN.</td>
+          </tr>
+          <tr>
+            <td>Recomendação de produto</td>
+            <td>Produtos mais prováveis para cada cliente.</td>
+            <td>Top-N simples, depois embeddings.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="executar">
+      <h2>6. Ordem certa para executar</h2>
+      <ol>
+        <li><code>python python/run_pipeline.py</code></li>
+        <li><code>python python/ml_retail.py</code></li>
+        <li><code>pip install -r requirements_deep_learning.txt</code></li>
+        <li><code>python deep_learning/pytorch_retail_examples.py</code></li>
+        <li><code>python deep_learning/tensorflow_retail_examples.py</code></li>
+      </ol>
+    </section>
+
+    <section id="outputs">
+      <h2>7. Outputs esperados</h2>
+      <ul>
+        <li><code>data/deep_learning_outputs/pytorch_metrics.json</code></li>
+        <li><code>data/deep_learning_outputs/tensorflow_metrics.json</code></li>
+        <li><code>data/deep_learning_outputs/pytorch_regression_model.pt</code></li>
+        <li><code>data/deep_learning_outputs/pytorch_classification_model.pt</code></li>
+        <li><code>data/deep_learning_outputs/tensorflow_regression_model.keras</code></li>
+        <li><code>data/deep_learning_outputs/tensorflow_classification_model.keras</code></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

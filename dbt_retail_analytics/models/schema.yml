@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    columns:
+      - name: transaction_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests: [not_null]
+      - name: store_id
+        tests: [not_null]
+
+  - name: stg_sales_items
+    columns:
+      - name: sales_item_id
+        tests: [not_null, unique]
+      - name: transaction_id
+        tests: [not_null]
+      - name: product_id
+        tests: [not_null]
+
+  - name: fct_sales
+    columns:
+      - name: sales_item_id
+        tests: [not_null, unique]
+      - name: transaction_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_transactions')
+                field: transaction_id
+      - name: product_id
+        tests: [not_null]
+      - name: net_amount
+        tests: [not_null]

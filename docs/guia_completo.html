@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia Completo — Retail Analytics</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel2: #192347;
+      --text: #edf2ff;
+      --muted: #b8c3e6;
+      --accent: #6ea8fe;
+      --accent2: #9bdbff;
+      --ok: #64d2a6;
+      --warn: #ffd166;
+      --red: #ff7b7b;
+      --border: #2a3768;
+      --code: #0c1328;
+      --radius: 16px;
+      --shadow: 0 10px 32px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1020 0%, #0e1530 100%);
+      color: var(--text);
+      line-height: 1.65;
+      padding-bottom: 60px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 52px 24px 36px;
+      background: radial-gradient(ellipse at top right, rgba(110,168,254,.22), transparent 45%),
+                  radial-gradient(ellipse at top left, rgba(155,219,255,.14), transparent 35%);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .hero h1 { font-size: 2.4rem; color: var(--accent2); }
+    .hero p  { color: var(--muted); max-width: 780px; margin: 14px auto 0; font-size: 1.05rem; }
+    .badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      margin-bottom: 14px;
+    }
+    .badge-blue  { background: rgba(110,168,254,.15); color: var(--accent); border: 1px solid rgba(110,168,254,.35); }
+    .badge-green { background: rgba(100,210,166,.12); color: var(--ok);    border: 1px solid rgba(100,210,166,.35); }
+    .badge-warn  { background: rgba(255,209,102,.12); color: var(--warn);  border: 1px solid rgba(255,209,102,.35); }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── STICKY PROGRESS ── */
+    .progress-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,16,32,.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .progress-bar a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .82rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .progress-bar a:hover { color: var(--text); background: rgba(110,168,254,.1); border-color: var(--border); }
+
+    /* ── SECTIONS ── */
+    .section {
+      margin: 28px auto 0;
+      max-width: 1100px;
+      padding: 0 20px;
+    }
+    .card {
+      background: linear-gradient(160deg, rgba(18,25,51,.97), rgba(25,35,71,.93));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px 28px;
+    }
+    h2 {
+      font-size: 1.45rem;
+      color: var(--accent2);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    h3 { font-size: 1.08rem; color: var(--accent); margin: 18px 0 8px; }
+    h4 { color: var(--ok); font-size: .97rem; margin: 14px 0 6px; }
+    p, li { color: var(--muted); }
+    li { margin-left: 20px; margin-bottom: 5px; }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      border-left: 4px solid var(--warn);
+      background: rgba(255,209,102,.07);
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin: 14px 0;
+    }
+    .callout.ok  { border-color: var(--ok);  background: rgba(100,210,166,.07); }
+    .callout.info{ border-color: var(--accent); background: rgba(110,168,254,.07); }
+    .callout strong { color: var(--text); }
+
+    /* ── CODE ── */
+    pre {
+      background: var(--code);
+      color: #dce7ff;
+      border: 1px solid #223060;
+      border-radius: 12px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      margin: 12px 0;
+      font-size: .9rem;
+      font-family: Consolas, ui-monospace, monospace;
+    }
+    code {
+      font-family: Consolas, ui-monospace, monospace;
+      background: rgba(110,168,254,.1);
+      color: var(--accent2);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: .9rem;
+    }
+    pre code { background: none; color: inherit; padding: 0; border-radius: 0; }
+
+    /* ── GRID ── */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+    .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 12px; }
+    .mini {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .mini .num { font-size: 1.9rem; font-weight: 700; color: var(--accent2); }
+    .mini .lbl { color: var(--muted); font-size: .9rem; }
+
+    /* ── FLOW ── */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 14px 0;
+    }
+    .box {
+      background: rgba(110,168,254,.08);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      min-width: 130px;
+      text-align: center;
+      color: var(--text);
+      font-weight: 600;
+      font-size: .92rem;
+    }
+    .arrow { font-size: 1.4rem; color: var(--accent2); }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    th, td { padding: 11px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { color: var(--text); background: rgba(110,168,254,.08); font-size: .9rem; }
+    td { color: var(--muted); font-size: .88rem; }
+
+    /* ── STEP NUMBER ── */
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(110,168,254,.18);
+      border: 1px solid rgba(110,168,254,.4);
+      color: var(--accent2);
+      font-weight: 700;
+      font-size: .88rem;
+      flex-shrink: 0;
+    }
+    .step-row { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+    .step-body { flex: 1; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      margin: 32px 20px 0;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── CONCLUSION ── */
+    .conclusion {
+      background: linear-gradient(135deg, rgba(100,210,166,.09), rgba(110,168,254,.09));
+      border: 1px solid rgba(100,210,166,.3);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .conclusion h2 { color: var(--ok); border-color: rgba(100,210,166,.3); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .grid2, .grid3 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.8rem; }
+      .progress-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════╗
+     ║          HERO            ║
+     ╚══════════════════════════╝ -->
+<div class="hero">
+  <div class="badge badge-blue">GUIA COMPLETO — DO INÍCIO À CONCLUSÃO</div>
+  <h1>Retail Analytics Study Case</h1>
+  <p>
+    Teoria, prática e conclusão num único documento. Desde a instalação até ao resultado final,
+    com explicação do raciocínio por trás de cada escolha técnica.
+  </p>
+</div>
+
+<!-- ── NAVEGAÇÃO ── -->
+<nav class="progress-bar">
+  <a href="#s0">0. Contexto</a>
+  <a href="#s1">1. Teoria de dados</a>
+  <a href="#s2">2. Ferramentas</a>
+  <a href="#s3">3. Modelo relacional</a>
+  <a href="#s4">4. Instalação</a>
+  <a href="#s5">5. Pipeline</a>
+  <a href="#s6">6. SQL</a>
+  <a href="#s7">7. dbt</a>
+  <a href="#s8">8. PL/SQL</a>
+  <a href="#s9">9. App</a>
+  <a href="#s10">10. Fluxo completo</a>
+  <a href="#s11">11. Conclusão</a>
+</nav>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 0 — CONTEXTO E OBJETIVO
+══════════════════════════════════════════ -->
+<div class="section" id="s0">
+  <div class="card">
+    <h2>0. Contexto e objetivo do projeto</h2>
+    <p>
+      Este projeto simula o sistema de analytics de uma cadeia de supermercados.
+      O objetivo não é apenas escrever código — é conseguir explicar cada escolha técnica com
+      linguagem clara, seja numa entrevista, numa reunião técnica ou numa revisão de código.
+    </p>
+    <div class="grid3" style="margin-top:18px;">
+      <div class="mini">
+        <div class="num">1</div>
+        <div class="lbl">Negócio simulado: supermercado com vendas, clientes e lojas</div>
+      </div>
+      <div class="mini">
+        <div class="num">2</div>
+        <div class="lbl">Stack técnico: Python + SQLite + DuckDB + dbt + Streamlit</div>
+      </div>
+      <div class="mini">
+        <div class="num">3</div>
+        <div class="lbl">Resultado: plataforma analytics end-to-end com documentação completa</div>
+      </div>
+    </div>
+    <div class="callout ok" style="margin-top:18px;">
+      <strong>Como usar este guia:</strong> lê na ordem apresentada. Cada secção tem teoria + prática + raciocínio.
+      Podes voltar atrás quando quiseres.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 1 — TEORIA DE DADOS
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s1">
+  <div class="card">
+    <h2>1. Teoria de dados — o que precisas de saber antes de começar</h2>
+
+    <h3>OLTP vs OLAP</h3>
+    <p>
+      Existem dois mundos distintos em sistemas de dados.
+      <strong style="color:var(--text)">OLTP</strong> é o sistema operacional — o que responde a ações
+      em tempo real como vendas, stocks, encomendas.
+      <strong style="color:var(--text)">OLAP</strong> é o sistema analítico — o que agrega histórico
+      para responder a perguntas de negócio.
+    </p>
+    <table>
+      <tr><th>Dimensão</th><th>OLTP</th><th>OLAP</th></tr>
+      <tr><td>Objetivo</td><td>Registar operações em tempo real</td><td>Analisar tendências e padrões</td></tr>
+      <tr><td>Motor neste projeto</td><td>SQLite</td><td>DuckDB</td></tr>
+      <tr><td>Queries típicas</td><td>INSERT / UPDATE / DELETE</td><td>SELECT com agregações, CTEs, janelas</td></tr>
+      <tr><td>Volume por operação</td><td>Pequeno (1 registo)</td><td>Grande (milhões de linhas)</td></tr>
+      <tr><td>Estrutura</td><td>Normalizada (3NF)</td><td>Desnormalizada (star schema)</td></tr>
+    </table>
+
+    <h3>Facto vs Dimensão</h3>
+    <p>
+      Uma <strong style="color:var(--text)">fact table</strong> regista eventos de negócio com medidas quantitativas
+      (valor, quantidade). Uma <strong style="color:var(--text)">dimension table</strong> descreve contexto:
+      quem, onde, o quê.
+    </p>
+    <div class="grid2" style="margin-top:10px;">
+      <div class="mini">
+        <h4>Fact: fct_sales</h4>
+        <ul>
+          <li>sales_item_id</li>
+          <li>transaction_id</li>
+          <li>product_id, store_id, customer_id</li>
+          <li>quantity, net_amount (medidas)</li>
+        </ul>
+      </div>
+      <div class="mini">
+        <h4>Dimensions: dim_products, dim_stores, dim_customers</h4>
+        <ul>
+          <li>product_name, category (descrição)</li>
+          <li>store_name, region (localização)</li>
+          <li>customer_name, segment (contexto)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Grain — conceito crítico</h3>
+    <div class="callout info">
+      <strong>Grain:</strong> a pergunta que define o nível de detalhe de uma fact table.
+      <br>Neste projeto: <em>"1 produto dentro de 1 transação"</em>.
+      Cada linha representa exatamente isso. Nunca agregues antes de definir o grain.
+    </div>
+
+    <h3>Normalização e por que a quebramos na camada analítica</h3>
+    <p>
+      No SQLite, o modelo está normalizado para evitar redundância. No DuckDB (e no dbt),
+      unimos as tabelas num modelo mais largo porque na análise
+      queremos responder rápido — o custo de armazenamento extra é irrelevante.
+    </p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 2 — FERRAMENTAS
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s2">
+  <div class="card">
+    <h2>2. O que cada ferramenta faz e por que a escolhemos</h2>
+
+    <table>
+      <tr><th>Ferramenta</th><th>Papel</th><th>Porquê aqui?</th></tr>
+      <tr>
+        <td><strong>Python</strong></td>
+        <td>Geração de dados, orquestração de scripts</td>
+        <td>Ecosistema data por omissão; pandas + faker permitem dados realistas</td>
+      </tr>
+      <tr>
+        <td><strong>SQLite</strong></td>
+        <td>Base operacional local sem servidor</td>
+        <td>Zero configuração; representa conceitos OLTP de forma portável</td>
+      </tr>
+      <tr>
+        <td><strong>DuckDB</strong></td>
+        <td>Analytics column-store local</td>
+        <td>Lê CSV nativamente; suporta window functions, QUALIFY, etc.; muito rápido</td>
+      </tr>
+      <tr>
+        <td><strong>dbt</strong></td>
+        <td>Transformação SQL com governança</td>
+        <td>Organiza modelos, cria dependências, testa qualidade, gera documentação</td>
+      </tr>
+      <tr>
+        <td><strong>Streamlit</strong></td>
+        <td>Dashboard de validação</td>
+        <td>Visualização imediata dos dados sem infraestrutura BI adicional</td>
+      </tr>
+      <tr>
+        <td><strong>PL/SQL (conceitos)</strong></td>
+        <td>Treino de lógica Oracle enterprise</td>
+        <td>Prepara para ambientes que usam procedures, triggers e packages</td>
+      </tr>
+    </table>
+
+    <div class="callout">
+      <strong>Raciocínio:</strong> cada ferramenta tem um papel único. SQLite não substitui DuckDB e dbt não substitui Python.
+      Todas trabalham juntas numa cadeia.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 3 — MODELO RELACIONAL
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s3">
+  <div class="card">
+    <h2>3. Modelo relacional — estrutura de dados</h2>
+
+    <h3>Entidades e relações</h3>
+    <div class="flow">
+      <div class="box">customers</div>
+      <div class="arrow">→</div>
+      <div class="box">transactions</div>
+      <div class="arrow">←</div>
+      <div class="box">stores</div>
+    </div>
+    <div class="flow" style="margin-top:6px;">
+      <div class="box" style="visibility:hidden; min-width:130px;"></div>
+      <div class="arrow" style="visibility:hidden;"></div>
+      <div class="box">sales_items</div>
+      <div class="arrow">←</div>
+      <div class="box">products</div>
+    </div>
+
+    <h3>Tabelas criadas em SQLite</h3>
+    <table>
+      <tr><th>Tabela</th><th>Linhas típicas</th><th>Papel</th></tr>
+      <tr><td>customers</td><td>300</td><td>Dimensão cliente com segmento e cidade</td></tr>
+      <tr><td>products</td><td>80</td><td>Dimensão produto com categoria e preço</td></tr>
+      <tr><td>stores</td><td>12</td><td>Dimensão loja com região</td></tr>
+      <tr><td>transactions</td><td>2 200</td><td>Cabeçalho de cada transação (data, cliente, loja)</td></tr>
+      <tr><td>sales_items</td><td>~5 500</td><td>Grain: 1 produto por transação com valores</td></tr>
+    </table>
+
+    <h3>Decisões de design</h3>
+    <ul>
+      <li>Chaves primárias inteiras (<code>INTEGER PRIMARY KEY</code>) para joins simples e rápidos.</li>
+      <li>Foreign keys ativas no SQLite (<code>PRAGMA foreign_keys = ON</code>) para integridade.</li>
+      <li>Preço gravado em <code>sales_items</code> além de <code>products</code> — preserva o preço histórico no momento da venda.</li>
+      <li>Desconto calculado e gravado como campo derivado para evitar recálculo em cada query.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 4 — INSTALAÇÃO
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s4">
+  <div class="card">
+    <h2>4. Instalação completa — passo a passo</h2>
+
+    <div class="step-row">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h3 style="margin-top:0">Confirma Python 3.10+</h3>
+        <pre>python --version</pre>
+        <p>Se não estiver instalado: <a href="https://python.org/downloads" style="color:var(--accent)">python.org/downloads</a></p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h3 style="margin-top:0">Cria e ativa ambiente virtual</h3>
+        <h4>Windows (PowerShell)</h4>
+        <pre>python -m venv .venv
+.\.venv\Scripts\Activate.ps1</pre>
+        <div class="callout">
+          Se obtiveres erro de política de execução no PowerShell, corre primeiro:<br>
+          <code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code>
+        </div>
+        <h4>macOS / Linux</h4>
+        <pre>python3 -m venv .venv
+source .venv/bin/activate</pre>
+        <div class="callout info">
+          <strong>macOS — notas importantes:</strong>
+          <ul style="margin-top:8px;">
+            <li>O prompt passa a mostrar <code>(.venv)</code> quando o ambiente está ativo.</li>
+            <li>Para desativar: <code>deactivate</code>. Para reativar: <code>source .venv/bin/activate</code>.</li>
+            <li><strong>Apple Silicon (M1/M2/M3/M4):</strong> confirma Python nativo ARM:<br>
+              <code>python3 -c "import platform; print(platform.machine())"</code> → deve mostrar <code>arm64</code>.</li>
+            <li>Sem Python 3.10+? Instala via Homebrew: <code>brew install python@3.12</code></li>
+          </ul>
+          Guia macOS completo (Homebrew, pyenv, troubleshooting):
+          <a href="macos_setup.html" style="color:var(--accent2);">docs/macos_setup.html →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h3 style="margin-top:0">Instala dependências</h3>
+        <pre>python -m pip install --upgrade pip
+pip install -r requirements.txt</pre>
+        <p>Instala: <code>pandas</code>, <code>duckdb</code>, <code>sqlite-utils</code>, <code>dbt-core</code>, <code>dbt-duckdb</code>, <code>streamlit</code>, <code>plotly</code>, <code>faker</code>, <code>pyarrow</code>.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">4</span>
+      <div class="step-body">
+        <h3 style="margin-top:0">Configura dbt</h3>
+        <p>Copia o ficheiro de exemplo e coloca-o no diretório correto:</p>
+        <p><strong style="color:var(--text)">Windows:</strong> <code>%USERPROFILE%\.dbt\profiles.yml</code></p>
+        <p><strong style="color:var(--text)">macOS/Linux:</strong> <code>~/.dbt/profiles.yml</code></p>
+        <pre>retail_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../data/retail_analytics.duckdb
+      threads: 4</pre>
+        <p>O ficheiro de exemplo está em <code>dbt_retail_analytics/profiles.example.yml</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 5 — PIPELINE DE DADOS
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s5">
+  <div class="card">
+    <h2>5. Pipeline de dados — como os dados ganham vida</h2>
+
+    <h3>Teoria por trás</h3>
+    <p>
+      Num sistema real, os dados chegam de sistemas operacionais (ERP, POS, apps).
+      Como não temos esses sistemas neste estudo, <strong style="color:var(--text)">simulamos</strong> os dados com código Python,
+      garantindo volume suficiente para que as queries sejam representativas.
+      O uso de uma <code>seed</code> fixa garante <strong style="color:var(--text)">reprodutibilidade</strong>: os dados são sempre os mesmos.
+    </p>
+
+    <h3>Executar tudo de uma vez</h3>
+    <pre>python python/run_pipeline.py</pre>
+
+    <h3>Ou passo a passo (recomendado para aprender)</h3>
+    <div class="step-row">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Gerar CSVs com dados simulados</h4>
+        <pre>python python/generate_data.py</pre>
+        <p>Cria 5 ficheiros CSV em <code>data/</code>: customers, products, stores, transactions, sales_items.</p>
+        <p><strong style="color:var(--text)">O que acontece:</strong> a biblioteca <code>faker</code> e <code>random</code> com seed fixa geram valores realistas.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Criar base SQLite (camada operacional)</h4>
+        <pre>python python/setup_sqlite.py</pre>
+        <p>Executa os scripts SQL de criação de tabelas e índices e carrega os CSVs.</p>
+        <p><strong style="color:var(--text)">Resultado:</strong> <code>data/retail_app.db</code></p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Criar base DuckDB (camada analítica)</h4>
+        <pre>python python/setup_duckdb.py</pre>
+        <p>Lê os CSVs diretamente, cria tabelas e já gera a fact table consolidada <code>fct_sales</code>.</p>
+        <p><strong style="color:var(--text)">Resultado:</strong> <code>data/retail_analytics.duckdb</code></p>
+      </div>
+    </div>
+
+    <div class="callout ok">
+      <strong>Validação:</strong> confirma que <code>data/retail_app.db</code> e <code>data/retail_analytics.duckdb</code> foram criados.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 6 — SQL
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s6">
+  <div class="card">
+    <h2>6. SQL — da query simples à análise avançada</h2>
+
+    <h3>Teoria: aggregations e GROUP BY</h3>
+    <p>
+      <code>GROUP BY</code> agrupa linhas por uma ou mais colunas.
+      <code>SUM</code>, <code>AVG</code>, <code>COUNT</code> calculam métricas nessas partições.
+      A regra fundamental: toda a coluna no <code>SELECT</code> que não seja agregada tem de estar no <code>GROUP BY</code>.
+    </p>
+    <pre>-- Receita por loja por mês
+SELECT
+    strftime('%Y-%m', t.transaction_date) AS year_month,
+    s.store_name,
+    ROUND(SUM(si.net_amount), 2) AS revenue
+FROM transactions t
+JOIN sales_items si ON si.transaction_id = t.transaction_id
+JOIN stores s       ON s.store_id = t.store_id
+GROUP BY 1, 2
+ORDER BY 1, 3 DESC;</pre>
+
+    <h3>Teoria: CTEs — Common Table Expressions</h3>
+    <p>
+      Uma CTE (<code>WITH ... AS</code>) é uma subquery com nome, executada antes da query principal.
+      O benefício é <strong style="color:var(--text)">legibilidade</strong>: divides um problema complexo em partes nomeadas.
+      Não há ganho de performance por si só, mas o código torna-se muito mais fácil de rever e manter.
+    </p>
+    <pre>WITH monthly_revenue AS (
+    SELECT
+        date_trunc('month', transaction_date) AS month_date,
+        ROUND(SUM(net_amount), 2) AS revenue
+    FROM fct_sales
+    GROUP BY 1
+)
+SELECT month_date, revenue,
+       revenue - LAG(revenue) OVER (ORDER BY month_date) AS delta
+FROM monthly_revenue
+ORDER BY month_date;</pre>
+
+    <h3>Teoria: Window Functions</h3>
+    <p>
+      As funções de janela calculam valores <em>sem colapsar linhas</em>.
+      Perfeito para rankings, acumulados e comparações com períodos anteriores.
+    </p>
+    <table>
+      <tr><th>Função</th><th>O que faz</th><th>Uso típico</th></tr>
+      <tr><td><code>LAG(col)</code></td><td>Valor da linha anterior</td><td>Comparação com período anterior</td></tr>
+      <tr><td><code>RANK()</code></td><td>Posição com saltos em empates</td><td>Top N com empates</td></tr>
+      <tr><td><code>ROW_NUMBER()</code></td><td>Posição única sem empates</td><td>Deduplicação, top 1 por grupo</td></tr>
+      <tr><td><code>SUM() OVER()</code></td><td>Acumulado ou total por partição</td><td>% do total, running total</td></tr>
+    </table>
+
+    <pre>-- Top 5 produtos por categoria (DuckDB com QUALIFY)
+SELECT
+    p.category,
+    p.product_name,
+    ROUND(SUM(f.net_amount), 2) AS revenue,
+    RANK() OVER (
+        PARTITION BY p.category
+        ORDER BY SUM(f.net_amount) DESC
+    ) AS category_rank
+FROM fct_sales f
+JOIN products p ON p.product_id = f.product_id
+GROUP BY p.category, p.product_name
+QUALIFY category_rank &lt;= 5
+ORDER BY p.category, category_rank;</pre>
+
+    <h3>Ficheiros de referência</h3>
+    <ul>
+      <li><code>sql/sqlite/03_business_queries.sql</code> — receita mensal, top produtos, ticket médio.</li>
+      <li><code>sql/duckdb/01_analytical_queries.sql</code> — variação MoM, ranking por categoria.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 7 — DBT
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s7">
+  <div class="card">
+    <h2>7. dbt — transformação com governança</h2>
+
+    <h3>Teoria: porquê o dbt existe</h3>
+    <p>
+      Antes do dbt, scripts SQL espalhados por pastas diferentes não tinham dependências explícitas,
+      não tinham testes e não geravam documentação automaticamente.
+      <strong style="color:var(--text)">dbt resolve os 3 problemas</strong>: organiza modelos em camadas,
+      testa qualidade de dados e gera lineage graph interativo.
+    </p>
+
+    <h3>Camadas do projeto dbt</h3>
+    <div class="grid3" style="margin-top:10px;">
+      <div class="mini">
+        <h4>Staging</h4>
+        <p>Leitura das fontes com cast de tipos e rename de colunas. Sem lógica de negócio. View materializada.</p>
+      </div>
+      <div class="mini">
+        <h4>Intermediate (opcional)</h4>
+        <p>Joins complexos e enriquecimentos antes dos marts. Separa responsabilidades.</p>
+      </div>
+      <div class="mini">
+        <h4>Marts</h4>
+        <p>Modelos finais para consumo analítico. Tables materializadas. <code>fct_sales</code>, <code>dim_products</code>.</p>
+      </div>
+    </div>
+
+    <h3>ref() — o conceito mais importante do dbt</h3>
+    <div class="callout info">
+      <strong>{{ ref('stg_transactions') }}</strong> — o dbt resolve automaticamente a dependência.
+      Se <code>stg_transactions</code> ainda não existir, o dbt constrói-o antes.
+      Isto cria um grafo de dependências (DAG) que garante ordem de execução correta.
+    </div>
+
+    <h3>Executar dbt</h3>
+    <pre>cd dbt_retail_analytics
+dbt run       # constrói todos os modelos
+dbt test      # corre testes de qualidade (not_null, unique, relationships)
+dbt docs generate &amp;&amp; dbt docs serve  # abre documentação com lineage</pre>
+
+    <h3>Testes configurados (schema.yml)</h3>
+    <ul>
+      <li><code>not_null</code> em todas as colunas críticas (IDs, amounts).</li>
+      <li><code>unique</code> em <code>sales_item_id</code> e <code>transaction_id</code>.</li>
+      <li><code>relationships</code> de <code>fct_sales.transaction_id</code> para <code>stg_transactions</code>.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 8 — PL/SQL
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s8">
+  <div class="card">
+    <h2>8. PL/SQL — lógica de base de dados no estilo Oracle</h2>
+
+    <h3>Teoria: o que é PL/SQL</h3>
+    <p>
+      PL/SQL (Procedural Language / SQL) é a extensão procedural do SQL da Oracle.
+      Permite escrever lógica com variáveis, condições, ciclos e tratamento de erros
+      <em>dentro</em> da base de dados. Usado extensivamente em sistemas enterprise legacy.
+    </p>
+
+    <h3>Os 4 conceitos essenciais</h3>
+    <table>
+      <tr><th>Conceito</th><th>O que é</th><th>Quando usar</th></tr>
+      <tr>
+        <td><strong>Procedure</strong></td>
+        <td>Bloco de código que executa ações. Não retorna valor diretamente.</td>
+        <td>Processar dados, carregar tabelas, tarefas de manutenção</td>
+      </tr>
+      <tr>
+        <td><strong>Function</strong></td>
+        <td>Bloco que retorna um valor. Pode ser chamado em SELECT.</td>
+        <td>Cálculos reutilizáveis em queries (ex.: LTV de cliente)</td>
+      </tr>
+      <tr>
+        <td><strong>Trigger</strong></td>
+        <td>Código que corre automaticamente em INSERT/UPDATE/DELETE.</td>
+        <td>Auditoria, validações automáticas — usar com cuidado</td>
+      </tr>
+      <tr>
+        <td><strong>Package</strong></td>
+        <td>Agrupa procedures e functions numa unidade coerente.</td>
+        <td>Organizar lógica relacionada, separar especificação de implementação</td>
+      </tr>
+    </table>
+
+    <h3>Exemplo da procedure deste projeto</h3>
+    <pre>CREATE OR REPLACE PROCEDURE prc_store_revenue (
+    p_store_id      IN  NUMBER,
+    p_total_revenue OUT NUMBER
+) AS
+BEGIN
+    SELECT NVL(SUM(net_amount), 0)
+    INTO   p_total_revenue
+    FROM   fct_sales
+    WHERE  store_id = p_store_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        p_total_revenue := 0;
+END;</pre>
+
+    <div class="callout info">
+      <strong>Raciocínio:</strong> o código PL/SQL neste projeto é <em>conceitual</em> — SQLite e DuckDB não executam
+      PL/SQL nativamente. O objetivo é treinar a sintaxe e o raciocínio para ambientes Oracle reais.
+    </div>
+
+    <p>Ficheiro de referência: <code>sql/oracle_plsql_concepts/01_plsql_study_case.sql</code></p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 9 — APP STREAMLIT
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s9">
+  <div class="card">
+    <h2>9. App Streamlit — validação visual dos dados</h2>
+
+    <h3>Teoria: porquê visualizar os dados</h3>
+    <p>
+      Um pipeline de dados que produz resultados sem forma de os inspecionar visualmente
+      é difícil de validar e de apresentar. O Streamlit resolve isso com Python puro —
+      não precisas de BI tool, servidor separado ou JavaScript.
+    </p>
+
+    <h3>O que a app mostra</h3>
+    <ul>
+      <li>KPIs principais: total de transações, receita total, valor médio por linha.</li>
+      <li>Gráfico de receita por mês.</li>
+      <li>Top 10 produtos por receita com breakdown por categoria.</li>
+    </ul>
+
+    <h3>Executar</h3>
+    <pre>streamlit run streamlit/app.py</pre>
+    <p>Abre automaticamente em <strong style="color:var(--text)">http://localhost:8501</strong>.</p>
+
+    <div class="callout">
+      <strong>Nota:</strong> a app lê diretamente o ficheiro DuckDB. O pipeline de dados tem de ter sido executado primeiro.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 10 — FLUXO COMPLETO
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s10">
+  <div class="card">
+    <h2>10. Fluxo completo do projeto — visão end-to-end</h2>
+
+    <div class="flow" style="flex-direction:column; align-items:flex-start; gap:6px;">
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="step-num">1</span>
+        <div class="box" style="min-width:200px;">Python: generate_data.py</div>
+        <span style="color:var(--muted); font-size:.9rem;">Gera CSVs com dados simulados em data/</span>
+      </div>
+      <div style="padding-left:16px; color:var(--border); font-size:1.3rem;">↓</div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="step-num">2</span>
+        <div class="box" style="min-width:200px;">Python: setup_sqlite.py</div>
+        <span style="color:var(--muted); font-size:.9rem;">Cria retail_app.db com modelo operacional</span>
+      </div>
+      <div style="padding-left:16px; color:var(--border); font-size:1.3rem;">↓</div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="step-num">3</span>
+        <div class="box" style="min-width:200px;">Python: setup_duckdb.py</div>
+        <span style="color:var(--muted); font-size:.9rem;">Cria retail_analytics.duckdb com fct_sales</span>
+      </div>
+      <div style="padding-left:16px; color:var(--border); font-size:1.3rem;">↓</div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="step-num">4</span>
+        <div class="box" style="min-width:200px;">SQL: business queries</div>
+        <span style="color:var(--muted); font-size:.9rem;">Valida receita, top produtos, ticket médio</span>
+      </div>
+      <div style="padding-left:16px; color:var(--border); font-size:1.3rem;">↓</div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="step-num">5</span>
+        <div class="box" style="min-width:200px;">dbt run + dbt test</div>
+        <span style="color:var(--muted); font-size:.9rem;">Constrói modelos, testa qualidade, gera lineage</span>
+      </div>
+      <div style="padding-left:16px; color:var(--border); font-size:1.3rem;">↓</div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="step-num">6</span>
+        <div class="box" style="min-width:200px;">streamlit run</div>
+        <span style="color:var(--muted); font-size:.9rem;">Dashboard visual de validação</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top:22px;">Checklist de validação</h3>
+    <table>
+      <tr><th>Item</th><th>Como verificar</th></tr>
+      <tr><td><code>data/*.csv</code> existem</td><td><code>ls data/</code> ou explorador de ficheiros</td></tr>
+      <tr><td><code>data/retail_app.db</code> criado</td><td>Mesmo acima</td></tr>
+      <tr><td><code>data/retail_analytics.duckdb</code> criado</td><td>Mesmo acima</td></tr>
+      <tr><td>dbt modelos em verde</td><td>Output de <code>dbt run</code></td></tr>
+      <tr><td>dbt testes passam</td><td>Output de <code>dbt test</code></td></tr>
+      <tr><td>Streamlit abre</td><td>Acesso a <code>localhost:8501</code></td></tr>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECÇÃO 11 — CONCLUSÃO
+══════════════════════════════════════════ -->
+<hr class="divider">
+<div class="section" id="s11">
+  <div class="card conclusion">
+    <h2>11. Conclusão</h2>
+
+    <h3>O que este projeto demonstra</h3>
+    <p>
+      Este estudo de caso não usa uma única ferramenta — usa cinco camadas que se complementam.
+      Cada camada resolve um problema específico que as outras não resolvem:
+    </p>
+    <ul>
+      <li>Python resolve a <strong style="color:var(--text)">geração e orquestração</strong>.</li>
+      <li>SQLite resolve o <strong style="color:var(--text)">storage operacional com integridade relacional</strong>.</li>
+      <li>DuckDB resolve a <strong style="color:var(--text)">analytics local com performance column-store</strong>.</li>
+      <li>dbt resolve a <strong style="color:var(--text)">governança, testes e documentação</strong>.</li>
+      <li>Streamlit resolve a <strong style="color:var(--text)">validação visual rápida</strong>.</li>
+    </ul>
+
+    <h3>O que aprendeste com este projeto</h3>
+    <ul>
+      <li>A diferença real entre OLTP e OLAP e quando cada um se aplica.</li>
+      <li>Como definir grain antes de qualquer query de facto.</li>
+      <li>Como escrever SQL avançado com CTEs e window functions com confiança.</li>
+      <li>Como o dbt resolve a fragmentação de SQL com dependências, testes e lineage.</li>
+      <li>Os conceitos fundamentais de PL/SQL para environments Oracle enterprise.</li>
+    </ul>
+
+    <h3>Como apresentar este projeto numa entrevista</h3>
+    <div class="callout ok">
+      <strong>Frase de síntese:</strong><br>
+      <em>"Construí uma plataforma de analytics de retalho end-to-end onde simulo dados operacionais em SQLite,
+      analiso com DuckDB usando CTEs e window functions, modelo com dbt com testes de qualidade e governança,
+      e visualizo resultados com Streamlit. O projeto também inclui a camada de lógica PL/SQL Oracle para
+      treino de ambientes enterprise."</em>
+    </div>
+
+    <h3>Próximos passos para ir mais longe</h3>
+    <ul>
+      <li>Adicionar orquestração com Airflow ou GitHub Actions.</li>
+      <li>Introduzir lógica incremental no dbt (<code>incremental</code> materialization).</li>
+      <li>Expandir testes dbt com testes de negócio customizados.</li>
+      <li>Adicionar camada de monitorização de qualidade de dados (Great Expectations ou dbt expectations).</li>
+      <li>Publicar documentação dbt como site estático.</li>
+    </ul>
+
+    <div class="callout info" style="margin-top:18px;">
+      <strong>Documentação relacionada neste repositório:</strong>
+      <br>
+      <a href="setup_and_installation.html" style="color:var(--accent)">Guia de instalação</a> ·
+      <a href="bosch_priority_roadmap.html" style="color:var(--accent)">Roadmap de prioridades</a> ·
+      <a href="analise_profunda.html" style="color:var(--accent)">Análise profunda</a> ·
+      <a href="explicacao_codigo.html" style="color:var(--accent)">Explicação do código</a> ·
+      <a href="apresentacao_curta.html" style="color:var(--accent)">Apresentação curta</a>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; color:var(--muted); font-size:.88rem; margin-top:28px; padding-bottom:20px;">
+  Retail Analytics Study Case · Guia Completo
+</div>
+
+</body>
+</html>

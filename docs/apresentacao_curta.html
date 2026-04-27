@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apresentação Curta — Retail Analytics</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #1f2937; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 24px 16px 36px; }
+    .slide {
+      background: white;
+      border: 1px solid #d5dfef;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 18px rgba(15,23,42,.06);
+    }
+    h1, h2 { margin: 0 0 8px; color: #0b3d91; }
+    p, li { line-height: 1.6; }
+    .kpi { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-top:10px; }
+    .kpi div { background:#eef4ff; border:1px solid #d5dfef; border-radius:10px; padding:10px; text-align:center; }
+    .kpi strong { display:block; color:#0b3d91; font-size:1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="slide">
+      <h1>Retail Analytics — Apresentação Curta</h1>
+      <p>
+        Projeto de estudo end-to-end para demonstrar competências em SQL, modelação relacional,
+        transformação com dbt e lógica de base de dados no estilo Oracle PL/SQL.
+      </p>
+    </section>
+
+    <section class="slide">
+      <h2>1) Problema e objetivo</h2>
+      <ul>
+        <li>Simular uma operação de retalho com dados transacionais realistas.</li>
+        <li>Transformar dados operacionais em insights analíticos.</li>
+        <li>Estruturar a solução de forma explicável para contexto profissional.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>2) Arquitetura resumida</h2>
+      <ul>
+        <li><strong>SQLite:</strong> camada operacional (OLTP simplificada).</li>
+        <li><strong>DuckDB:</strong> camada analítica local (OLAP).</li>
+        <li><strong>dbt:</strong> transformação, testes e documentação.</li>
+        <li><strong>PL/SQL concepts:</strong> treino de lógica Oracle-style.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>3) Entregáveis</h2>
+      <ul>
+        <li>Guia para iniciantes e roadmap de estudo.</li>
+        <li>Guia de instalação completo com troubleshooting.</li>
+        <li>Documento de análise profunda (arquitetura, riscos, evolução).</li>
+        <li>Requisitos técnicos em <code>requirements.txt</code> e metadados em <code>package.json</code>.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>4) Valor gerado</h2>
+      <div class="kpi">
+        <div><strong>100%</strong><span>Onboarding documentado</span></div>
+        <div><strong>1</strong><span>Ponto único de entrada (<code>index.html</code>)</span></div>
+        <div><strong>3</strong><span>Níveis de documentação (básico, curto, profundo)</span></div>
+        <div><strong>Rápido</strong><span>Arranque local em poucos comandos</span></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>5) Próximos passos</h2>
+      <ol>
+        <li>Executar setup local completo.</li>
+        <li>Implementar/validar scripts de geração e carga de dados.</li>
+        <li>Executar dbt + testes e validar qualidade.</li>
+        <li>Preparar demo de 2 minutos com base nesta estrutura.</li>
+      </ol>
+    </section>
+  </div>
+</body>
+</html>

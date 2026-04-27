@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aprender Deep Learning - PyTorch, TensorFlow e Outras Ferramentas</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6b76;
+      --line: #d8dee6;
+      --paper: #ffffff;
+      --soft: #f5f7fa;
+      --accent: #0f766e;
+      --accent2: #1d4ed8;
+      --accent3: #7c3aed;
+      --codebg: #0f172a;
+      --codeink: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.58;
+    }
+    header {
+      min-height: 76vh;
+      display: grid;
+      align-items: end;
+      padding: 56px 24px 46px;
+      color: #fff;
+      background:
+        linear-gradient(rgba(15,23,42,.48), rgba(15,23,42,.74)),
+        url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80") center/cover;
+    }
+    .hero, main, nav .inner { width: min(1120px, 100%); margin: 0 auto; }
+    h1 {
+      margin: 0 0 12px;
+      max-width: 900px;
+      font-size: clamp(2.2rem, 5vw, 4.6rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      max-width: 820px;
+      margin: 0;
+      color: #eef4ff;
+      font-size: 1.16rem;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    nav .inner {
+      padding: 10px 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: .94rem;
+    }
+    nav a:hover { background: var(--soft); }
+    main { padding: 32px 24px 72px; }
+    section { padding: 30px 0; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0 0 14px; font-size: 2rem; }
+    h3 { margin: 24px 0 8px; font-size: 1.2rem; }
+    p { margin: 0 0 12px; }
+    ul, ol { padding-left: 22px; }
+    li { margin: 7px 0; }
+    .lead { max-width: 860px; color: var(--muted); font-size: 1.07rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+    .card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+    .callout {
+      margin: 18px 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      background: #ecfdf5;
+    }
+    .warning {
+      border-left-color: var(--accent3);
+      background: #f5f3ff;
+    }
+    code {
+      background: #eef2f7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+    }
+    pre {
+      background: var(--codebg);
+      color: var(--codeink);
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <h1>Aprender Deep Learning com PyTorch, TensorFlow e Outras Ferramentas</h1>
+      <p class="subtitle">
+        Guia teórico-prático para evoluíres do Machine Learning clássico para Deep Learning no contexto
+        do teu projeto de retail analytics.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="inner">
+      <a href="#porque">Porque</a>
+      <a href="#metodologia">Metodologia</a>
+      <a href="#ferramentas">Ferramentas</a>
+      <a href="#teoria">Base Teorica</a>
+      <a href="#pytorch">PyTorch</a>
+      <a href="#tensorflow">TensorFlow</a>
+      <a href="#outras">Outras Ferramentas</a>
+      <a href="#retail">Aplicacao ao Retail</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#atalhos">Atalhos</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="porque">
+      <h2>1. Porque adicionar PyTorch e TensorFlow</h2>
+      <p class="lead">
+        O projeto atual já te dá uma base ótima com scikit-learn, SQL, dbt e dashboards. O próximo passo
+        natural para aprender mais fundo é entrares em Deep Learning: redes neuronais, embeddings,
+        séries temporais mais ricas, recomendação e modelos mais flexíveis.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <strong>PyTorch</strong>
+          Mais intuitivo para aprender redes neuronais passo a passo e experimentar.
+        </div>
+        <div class="card">
+          <strong>TensorFlow / Keras</strong>
+          Muito usado em treino e produção, com API mais guiada para iniciantes.
+        </div>
+        <div class="card">
+          <strong>Jupyter</strong>
+          Excelente para explorar teoria, testar hipóteses e documentar experiências.
+        </div>
+        <div class="card">
+          <strong>MLflow / Weights & Biases</strong>
+          Úteis para tracking de experiências, métricas e versões de modelos.
+        </div>
+      </div>
+    </section>
+
+    <section id="metodologia">
+      <h2>2. Metodologia de Aprendizagem</h2>
+      <p>Em vez de saltar diretamente para código complexo, usa esta ordem:</p>
+      <ol>
+        <li>Definir o problema de negócio.</li>
+        <li>Traduzir o problema para um tipo de aprendizagem.</li>
+        <li>Perceber a teoria mínima do método antes de programar.</li>
+        <li>Começar com baseline simples.</li>
+        <li>Só depois testar rede neuronal.</li>
+        <li>Comparar sempre com métricas e interpretação.</li>
+        <li>Guardar experiência, resultados e lições aprendidas.</li>
+      </ol>
+      <div class="callout">
+        A metodologia certa é: teoria pequena, prática curta, comparação honesta, iteração controlada.
+      </div>
+    </section>
+
+    <section id="ferramentas">
+      <h2>3. Ferramentas a usar para aprender</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Ferramenta</th>
+            <th>Para que serve</th>
+            <th>Quando usar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>scikit-learn</td>
+            <td>Baselines, pipelines simples, métricas, split, preprocessamento.</td>
+            <td>Primeiro passo antes de Deep Learning.</td>
+          </tr>
+          <tr>
+            <td>PyTorch</td>
+            <td>Treinar redes neuronais com mais controlo e clareza.</td>
+            <td>Quando queres aprender a mecânica interna do treino.</td>
+          </tr>
+          <tr>
+            <td>TensorFlow / Keras</td>
+            <td>Criar modelos de Deep Learning com API mais declarativa.</td>
+            <td>Quando queres ir rápido e estruturar melhor treino/avaliação.</td>
+          </tr>
+          <tr>
+            <td>Jupyter Notebook</td>
+            <td>Exploração, teoria, visualização e experimentação.</td>
+            <td>Durante estudo e prototipagem.</td>
+          </tr>
+          <tr>
+            <td>MLflow</td>
+            <td>Guardar runs, métricas, parâmetros e artefactos.</td>
+            <td>Quando fazes muitas experiências.</td>
+          </tr>
+          <tr>
+            <td>ONNX</td>
+            <td>Interoperabilidade entre frameworks.</td>
+            <td>Quando queres exportar modelos para servir noutros ambientes.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="teoria">
+      <h2>4. Base Teórica que deves dominar</h2>
+
+      <h3>4.1 Tipos de aprendizagem</h3>
+      <ul>
+        <li><strong>Supervisionada:</strong> tens exemplos com rótulos.</li>
+        <li><strong>Não supervisionada:</strong> procuras padrões sem rótulos.</li>
+        <li><strong>Semi-supervisionada:</strong> misturas poucos rótulos com muitos dados sem rótulo.</li>
+        <li><strong>Self-supervised:</strong> o próprio dado gera o objetivo de treino.</li>
+      </ul>
+
+      <h3>4.2 Conceitos centrais</h3>
+      <ul>
+        <li><strong>Feature:</strong> coluna usada pelo modelo.</li>
+        <li><strong>Target:</strong> o que queres prever.</li>
+        <li><strong>Loss function:</strong> mede o erro do modelo.</li>
+        <li><strong>Gradient descent:</strong> método de otimização.</li>
+        <li><strong>Overfitting:</strong> o modelo memoriza demais.</li>
+        <li><strong>Regularização:</strong> técnicas para melhorar generalização.</li>
+        <li><strong>Batch, epoch, learning rate:</strong> pilares do treino em redes neuronais.</li>
+      </ul>
+
+      <h3>4.3 O que muda no Deep Learning</h3>
+      <p>
+        No ML clássico, tu escolhes muitas features manualmente. No Deep Learning, a rede aprende
+        representações internas. Isso aumenta flexibilidade, mas também aumenta custo, necessidade
+        de dados e risco de complexidade desnecessária.
+      </p>
+    </section>
+
+    <section id="pytorch">
+      <h2>5. Aprender com PyTorch</h2>
+      <p>PyTorch é excelente para perceberes o treino quase “por dentro”.</p>
+
+      <h3>Instalação opcional</h3>
+      <pre><code>pip install -r requirements_deep_learning.txt</code></pre>
+
+      <h3>Estrutura mental de um projeto PyTorch</h3>
+      <ol>
+        <li>Carregar dados.</li>
+        <li>Transformar em tensores.</li>
+        <li>Criar Dataset e DataLoader.</li>
+        <li>Definir a rede.</li>
+        <li>Escolher loss e optimizer.</li>
+        <li>Treinar por épocas.</li>
+        <li>Avaliar e guardar métricas.</li>
+      </ol>
+
+      <h3>Exemplo mínimo</h3>
+      <pre><code>import torch
+import torch.nn as nn
+import torch.optim as optim
+
+model = nn.Sequential(
+    nn.Linear(10, 32),
+    nn.ReLU(),
+    nn.Linear(32, 1)
+)
+
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)</code></pre>
+
+      <h3>O que estás a aprender aqui</h3>
+      <ul>
+        <li>Camadas lineares.</li>
+        <li>Funções de ativação.</li>
+        <li>Propagação para a frente.</li>
+        <li>Backpropagation.</li>
+        <li>Atualização de pesos.</li>
+      </ul>
+    </section>
+
+    <section id="tensorflow">
+      <h2>6. Aprender com TensorFlow / Keras</h2>
+      <p>
+        TensorFlow com Keras é muito bom para aprender fluxos de treino organizados e construir
+        modelos mais rapidamente.
+      </p>
+
+      <h3>Exemplo mínimo</h3>
+      <pre><code>import tensorflow as tf
+from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Dense(32, activation="relu", input_shape=(10,)),
+    keras.layers.Dense(1)
+])
+
+model.compile(
+    optimizer="adam",
+    loss="mse",
+    metrics=["mae"]
+)</code></pre>
+
+      <h3>Quando TensorFlow é útil para aprender</h3>
+      <ul>
+        <li>Quando queres treinar com callbacks.</li>
+        <li>Quando queres early stopping facilmente.</li>
+        <li>Quando queres ver uma API de treino mais “alta”.</li>
+        <li>Quando queres usar Keras para prototipagem rápida.</li>
+      </ul>
+    </section>
+
+    <section id="outras">
+      <h2>7. Outras Ferramentas para aprender bem</h2>
+
+      <h3>Jupyter Notebook</h3>
+      <pre><code>pip install notebook jupyterlab
+jupyter lab</code></pre>
+
+      <h3>MLflow</h3>
+      <pre><code>pip install mlflow
+mlflow ui</code></pre>
+
+      <h3>Optuna para tuning</h3>
+      <pre><code>pip install optuna</code></pre>
+
+      <h3>SHAP para explicabilidade</h3>
+      <pre><code>pip install shap</code></pre>
+
+      <h3>Polars para processamento</h3>
+      <pre><code>pip install polars</code></pre>
+
+      <div class="callout warning">
+        Não precisas de instalar tudo ao mesmo tempo. Primeiro consolida scikit-learn, depois escolhe
+        PyTorch ou TensorFlow, e só depois adiciona tracking, tuning e explicabilidade.
+      </div>
+    </section>
+
+    <section id="retail">
+      <h2>8. Como aplicar isto ao teu caso de Retail</h2>
+
+      <h3>Problemas concretos do projeto</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Problema</th>
+            <th>Tipo</th>
+            <th>Modelo inicial</th>
+            <th>Evolução com DL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prever valor da venda</td>
+            <td>Regressão</td>
+            <td>Random Forest Regressor</td>
+            <td>MLP em PyTorch ou Keras</td>
+          </tr>
+          <tr>
+            <td>Prever segmento do cliente</td>
+            <td>Classificação</td>
+            <td>Logistic Regression</td>
+            <td>Rede densa com embeddings de categorias</td>
+          </tr>
+          <tr>
+            <td>Agrupar clientes</td>
+            <td>Clustering</td>
+            <td>K-Means</td>
+            <td>Autoencoders + clustering no espaço latente</td>
+          </tr>
+          <tr>
+            <td>Prever receita futura</td>
+            <td>Série temporal</td>
+            <td>Baseline com média móvel</td>
+            <td>LSTM, TCN ou Transformer temporal</td>
+          </tr>
+          <tr>
+            <td>Recomendação de produto</td>
+            <td>Recomendação</td>
+            <td>Top-N por frequência</td>
+            <td>Embeddings e ranking neural</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Metodologia aplicada ao retail</h3>
+      <ol>
+        <li>Definir target claro.</li>
+        <li>Criar baseline simples em scikit-learn.</li>
+        <li>Medir resultado e guardar métrica.</li>
+        <li>Preparar features melhores.</li>
+        <li>Só depois testar uma rede neuronal.</li>
+        <li>Comparar se a rede neuronal melhora mesmo o problema.</li>
+      </ol>
+    </section>
+
+    <section id="roadmap">
+      <h2>9. Roadmap de estudo</h2>
+      <ol>
+        <li>Dominar regressão, classificação e clustering com scikit-learn.</li>
+        <li>Entender loss, gradient descent, batches e overfitting.</li>
+        <li>Aprender PyTorch com MLPs pequenos.</li>
+        <li>Aprender TensorFlow/Keras para treino mais organizado.</li>
+        <li>Estudar embeddings para variáveis categóricas.</li>
+        <li>Entrar em séries temporais.</li>
+        <li>Aprender tracking de experiências.</li>
+        <li>Aprender explicabilidade e validação.</li>
+      </ol>
+    </section>
+
+    <section id="atalhos">
+      <h2>10. Atalhos e comandos úteis</h2>
+      <table>
+        <tbody>
+          <tr><th>Objetivo</th><th>Comando</th></tr>
+          <tr><td>Instalar stack opcional</td><td><code>pip install -r requirements_deep_learning.txt</code></td></tr>
+          <tr><td>Abrir JupyterLab</td><td><code>jupyter lab</code></td></tr>
+          <tr><td>Ver versão PyTorch</td><td><code>python -c "import torch; print(torch.__version__)"</code></td></tr>
+          <tr><td>Ver versão TensorFlow</td><td><code>python -c "import tensorflow as tf; print(tf.__version__)"</code></td></tr>
+          <tr><td>Abrir UI do MLflow</td><td><code>mlflow ui</code></td></tr>
+          <tr><td>Executar pipeline base</td><td><code>python python/run_pipeline.py</code></td></tr>
+          <tr><td>Executar ML clássico</td><td><code>python python/ml_retail.py</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

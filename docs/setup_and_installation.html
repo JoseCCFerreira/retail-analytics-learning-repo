@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia de Instalação Completo — Retail Analytics</title>
+<style>
+:root {
+  --bg: #f5f8ff;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #4b5563;
+  --line: #d7deea;
+  --accent: #0b3d91;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 16px 40px; }
+.hero {
+  background: linear-gradient(135deg, #0b3d91, #1a58bc);
+  color: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 28px rgba(11,61,145,.2);
+}
+.hero h1 { margin: 0 0 8px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 14px;
+  box-shadow: 0 4px 16px rgba(15,23,42,.05);
+}
+h2 { margin-top: 0; color: var(--accent); }
+ul li { margin: 6px 0; color: var(--muted); }
+code, pre { font-family: Consolas, Monaco, monospace; }
+code {
+  background: #eef3ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+pre {
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 10px;
+  padding: 12px;
+  overflow-x: auto;
+  border-left: 4px solid #60a5fa;
+}
+.note {
+  background: #eef5ff;
+  border-left: 4px solid #0b3d91;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+.ok {
+  background: #ecfdf5;
+  border-left: 4px solid #047857;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Guia de Instalação Completo</h1>
+    <p>
+      Este guia prepara o repositório de ponta a ponta: ambiente local, dependências, estrutura recomendada,
+      execução de scripts, dbt, documentação e validação final.
+    </p>
+    <p style="margin-top:10px;font-size:.95rem;">
+      <strong>macOS?</strong> Guia dedicado com Homebrew, Apple Silicon e troubleshooting completo:
+      <a href="macos_setup.html" style="color:#fff; font-weight:700; text-decoration:underline;">Guia macOS →</a>
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>1) Pré-requisitos</h2>
+    <ul>
+      <li>Windows 10/11, macOS ou Linux</li>
+      <li>Python 3.10+ instalado e no <code>PATH</code></li>
+      <li>Git instalado</li>
+      <li>Acesso a terminal (PowerShell, CMD, bash ou zsh)</li>
+      <li>Opcional: Node.js 18+ para usar scripts do <code>package.json</code></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>2) Clonar e abrir o repositório</h2>
+    <pre>git clone &lt;URL_DO_REPOSITORIO&gt;
+cd retail_case_repo_with_dynamic_beginner_html</pre>
+    <div class="note">Se já tiveres o repositório local, entra apenas na pasta raiz do projeto.</div>
+  </section>
+
+  <section class="card">
+    <h2>3) Criar e ativar ambiente virtual</h2>
+    <div class="grid">
+      <div>
+        <h3>Windows (PowerShell)</h3>
+        <pre>python -m venv .venv
+.\.venv\Scripts\Activate.ps1</pre>
+      </div>
+      <div>
+        <h3>macOS / Linux</h3>
+        <pre>python3 -m venv .venv
+source .venv/bin/activate</pre>
+      </div>
+    </div>
+    <p style="margin-top:12px;"><strong>macOS — guia detalhado com Apple Silicon, Homebrew e pyenv:</strong>
+      <a href="macos_setup.html" style="color:var(--accent);">docs/macos_setup.html →</a>
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>4) Instalar dependências Python (requirements)</h2>
+    <pre>python -m pip install --upgrade pip
+pip install -r requirements.txt</pre>
+    <p>O ficheiro <code>requirements.txt</code> inclui os pacotes necessários para dados, SQL analytics, dbt e visualização.</p>
+  </section>
+
+  <section class="card">
+    <h2>5) Dependências do package (scripts de docs)</h2>
+    <p>O repositório contém <code>package.json</code> com scripts utilitários para servir a documentação local.</p>
+    <pre>npm install
+npm run docs:serve</pre>
+    <div class="note">Alternativa sem Node.js: <code>python -m http.server 8080</code>.</div>
+  </section>
+
+  <section class="card">
+    <h2>6) Estrutura de código recomendada</h2>
+    <pre>.
+├── data/
+├── python/
+│   ├── generate_data.py
+│   ├── setup_sqlite.py
+│   └── setup_duckdb.py
+├── sql/
+│   ├── sqlite/
+│   ├── duckdb/
+│   └── oracle_plsql_concepts/
+├── dbt_retail_analytics/
+├── streamlit/
+├── docs/
+├── requirements.txt
+└── package.json</pre>
+    <p>Os documentos desta pasta assumem esta convenção de organização.</p>
+  </section>
+
+  <section class="card">
+    <h2>7) Pipeline técnico (quando os scripts estiverem presentes)</h2>
+    <ol>
+      <li>Gerar dados simulados: <code>python python/generate_data.py</code></li>
+      <li>Criar BD SQLite: <code>python python/setup_sqlite.py</code></li>
+      <li>Criar BD DuckDB: <code>python python/setup_duckdb.py</code></li>
+      <li>Executar modelos dbt: <code>dbt seed && dbt run && dbt test</code></li>
+      <li>Levantar app Streamlit: <code>streamlit run streamlit/app.py</code></li>
+    </ol>
+    <div class="note">Se algum diretório ainda não existir, usa este guia como blueprint para implementação faseada.</div>
+  </section>
+
+  <section class="card">
+    <h2>8) Configuração dbt (DuckDB)</h2>
+    <p>Cria/edita o ficheiro <code>profiles.yml</code> no diretório de perfis dbt:</p>
+    <ul>
+      <li>Windows: <code>%USERPROFILE%\.dbt\profiles.yml</code></li>
+      <li>Linux/macOS: <code>~/.dbt/profiles.yml</code></li>
+    </ul>
+    <pre>retail_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../data/retail_analytics.duckdb
+      threads: 4</pre>
+  </section>
+
+  <section class="card">
+    <h2>9) Checklist de validação final</h2>
+    <ul>
+      <li><code>pip install -r requirements.txt</code> termina sem erros</li>
+      <li><code>index.html</code> abre corretamente no browser</li>
+      <li>Guias em <code>docs/</code> navegáveis e consistentes</li>
+      <li>Scripts de documentação executáveis por <code>npm run docs:serve</code> ou <code>python -m http.server 8080</code></li>
+      <li>Se houver código de pipeline, execução ponta a ponta validada</li>
+    </ul>
+    <div class="ok"><strong>Resultado esperado:</strong> ambiente pronto, requisitos definidos, documentação completa e base preparada para desenvolvimento e apresentação.</div>
+  </section>
+
+  <section class="card">
+    <h2>10) Troubleshooting rápido</h2>
+    <h3>Erro ao ativar venv no PowerShell</h3>
+    <pre>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</pre>
+
+    <h3><code>dbt</code> não encontrado</h3>
+    <p>Confirma ambiente virtual ativo e reinstala com <code>pip install -r requirements.txt</code>.</p>
+
+    <h3><code>npm</code> não encontrado</h3>
+    <p>Instala Node.js LTS ou usa alternativa com <code>python -m http.server 8080</code>.</p>
+    <h3>macOS — <code>python3: command not found</code></h3>
+    <pre>brew install python@3.12</pre>
+
+    <h3>macOS — erro de compilação em dependências</h3>
+    <pre>xcode-select --install</pre>
+
+    <h3>macOS Apple Silicon — conflito de arquitetura</h3>
+    <pre>python3 -c "import platform; print(platform.machine())"
+# deve devolver arm64</pre>
+
+    <h3>DuckDB: path error no profiles.yml (macOS)</h3>
+    <p>Usa caminho absoluto. Obtém-no com <code>pwd</code> na raiz do projeto.</p>
+
+    <p style="margin-top:14px;">Troubleshooting macOS completo:
+      <a href="macos_setup.html" style="color:var(--accent);">Guia macOS →</a>
+    </p>
+  </section>
+</div>
+</body>
+</html>

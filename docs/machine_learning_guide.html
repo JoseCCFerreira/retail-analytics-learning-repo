@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Machine Learning Guide — Retail Analytics</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:         #0d1117;
+      --bg2:        #161b22;
+      --bg3:        #1e2733;
+      --border:     #30363d;
+      --accent:     #58a6ff;
+      --accent2:    #7ee787;
+      --accent3:    #f78166;
+      --accent4:    #ffa657;
+      --accent5:    #d2a8ff;
+      --accent6:    #79c0ff;
+      --text:       #e6edf3;
+      --text2:      #8b949e;
+      --code-bg:    #161b22;
+      --tag-blue:   rgba(88,166,255,.15);
+      --tag-green:  rgba(126,231,135,.15);
+      --tag-orange: rgba(255,166,87,.15);
+      --tag-purple: rgba(210,168,255,.15);
+      --tag-red:    rgba(247,129,102,.15);
+    }
+    html { scroll-behavior: smooth; height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ───────────────────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #0d1117 0%, #1a1f3a 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(88,166,255,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent5) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: .5rem;
+    }
+    header p {
+      color: var(--text2);
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto 1.5rem;
+    }
+    .badge-row {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      justify-content: center;
+    }
+    .badge {
+      padding: .3rem .8rem;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .badge-blue   { background: var(--tag-blue);   color: var(--accent);  border: 1px solid rgba(88,166,255,.3); }
+    .badge-green  { background: var(--tag-green);  color: var(--accent2); border: 1px solid rgba(126,231,135,.3); }
+    .badge-orange { background: var(--tag-orange); color: var(--accent4); border: 1px solid rgba(255,166,87,.3); }
+    .badge-purple { background: var(--tag-purple); color: var(--accent5); border: 1px solid rgba(210,168,255,.3); }
+    .badge-red    { background: var(--tag-red);    color: var(--accent3); border: 1px solid rgba(247,129,102,.3); }
+
+    /* ── Navigation ───────────────────────────────────────────────────── */
+    nav.top-nav {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: .8rem 2rem;
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav.top-nav ul {
+      list-style: none;
+      display: flex; flex-wrap: wrap; gap: .3rem 1.2rem;
+      max-width: 1400px; margin: 0 auto;
+    }
+    nav.top-nav a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: .875rem;
+      transition: color .2s;
+    }
+    nav.top-nav a:hover { color: var(--accent); }
+
+    /* ── Doc Hub Navigation ───────────────────────────────────────────── */
+    .doc-hub {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+    }
+    .doc-hub-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      font-size: .85rem;
+    }
+    .doc-hub-label {
+      color: var(--text2);
+      font-weight: 600;
+      margin-bottom: .5rem;
+    }
+    .doc-hub-links {
+      display: flex; flex-wrap: wrap; gap: .8rem 1.2rem;
+    }
+    .doc-hub-links a {
+      color: var(--accent);
+      text-decoration: none;
+      padding: .3rem .6rem;
+      border-radius: 4px;
+      border: 1px solid rgba(88,166,255,.2);
+      transition: all .2s;
+    }
+    .doc-hub-links a:hover {
+      background: rgba(88,166,255,.1);
+      border-color: var(--accent);
+    }
+    .doc-hub-links a.active {
+      background: rgba(88,166,255,.2);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────────────── */
+    body > header,
+    body > nav.top-nav,
+    body > .doc-hub {
+      flex-shrink: 0;
+    }
+    .content-wrapper {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      flex: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem 4rem;
+    }
+    @media (max-width: 768px) {
+      .content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1.5rem 1rem 3rem;
+      }
+    }
+    .container {
+      width: 100%;
+    }
+
+    /* ── Section ──────────────────────────────────────────────────────── */
+    section {
+      margin-bottom: 4rem;
+    }
+    .section-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      padding-bottom: .5rem;
+      border-bottom: 2px solid var(--border);
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .section-number {
+      background: var(--accent);
+      color: var(--bg);
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 800;
+      flex-shrink: 0;
+    }
+    h3 {
+      color: var(--accent4);
+      font-size: 1.15rem;
+      margin: 1.5rem 0 .6rem;
+    }
+    h4 {
+      color: var(--accent2);
+      font-size: 1rem;
+      margin: 1rem 0 .4rem;
+    }
+    p { margin-bottom: .8rem; color: var(--text); }
+    ul, ol { padding-left: 1.5rem; margin-bottom: .8rem; }
+    li { margin-bottom: .4rem; }
+    strong { color: var(--accent4); }
+    em { color: var(--accent5); }
+
+    /* ── Cards ────────────────────────────────────────────────────────── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card-icon { font-size: 2rem; margin-bottom: .6rem; }
+    .card h4 { color: var(--text); font-size: 1rem; margin: 0 0 .5rem; }
+    .card p  { font-size: .88rem; color: var(--text2); margin: 0; }
+
+    /* ── Code blocks ──────────────────────────────────────────────────── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-size: .86rem;
+      line-height: 1.6;
+    }
+    code {
+      font-family: "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+      font-size: .9em;
+    }
+    pre code { font-size: inherit; }
+    p code, li code {
+      background: var(--bg3);
+      padding: .15em .45em;
+      border-radius: 4px;
+      color: var(--accent2);
+      font-size: .88em;
+    }
+
+    /* ── Syntax color hints (manual) ──────────────────────────────────── */
+    .kw  { color: #ff7b72; }   /* keywords: def, class, import, return */
+    .fn  { color: #d2a8ff; }   /* function names */
+    .str { color: #a5d6ff; }   /* strings */
+    .cmt { color: #8b949e; font-style: italic; } /* comments */
+    .num { color: #79c0ff; }   /* numbers */
+    .op  { color: #ff7b72; }   /* operators */
+    .cls { color: #ffa657; }   /* class names */
+    .var { color: #e6edf3; }   /* variables */
+    .dec { color: #7ee787; }   /* decorators / annotations */
+
+    /* ── Info boxes ───────────────────────────────────────────────────── */
+    .box {
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: .92rem;
+    }
+    .box-info    { background: rgba(88,166,255,.08);   border-left: 4px solid var(--accent);  }
+    .box-success { background: rgba(126,231,135,.08);  border-left: 4px solid var(--accent2); }
+    .box-warning { background: rgba(255,166,87,.08);   border-left: 4px solid var(--accent4); }
+    .box-error   { background: rgba(247,129,102,.08);  border-left: 4px solid var(--accent3); }
+    .box-purple  { background: rgba(210,168,255,.08);  border-left: 4px solid var(--accent5); }
+    .box strong  { color: inherit; }
+
+    /* ── Tables ───────────────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: .88rem;
+    }
+    th {
+      background: var(--bg3);
+      color: var(--accent);
+      padding: .7rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:hover td { background: var(--bg3); }
+
+    /* ── Diagram (ASCII-ish) ──────────────────────────────────────────── */
+    .diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: .82rem;
+      color: var(--accent6);
+      white-space: pre;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    /* ── Step list ────────────────────────────────────────────────────── */
+    .steps { counter-reset: step-counter; list-style: none; padding: 0; }
+    .steps li {
+      counter-increment: step-counter;
+      display: flex; gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .steps li::before {
+      content: counter(step-counter);
+      background: var(--accent);
+      color: var(--bg);
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .85rem;
+      flex-shrink: 0; margin-top: .1rem;
+    }
+    .steps li > div { flex: 1; }
+    .steps li strong { color: var(--text); display: block; margin-bottom: .3rem; }
+
+    /* ── Metric cards ─────────────────────────────────────────────────── */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .metric-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .metric-card .metric-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+    }
+    .metric-card .metric-label {
+      font-size: .82rem;
+      color: var(--text2);
+      margin-top: .3rem;
+    }
+    .metric-card .metric-desc {
+      font-size: .8rem;
+      color: var(--text2);
+      margin-top: .5rem;
+    }
+
+    /* ── Comparison columns ───────────────────────────────────────────── */
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+    .compare-col {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+    .compare-col h4 { margin-top: 0; }
+
+    /* ── Progress bar ─────────────────────────────────────────────────── */
+    .progress-row { margin: .5rem 0; }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      font-size: .82rem; color: var(--text2); margin-bottom: .25rem;
+    }
+    .progress-bar {
+      height: 8px; background: var(--bg3);
+      border-radius: 4px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent5) 100%);
+    }
+
+    /* ── TOC Sidebar ──────────────────────────────────────────────────── */
+    .toc {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem 1.2rem;
+      position: sticky;
+      top: 120px;
+      height: fit-content;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+    .toc h3 { color: var(--text); margin-top: 0; font-size: 1rem; }
+    .toc ol { counter-reset: toc-counter; list-style: none; padding: 0; }
+    .toc li {
+      counter-increment: toc-counter;
+      padding: .35rem 0;
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+    .toc li::before {
+      content: counter(toc-counter) ". ";
+      color: var(--accent); font-weight: 700;
+    }
+    .toc a {
+      color: var(--text2);
+      text-decoration: none;
+      transition: color .2s;
+      display: inline;
+    }
+    .toc a:hover { color: var(--accent); }
+    /* Scrollbar styling for TOC */
+    .toc::-webkit-scrollbar { width: 6px; }
+    .toc::-webkit-scrollbar-track { background: transparent; }
+    .toc::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .toc::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ── Footer ───────────────────────────────────────────────────────── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text2);
+      font-size: .85rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════ HEADER -->
+<header>
+  <h1>🤖 Machine Learning no Retail Analytics</h1>
+  <p>Guia completo passo-a-passo — teoria, código, modelos supervisionados &amp; não-supervisionados, OLAP/OLTP e PL/SQL avançado.</p>
+  <div class="badge-row">
+    <span class="badge badge-blue">Python 3.10+</span>
+    <span class="badge badge-green">scikit-learn</span>
+    <span class="badge badge-orange">DuckDB</span>
+    <span class="badge badge-purple">PL/SQL</span>
+    <span class="badge badge-red">OLAP / OLTP</span>
+    <span class="badge badge-blue">Supervised Learning</span>
+    <span class="badge badge-green">Unsupervised Learning</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════ NAV -->
+<nav class="top-nav">
+  <ul>
+    <li><a href="#intro">O que é ML?</a></li>
+    <li><a href="#setup">Setup</a></li>
+    <li><a href="#data">Dados</a></li>
+    <li><a href="#supervised">Supervisionado</a></li>
+    <li><a href="#regression">Regressão</a></li>
+    <li><a href="#classification">Classificação</a></li>
+    <li><a href="#unsupervised">Não-supervisionado</a></li>
+    <li><a href="#clustering">Clustering</a></li>
+    <li><a href="#pca">PCA</a></li>
+    <li><a href="#eval">Avaliação</a></li>
+    <li><a href="#results">O que esperar</a></li>
+    <li><a href="#olap">OLAP vs OLTP</a></li>
+    <li><a href="#plsql">PL/SQL</a></li>
+    <li><a href="#run">Executar</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════ DOC HUB -->
+<div class="doc-hub">
+  <div class="doc-hub-content">
+    <div class="doc-hub-label">📚 Documentation Hub</div>
+    <div class="doc-hub-links">
+      <a href="guia_completo.html">Complete Guide</a>
+      <a href="machine_learning_guide.html" class="active">Machine Learning</a>
+      <a href="setup_and_installation.html">Setup &amp; Install</a>
+      <a href="macos_setup.html">macOS Setup</a>
+      <a href="../index.html">Project Hub</a>
+      <a href="../../learning/modules/repository-setup/criar-repositorio-retail-analytics.html">Publishing</a>
+      <a href="../../learning/modules/zero-to-product/do-zero-ao-produto-final.html">Zero to Product</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ MAIN -->
+<div class="content-wrapper">
+
+  <!-- TOC Sidebar -->
+  <nav class="toc">
+    <h3>📑 Índice</h3>
+    <ol>
+      <li><a href="#intro">O que é Machine Learning? — Conceito e Lógica</a></li>
+      <li><a href="#setup">Setup — Instalar dependências</a></li>
+      <li><a href="#data">Os nossos dados de Retail</a></li>
+      <li><a href="#features">Feature Engineering — preparar dados para ML</a></li>
+      <li><a href="#supervised">Aprendizagem Supervisionada — conceito</a></li>
+      <li><a href="#regression">Regressão — prever net_amount</a></li>
+      <li><a href="#classification">Classificação — prever segmento de cliente</a></li>
+      <li><a href="#cv">Cross-Validation — validação honesta</a></li>
+      <li><a href="#unsupervised">Aprendizagem Não-Supervisionada — conceito</a></li>
+      <li><a href="#clustering">Clustering — K-Means + DBSCAN</a></li>
+      <li><a href="#pca">PCA — Redução de Dimensionalidade</a></li>
+      <li><a href="#eval">Métricas de Avaliação — tim-tim por tim-tim</a></li>
+      <li><a href="#results">O que esperar dos resultados</a></li>
+      <li><a href="#olap">OLAP vs OLTP — diferenças e quando usar cada um</a></li>
+      <li><a href="#plsql">PL/SQL Avançado — Packages, ETL, RFM</a></li>
+      <li><a href="#run">Como executar tudo</a></li>
+    </ol>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+
+  <!-- ══════════════════════════════════════ 1. O QUE É ML -->
+  <section id="intro">
+    <h2 class="section-title"><span class="section-number">1</span> O que é Machine Learning?</h2>
+
+    <p>
+      <strong>Machine Learning (ML)</strong> é a área da Inteligência Artificial que permite a computadores
+      <em>aprender padrões a partir de dados</em> sem serem explicitamente programados com regras fixas.
+    </p>
+
+    <div class="box box-info">
+      <strong>Analogia simples:</strong> Imagine que és novo num supermercado. No primeiro dia perguntas ao gestor
+      o preço de cada produto (regras explícitas). Ao fim de um mês, já sabes estimar o preço de um produto
+      desconhecido pelo tamanho, marca, e categoria. Isso é ML — aprendeste padrões dos dados.
+    </div>
+
+    <h3>As três grandes categorias de ML</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">👨‍🏫</div>
+        <h4>Supervisionado</h4>
+        <p>Treinamos com dados que têm <strong>resposta certa</strong> (label). O modelo aprende a mapear input → output. Exemplo: prever preço de venda, classificar cliente.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h4>Não-Supervisionado</h4>
+        <p>Os dados <strong>não têm labels</strong>. O modelo descobre estrutura oculta por conta própria. Exemplo: agrupar clientes por comportamento.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎮</div>
+        <h4>Por Reforço</h4>
+        <p>O modelo aprende através de <strong>tentativa e erro</strong> recebendo recompensas/punições. Exemplo: AlphaGo, carros autónomos. (fora do scope deste projecto)</p>
+      </div>
+    </div>
+
+    <h3>O fluxo geral de um projecto ML</h3>
+    <div class="diagram">
+┌─────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌──────────────┐
+│   DADOS      │───▶│ FEATURE          │───▶│  TREINAR        │───▶│  AVALIAR     │
+│  (DuckDB)    │    │ ENGINEERING      │    │  MODELO         │    │  MÉTRICAS    │
+│             │    │ (transformar)     │    │  .fit(X, y)     │    │  R², MAE,    │
+│  fct_sales  │    │                  │    │                 │    │  Accuracy    │
+│  customers  │    │  encode strings  │    │  Linear Reg.    │    │              │
+│  products   │    │  create features │    │  Random Forest  │    │              │
+│  stores     │    │  scale numbers   │    │  K-Means        │    │              │
+└─────────────┘    └──────────────────┘    └─────────────────┘    └──────┬───────┘
+                                                                          │
+                                                    ┌─────────────────────▼──────┐
+                                                    │  DEPLOY / USAR              │
+                                                    │  .predict(new_data)        │
+                                                    └────────────────────────────┘
+    </div>
+
+    <h3>Por que usar ML em Retail Analytics?</h3>
+    <table>
+      <tr><th>Problema de Negócio</th><th>Tipo de ML</th><th>Modelo</th></tr>
+      <tr><td>Prever receita de uma venda</td><td>Regressão</td><td>Random Forest Regressor</td></tr>
+      <tr><td>Classificar segmento de cliente</td><td>Classificação</td><td>Random Forest Classifier</td></tr>
+      <tr><td>Descobrir grupos de clientes</td><td>Clustering</td><td>K-Means, DBSCAN</td></tr>
+      <tr><td>Detectar clientes anómalos</td><td>Anomaly Detection</td><td>DBSCAN (-1 = outlier)</td></tr>
+      <tr><td>Visualizar clusters em 2D</td><td>Dim. Reduction</td><td>PCA</td></tr>
+      <tr><td>Prever abandono de cliente</td><td>Classificação</td><td>Logistic Regression</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════════════════════════════════ 2. SETUP -->
+  <section id="setup">
+    <h2 class="section-title"><span class="section-number">2</span> Setup — Instalar Dependências</h2>
+
+    <p>O ficheiro <code>requirements.txt</code> já inclui as dependências ML. Para instalar:</p>
+
+    <pre><code><span class="cmt"># 1. Criar e activar virtual environment (se ainda não fizeste)</span>
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1      <span class="cmt"># Windows PowerShell</span>
+<span class="cmt"># source .venv/bin/activate        # macOS/Linux</span>
+
+<span class="cmt"># 2. Instalar todas as dependências incluindo ML</span>
+pip install -r requirements.txt
+
+<span class="cmt"># 3. Verificar instalação do scikit-learn</span>
+python -c "import sklearn; print(sklearn.__version__)"</code></pre>
+
+    <h3>Dependências ML adicionadas ao requirements.txt</h3>
+    <table>
+      <tr><th>Pacote</th><th>Versão</th><th>Para quê</th></tr>
+      <tr><td><code>scikit-learn</code></td><td>≥1.5</td><td>Todos os algoritmos ML (Linear Regression, Random Forest, K-Means, PCA…)</td></tr>
+      <tr><td><code>matplotlib</code></td><td>≥3.9</td><td>Gráficos base (curvas de aprendizagem, scatter plots)</td></tr>
+      <tr><td><code>seaborn</code></td><td>≥0.13</td><td>Gráficos estatísticos bonitos (heatmaps, distribuições)</td></tr>
+      <tr><td><code>joblib</code></td><td>≥1.4</td><td>Guardar/carregar modelos treinados em disco</td></tr>
+      <tr><td><code>numpy</code></td><td>≥1.26</td><td>Cálculo numérico (vem com pandas/sklearn mas explicitamos)</td></tr>
+    </table>
+
+    <div class="box box-warning">
+      <strong>⚠️ Antes de correr o script ML:</strong> é necessário ter a pipeline de dados já executada.
+      Corre primeiro: <code>python python/run_pipeline.py</code> para gerar o DuckDB com dados.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════ 3. DADOS -->
+  <section id="data">
+    <h2 class="section-title"><span class="section-number">3</span> Os Nossos Dados de Retail</h2>
+
+    <p>
+      Antes de fazer qualquer ML é fundamental <strong>conhecer os dados</strong> que vamos usar.
+      O nosso DuckDB tem as seguintes tabelas:
+    </p>
+
+    <div class="diagram">
+   fct_sales (tabela de factos — uma linha por item de venda)
+   ┌───────────────┬──────────┬──────────────────────────────────────────────┐
+   │ Coluna        │ Tipo     │ Descrição                                     │
+   ├───────────────┼──────────┼──────────────────────────────────────────────┤
+   │ transaction_id│ INTEGER  │ ID da transacção                              │
+   │ transaction_date│ DATE   │ Data da venda                                 │
+   │ customer_id   │ INTEGER  │ FK → customers                                │
+   │ store_id      │ INTEGER  │ FK → stores                                   │
+   │ product_id    │ INTEGER  │ FK → dim_products                             │
+   │ quantity      │ INTEGER  │ Unidades vendidas (1-4)                       │
+   │ unit_price    │ DECIMAL  │ Preço unitário (€0.90-€45.00)                 │
+   │ discount_pct  │ DECIMAL  │ Desconto aplicado (0, 5, 10, 15%)             │
+   │ gross_amount  │ DECIMAL  │ quantity × unit_price                         │
+   │ net_amount    │ DECIMAL  │ gross × (1 - discount/100)  ← TARGET regressão│
+   │ payment_method│ VARCHAR  │ cash | card | mbway                           │
+   └───────────────┴──────────┴──────────────────────────────────────────────┘
+
+   customers:  300 clientes com segmentos: budget | family | premium | business
+   products:   80 produtos em 6 categorias: beverage | bakery | dairy | frozen | snacks | cleaning
+   stores:     12 lojas nas regiões: north | center | south
+   fct_sales:  ~5,500-8,000 linhas de vendas (2024-2025)
+    </div>
+
+    <h3>O que queremos prever com ML?</h3>
+    <div class="compare">
+      <div class="compare-col">
+        <h4>🎯 Targets Supervisionados</h4>
+        <ul>
+          <li><strong>net_amount</strong> — valor real (€) de cada linha de venda <em>(Regressão)</em></li>
+          <li><strong>customer_segment</strong> — budget/family/premium/business <em>(Classificação)</em></li>
+        </ul>
+      </div>
+      <div class="compare-col">
+        <h4>🔍 Descobertas Não-Supervisionadas</h4>
+        <ul>
+          <li><strong>Grupos de clientes</strong> baseados em comportamento de compra <em>(Clustering)</em></li>
+          <li><strong>Estrutura em 2D</strong> dos clusters para visualização <em>(PCA)</em></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════ 4. FEATURE ENGINEERING -->
+  <section id="features">
+    <h2 class="section-title"><span class="section-number">4</span> Feature Engineering</h2>
+
+    <p>
+      <strong>Feature Engineering</strong> é o processo de transformar dados brutos em <em>features</em>
+      (variáveis de entrada) que os algoritmos de ML conseguem processar.
+      É frequentemente o passo mais importante — melhores features &gt; melhores modelos.
+    </p>
+
+    <div class="box box-info">
+      <strong>Regra de ouro:</strong> Os modelos de ML só trabalham com <em>números</em>.
+      Strings como <code>"beverage"</code> ou <code>"budget"</code> têm de ser convertidas para inteiros.
+    </div>
+
+    <h3>Transformações aplicadas no nosso script</h3>
+    <table>
+      <tr><th>Dado original</th><th>Transformação</th><th>Resultado</th><th>Porquê</th></tr>
+      <tr><td><code>category = "dairy"</code></td><td>LabelEncoder</td><td><code>category_encoded = 2</code></td><td>Converte string → int</td></tr>
+      <tr><td><code>transaction_date</code></td><td>Date decomposition</td><td><code>month=3, day_of_week=1, is_weekend=0</code></td><td>Captura padrões temporais</td></tr>
+      <tr><td><code>discount_pct > 0</code></td><td>Boolean flag</td><td><code>has_discount = 1</code></td><td>Feature binária mais clara</td></tr>
+      <tr><td><code>unit_price</code></td><td>StandardScaler</td><td>média=0, std=1</td><td>Normaliza escala para modelos lineares</td></tr>
+    </table>
+
+    <pre><code><span class="cmt"># Feature Engineering simplificado — o que o script faz</span>
+
+<span class="cmt"># 1. Datas → componentes numéricas</span>
+df[<span class="str">"day_of_week"</span>] = df[<span class="str">"transaction_date"</span>].dt.dayofweek   <span class="cmt"># 0=Segunda, 6=Domingo</span>
+df[<span class="str">"month"</span>]       = df[<span class="str">"transaction_date"</span>].dt.month       <span class="cmt"># 1-12</span>
+df[<span class="str">"is_weekend"</span>]  = (df[<span class="str">"day_of_week"</span>] &gt;= 5).astype(<span class="num">int</span>)  <span class="cmt"># 0 ou 1</span>
+
+<span class="cmt"># 2. Strings → inteiros (LabelEncoder)</span>
+le = <span class="cls">LabelEncoder</span>()
+df[<span class="str">"category_encoded"</span>] = le.fit_transform(df[<span class="str">"category"</span>])
+<span class="cmt"># "bakery"→0, "beverage"→1, "cleaning"→2, "dairy"→3, "frozen"→4, "snacks"→5</span>
+
+<span class="cmt"># 3. Normalização para modelos lineares</span>
+scaler = <span class="cls">StandardScaler</span>()
+X_scaled = scaler.fit_transform(X_train)   <span class="cmt"># média=0, desvio_padrão=1</span></code></pre>
+
+    <div class="box box-warning">
+      <strong>⚠️ Cuidado: Data Leakage</strong><br>
+      Nunca uses <code>scaler.fit()</code> nos dados de teste! O scaler deve ser ajustado <em>apenas</em>
+      no treino e depois aplicado ao teste. Se fizeres fit no conjunto completo, o modelo "vê" o futuro
+      e as métricas ficam infladas artificialmente.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════ 5. SUPERVISIONADO -->
+  <section id="supervised">
+    <h2 class="section-title"><span class="section-number">5</span> Aprendizagem Supervisionada — Conceito</h2>
+
+    <p>
+      Na aprendizagem supervisionada temos um conjunto de dados onde <strong>cada exemplo tem uma resposta certa</strong>
+      (chamada de <em>label</em> ou <em>target</em>).
+      O modelo aprende uma função que mapeia features (X) → target (y).
+    </p>
+
+    <div class="diagram">
+  TREINO:
+  ┌────────────────────────────────────┬──────────────┐
+  │  X (features)                      │  y (target)  │
+  ├────────────────────────────────────┼──────────────┤
+  │ qty=2, price=4.5, cat=dairy, ...   │  net=8.55    │
+  │ qty=1, price=22.0, cat=frozen, ... │  net=18.70   │
+  │ qty=3, price=1.2,  cat=bakery, ... │  net=3.42    │
+  │ ...                                │  ...         │
+  └────────────────────────────────────┴──────────────┘
+                    │ model.fit(X_train, y_train)
+                    ▼
+             MODELO TREINADO
+                    │ model.predict(X_new)
+                    ▼
+  ┌───────────────────────────────────────────────────┐
+  │  X_new: qty=2, price=5.0, cat=snacks, ...         │
+  │  ŷ (previsão) = 9.25 €                             │
+  └───────────────────────────────────────────────────┘
+    </div>
+
+    <div class="compare">
+      <div class="compare-col">
+        <h4>🔢 Regressão</h4>
+        <p>O target é um <strong>número contínuo</strong>.</p>
+        <ul>
+          <li>Prever o valor de uma venda (€)</li>
+          <li>Prever temperatura amanhã</li>
+          <li>Prever preço de casa</li>
+        </ul>
+        <p>Métricas: <em>MAE, RMSE, R²</em></p>
+      </div>
+      <div class="compare-col">
+        <h4>🏷️ Classificação</h4>
+        <p>O target é uma <strong>categoria/classe</strong>.</p>
+        <ul>
+          <li>Prever segmento do cliente (budget/premium/…)</li>
+          <li>Spam vs não-spam</li>
+          <li>Doença vs saudável</li>
+        </ul>
+        <p>Métricas: <em>Accuracy, F1, Precision, Recall</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════ 6. REGRESSÃO -->
+  <section id="regression">
+    <h2 class="section-title"><span class="section-number">6</span> Regressão — Prever net_amount</h2>
+
+    <p>
+      Queremos prever quanto vale cada linha de venda (<code>net_amount</code>) dado o produto,
+      quantidade, desconto, data, cliente e loja. Testamos 4 modelos com complexidade crescente.
+    </p>
+
+    <h3>Modelo 1: Linear Regression</h3>
+    <div class="box box-info">
+      <strong>Teoria:</strong> Ajusta uma hiperplano linear aos dados. Equação:
+      <code>ŷ = β₀ + β₁×qty + β₂×price + β₃×discount + ...</code>
+      Cada β (coeficiente) indica o impacto de cada feature na previsão.
+    </div>
+    <ul>
+      <li><strong>Vantagens:</strong> Extremamente rápido, interpretável, bom como baseline</li>
+      <li><strong>Desvantagens:</strong> Assume relação linear — falha em padrões complexos</li>
+      <li><strong>Quando usar:</strong> Sempre como primeiro modelo de comparação</li>
+    </ul>
+
+    <pre><code><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> <span class="cls">LinearRegression</span>
+
+model = <span class="cls">LinearRegression</span>()
+model.fit(X_train_scaled, y_train)    <span class="cmt"># aprende coeficientes</span>
+predictions = model.predict(X_test_scaled)
+
+<span class="cmt"># Coeficientes: quanto cada feature influencia net_amount</span>
+<span class="kw">for</span> feat, coef <span class="kw">in</span> zip(feature_names, model.coef_):
+    <span class="fn">print</span>(<span class="str">f"  {feat:25s}: {coef:+.4f}"</span>)</code></pre>
+
+    <h3>Modelo 2: Decision Tree Regressor</h3>
+    <div class="box box-info">
+      <strong>Teoria:</strong> Divide os dados em regiões através de if/else recursivos.
+      Em cada nó pergunta: "feature X &gt; threshold?" e divide em 2 ramos.
+      A previsão final é a média do y na folha.
+    </div>
+    <div class="diagram">
+  unit_price > 10?
+  ├── SIM (acima de €10)
+  │     discount_pct > 0?
+  │     ├── SIM → média_net = 18.50 €
+  │     └── NÃO → média_net = 22.10 €
+  └── NÃO (abaixo de €10)
+        quantity > 2?
+        ├── SIM → média_net = 5.80 €
+        └── NÃO → média_net = 3.20 €
+    </div>
+    <ul>
+      <li><strong>Vantagens:</strong> Visualmente interpretável, captura não-linearidades</li>
+      <li><strong>Desvantagens:</strong> Tende a overfit (memoriza dados de treino), instável</li>
+      <li><strong>max_depth=6:</strong> Limitamos profundidade para controlar overfit</li>
+    </ul>
+
+    <h3>Modelo 3: Random Forest Regressor</h3>
+    <div class="box box-success">
+      <strong>Teoria:</strong> Constrói N=100 árvores de decisão diferentes (cada uma treinada em
+      amostra aleatória dos dados e features). A previsão final é a <strong>média</strong> de todas as árvores.
+      Isso reduz drásticamente o overfit — chama-se <em>ensemble learning</em> e <em>bagging</em>.
+    </div>
+    <div class="diagram">
+  Dados de treino
+       │
+   bootstrap sampling (cada árvore usa ~63% dos dados aleatoriamente)
+       │
+  ┌────┴────┐
+  │ Árvore 1│ → ŷ₁ = 12.40
+  │ Árvore 2│ → ŷ₂ = 11.80
+  │ Árvore 3│ → ŷ₃ = 12.95
+  │   ...   │
+  │Árvore 100│ → ŷ₁₀₀ = 12.20
+  └─────────┘
+       │
+   Média → ŷ_final = 12.47 €  (muito mais estável que 1 árvore só)
+    </div>
+    <ul>
+      <li><strong>Feature Importance:</strong> O RF calcula automaticamente quais features mais contribuem → guardamos em <code>regression_feature_importance.csv</code></li>
+      <li><strong>n_jobs=-1:</strong> usa todos os núcleos da CPU para paralelizar treino</li>
+    </ul>
+
+    <h3>Modelo 4: Gradient Boosting</h3>
+    <div class="box box-purple">
+      <strong>Teoria:</strong> Ao contrário do Random Forest (paralelo/bagging), o Gradient Boosting
+      treina árvores <strong>sequencialmente</strong>. Cada nova árvore tenta corrigir os erros da anterior.
+      Tecnicamente, minimiza o gradiente de uma função de perda — daí o nome.
+    </div>
+    <ul>
+      <li><strong>Geralmente mais preciso</strong> que Random Forest mas mais lento a treinar</li>
+      <li><strong>Variantes populares:</strong> XGBoost, LightGBM, CatBoost (não incluídas mas compatíveis)</li>
+      <li><strong>Hiperparâmetros chave:</strong> <code>n_estimators</code>, <code>learning_rate</code>, <code>max_depth</code></li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════════════════════ 7. CLASSIFICAÇÃO -->
+  <section id="classification">
+    <h2 class="section-title"><span class="section-number">7</span> Classificação — Prever Segmento de Cliente</h2>
+
+    <p>
+      Em vez de prever um número, queremos prever uma <strong>categoria</strong>:
+      a que segmento pertence um cliente — <code>budget</code>, <code>family</code>, <code>premium</code> ou <code>business</code>.
+    </p>
+
+    <div class="box box-info">
+      <strong>Como?</strong> Primeiro agregamos as vendas ao nível de cliente:
+      total gasto, número de transações, desconto médio, categoria favorita, etc.
+      Depois usamos esses aggregados como features para classificar o segmento.
+    </div>
+
+    <h3>Features de Classificação (nível cliente)</h3>
+    <table>
+      <tr><th>Feature</th><th>Calculo</th><th>Intuição</th></tr>
+      <tr><td><code>total_spent</code></td><td>SUM(net_amount)</td><td>Clientes premium gastam mais no total</td></tr>
+      <tr><td><code>avg_basket</code></td><td>AVG(net_amount)</td><td>Ticket médio por item</td></tr>
+      <tr><td><code>num_transactions</code></td><td>COUNT DISTINCT(transaction_id)</td><td>Frequência de visita</td></tr>
+      <tr><td><code>avg_quantity</code></td><td>AVG(quantity)</td><td>Clientes business compram mais unidades</td></tr>
+      <tr><td><code>avg_discount</code></td><td>AVG(discount_pct)</td><td>Clientes budget procuram descontos</td></tr>
+      <tr><td><code>favourite_category</code></td><td>MODE(category)</td><td>Categoria mais comprada</td></tr>
+    </table>
+
+    <h3>Modelo 1: Logistic Regression (classificação)</h3>
+    <div class="box box-info">
+      <strong>Atenção ao nome:</strong> Apesar de se chamar "Regression", é um classificador.
+      Calcula a probabilidade de cada classe usando a função sigmoide/softmax.
+      <code>P(classe=premium | features) = softmax(W·X + b)</code>
+    </div>
+
+    <h3>Modelo 2: Decision Tree Classifier</h3>
+    <p>Igual ao de regressão mas nas folhas tem a <strong>classe maioritária</strong> em vez da média.</p>
+
+    <h3>Modelo 3: Random Forest Classifier</h3>
+    <p>100 árvores de classificação — previsão final é a <strong>votação maioritária</strong> de todas as árvores.</p>
+
+    <h3>O que é o Classification Report?</h3>
+    <pre><code>              precision  recall  f1-score  support
+      budget       0.62      0.58      0.60       15
+      business     0.55      0.61      0.58       13
+      family       0.60      0.63      0.61       16
+      premium      0.67      0.60      0.63       15
+
+    accuracy                          0.61       59</code></pre>
+
+    <table>
+      <tr><th>Métrica</th><th>Fórmula</th><th>Significado</th></tr>
+      <tr><td><strong>Precision</strong></td><td>TP / (TP + FP)</td><td>Das vezes que o modelo disse "budget", quantas estavam certas?</td></tr>
+      <tr><td><strong>Recall</strong></td><td>TP / (TP + FN)</td><td>De todos os clientes "budget" reais, quantos detectámos?</td></tr>
+      <tr><td><strong>F1-Score</strong></td><td>2 × (P × R) / (P + R)</td><td>Balanço harmónico entre precision e recall</td></tr>
+      <tr><td><strong>Support</strong></td><td>Count</td><td>Quantos exemplos desta classe no teste</td></tr>
+      <tr><td><strong>Accuracy</strong></td><td>(TP+TN) / Total</td><td>% de previsões correctas no total</td></tr>
+    </table>
+
+    <div class="box box-warning">
+      <strong>Quando accuracy é enganosa:</strong> Se 90% dos clientes forem "budget",
+      um modelo que prevê sempre "budget" tem 90% de accuracy mas é inútil.
+      Verifica sempre precision + recall por classe.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════ 8. CROSS-VALIDATION -->
+  <section id="cv">
+    <h2 class="section-title"><span class="section-number">8</span> Cross-Validation — Validação Honesta</h2>
+
+    <p>
+      Um simples split 80/20 pode ter sorte ou azar dependendo de quais dados caem no teste.
+      <strong>Cross-Validation</strong> repete o processo N vezes com partições diferentes.
+    </p>
+
+    <div class="diagram">
+  5-Fold Cross-Validation:
+  
+  Fold 1:  [TEST] [TRAIN] [TRAIN] [TRAIN] [TRAIN]  → R² = 0.87
+  Fold 2:  [TRAIN] [TEST] [TRAIN] [TRAIN] [TRAIN]  → R² = 0.84
+  Fold 3:  [TRAIN] [TRAIN] [TEST] [TRAIN] [TRAIN]  → R² = 0.88
+  Fold 4:  [TRAIN] [TRAIN] [TRAIN] [TEST] [TRAIN]  → R² = 0.85
+  Fold 5:  [TRAIN] [TRAIN] [TRAIN] [TRAIN] [TEST]  → R² = 0.86
+
+  Resultado: Mean R² = 0.860 ± 0.013
+             (muito mais confiável que um único split!)
+    </div>
+
+    <pre><code><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> cross_val_score
+
+rf = <span class="cls">RandomForestRegressor</span>(n_estimators=<span class="num">50</span>, random_state=<span class="num">42</span>)
+scores = cross_val_score(rf, X, y, cv=<span class="num">5</span>, scoring=<span class="str">'r2'</span>)
+
+<span class="fn">print</span>(<span class="str">f"R² por fold: {scores}"</span>)       <span class="cmt"># [0.87, 0.84, 0.88, 0.85, 0.86]</span>
+<span class="fn">print</span>(<span class="str">f"Média: {scores.mean():.4f}"</span>)  <span class="cmt"># 0.8600</span>
+<span class="fn">print</span>(<span class="str">f"Std:   {scores.std():.4f}"</span>)   <span class="cmt"># 0.0130 — baixo = estável!</span></code></pre>
+  </section>
+
+  <!-- ══════════════════════════════════════ 9. NÃO-SUPERVISIONADO -->
+  <section id="unsupervised">
+    <h2 class="section-title"><span class="section-number">9</span> Aprendizagem Não-Supervisionada</h2>
+
+    <p>
+      Não temos labels/respostas certas. O algoritmo explora a <strong>estrutura interna dos dados</strong>
+      para descobrir padrões escondidos.
+    </p>
+
+    <div class="box box-purple">
+      <strong>Analogia:</strong> Imagina que recebes um ficheiro de 300 clientes sem qualquer etiqueta.
+      Não sabes quem são "premium" ou "budget". Analisas o comportamento de compra e naturalmente
+      notas grupos: uns compram muito e com frequência (champions), outros só em promoções (bargain hunters),
+      outros raramente (lost customers). Isso é clustering!
+    </div>
+
+    <h3>Quando usar Não-Supervisionado?</h3>
+    <ul>
+      <li>Não tens labels históricas para treinar</li>
+      <li>Queres descobrir segmentos de mercado desconhecidos</li>
+      <li>Queres detectar anomalias/outliers</li>
+      <li>Queres reduzir dimensionalidade para visualização</li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════════════════════ 10. CLUSTERING -->
+  <section id="clustering">
+    <h2 class="section-title"><span class="section-number">10</span> Clustering — Agrupar Clientes</h2>
+
+    <p>
+      Features usadas por cliente: <code>total_spent</code>, <code>avg_basket</code>,
+      <code>num_transactions</code>, <code>avg_quantity</code>, <code>avg_discount</code>.
+    </p>
+
+    <h3>Algoritmo 1: K-Means</h3>
+    <div class="box box-info">
+      <strong>Teoria:</strong> Divide N pontos em K grupos (clusters).
+      <br><strong>Funcionamento iterativo:</strong>
+      <ol>
+        <li>Escolhe K centróides aleatórios</li>
+        <li>Cada ponto é atribuído ao centróide mais próximo (distância Euclidiana)</li>
+        <li>Actualiza centróides = média de todos os pontos no cluster</li>
+        <li>Repete até convergir (centróides não mudam)</li>
+      </ol>
+    </div>
+
+    <div class="diagram">
+  ITERAÇÃO 1:                    ITERAÇÃO FINAL (convergido):
+  
+  ×  × ★ ×                      ×  × ★ ×
+  ×   ★  ×     → itera →        ×   ★  ×
+  ★ ○  ○  ○                      ★  ○  ○
+     ○   ○                           ○   ○
+
+  ★ = centróide   × = cluster A    ○ = cluster B
+    </div>
+
+    <pre><code><span class="kw">from</span> sklearn.cluster <span class="kw">import</span> <span class="cls">KMeans</span>
+<span class="kw">from</span> sklearn.metrics  <span class="kw">import</span> silhouette_score
+
+<span class="cmt"># Determinar k óptimo com o "Elbow Method"</span>
+inertias = {}
+<span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">2</span>, <span class="num">9</span>):
+    km = <span class="cls">KMeans</span>(n_clusters=k, random_state=<span class="num">42</span>, n_init=<span class="num">10</span>)
+    km.fit(X_scaled)
+    inertias[k] = km.inertia_   <span class="cmt"># soma das distâncias ao centróide</span>
+
+<span class="cmt"># k onde a curva "dobra" = elbow = melhor k</span>
+<span class="cmt"># Neste projecto esperamos k=4 (os 4 segmentos originais)</span>
+
+kmeans = <span class="cls">KMeans</span>(n_clusters=<span class="num">4</span>, random_state=<span class="num">42</span>)
+labels = kmeans.fit_predict(X_scaled)
+sil = silhouette_score(X_scaled, labels)
+<span class="fn">print</span>(<span class="str">f"Silhouette Score: {sil:.4f}"</span>)  <span class="cmt"># 0.0-1.0, maior = melhor</span></code></pre>
+
+    <h3>Elbow Method — Escolher o K óptimo</h3>
+    <div class="diagram">
+  Inércia (soma das distâncias²)
+  │
+  │\
+  │ \
+  │  \         ← "cotovelo" aqui = k óptimo (k=4 neste caso)
+  │   \____
+  │        \____
+  └──────────────── k
+  2  3  4  5  6  7  8
+    </div>
+
+    <h3>Algoritmo 2: DBSCAN</h3>
+    <div class="box box-info">
+      <strong>Teoria (Density-Based Spatial Clustering of Applications with Noise):</strong>
+      Em vez de centróides, baseia-se em <em>densidade</em>. Um cluster é uma região densa de pontos.
+      Pontos isolados em regiões pouco densas são marcados como <strong>noise (-1)</strong> = outliers.
+    </div>
+
+    <table>
+      <tr><th>Parâmetro</th><th>Significado</th><th>Nosso valor</th></tr>
+      <tr><td><code>eps</code></td><td>Raio da vizinhança</td><td>0.8 (em espaço normalizado)</td></tr>
+      <tr><td><code>min_samples</code></td><td>Mínimo de pontos para formar cluster</td><td>5</td></tr>
+    </table>
+
+    <div class="compare">
+      <div class="compare-col">
+        <h4>K-Means</h4>
+        <ul>
+          <li>Precisa de especificar K</li>
+          <li>Clusters esféricos</li>
+          <li>Todos os pontos têm cluster</li>
+          <li>Rápido, escalável</li>
+        </ul>
+      </div>
+      <div class="compare-col">
+        <h4>DBSCAN</h4>
+        <ul>
+          <li>K é automático</li>
+          <li>Clusters de qualquer forma</li>
+          <li>Detecta outliers (-1)</li>
+          <li>Sensível a eps e min_samples</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════ 11. PCA -->
+  <section id="pca">
+    <h2 class="section-title"><span class="section-number">11</span> PCA — Redução de Dimensionalidade</h2>
+
+    <p>
+      Temos 5 features de cliente. É impossível visualizar 5 dimensões num gráfico.
+      O <strong>PCA (Principal Component Analysis)</strong> encontra as 2 direcções de maior variância
+      e projeta todos os pontos nesse espaço 2D.
+    </p>
+
+    <div class="box box-purple">
+      <strong>Matemática (simplificada):</strong> PCA calcula os autovectores da matriz de covariância dos dados.
+      O primeiro autovector (PC1) aponta na direcção de maior variância.
+      O segundo (PC2) é perpendicular ao PC1 e tem a segunda maior variância.
+      Projectar em PC1+PC2 é como "achatar" os dados para o chão preservando o máximo de informação.
+    </div>
+
+    <div class="diagram">
+  Dados originais em 5D → PCA → Projecção em 2D
+
+  Antes:  [total_spent, avg_basket, num_tx, avg_qty, avg_discount]
+                            ↓ PCA
+  Depois: [PC1, PC2]
+
+  PC1 = 0.72 × total_spent + 0.51 × avg_basket + 0.31 × num_tx + ...
+  PC2 = -0.45 × total_spent + 0.62 × avg_basket + 0.41 × num_tx + ...
+
+  Scatter 2D (muito mais interpretável!):
+       PC2
+        │      Cluster 0 ●●●
+        │   ●● Cluster 1 ○○○
+        │ ●●○○○  Cluster 2 ▲▲▲
+        │   ▲▲ Cluster 3 ■■■
+        └──────────── PC1
+    </div>
+
+    <pre><code><span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> <span class="cls">PCA</span>
+
+<span class="cmt"># Reduzir para 2 componentes principais</span>
+pca = <span class="cls">PCA</span>(n_components=<span class="num">2</span>, random_state=<span class="num">42</span>)
+coords_2d = pca.fit_transform(X_scaled)   <span class="cmt"># shape: (n_customers, 2)</span>
+
+<span class="cmt"># Variância explicada</span>
+ev = pca.explained_variance_ratio_
+<span class="fn">print</span>(<span class="str">f"PC1 explica {ev[0]*100:.1f}% da variância"</span>)
+<span class="fn">print</span>(<span class="str">f"PC2 explica {ev[1]*100:.1f}% da variância"</span>)
+<span class="fn">print</span>(<span class="str">f"Total: {sum(ev)*100:.1f}%"</span>)   <span class="cmt"># esperamos ~70-85%</span>
+
+<span class="cmt"># Ver todos os componentes (curva de scree)</span>
+pca_full = <span class="cls">PCA</span>()
+pca_full.fit(X_scaled)
+cumvar = np.cumsum(pca_full.explained_variance_ratio_)
+<span class="cmt"># [0.45, 0.72, 0.88, 0.97, 1.00] → 3 componentes explicam 88%</span></code></pre>
+  </section>
+
+  <!-- ══════════════════════════════════════ 12. MÉTRICAS -->
+  <section id="eval">
+    <h2 class="section-title"><span class="section-number">12</span> Métricas de Avaliação — Tim-tim por Tim-tim</h2>
+
+    <h3>Métricas de Regressão</h3>
+    <div class="metric-grid">
+      <div class="metric-card">
+        <span class="metric-value">MAE</span>
+        <div class="metric-label">Mean Absolute Error</div>
+        <div class="metric-desc">Erro médio absoluto em €. <br>MAE=2.5 → erro médio de €2.50 por linha</div>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">RMSE</span>
+        <div class="metric-label">Root Mean Squared Error</div>
+        <div class="metric-desc">Penaliza erros grandes. Sempre ≥ MAE. Sensível a outliers.</div>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">R²</span>
+        <div class="metric-label">Coefficient of Determination</div>
+        <div class="metric-desc">% de variância explicada. R²=0.85 → modelo explica 85% da variação</div>
+      </div>
+    </div>
+
+    <div class="box box-info">
+      <strong>Fórmulas:</strong><br>
+      <code>MAE  = mean(|y - ŷ|)</code><br>
+      <code>RMSE = sqrt(mean((y - ŷ)²))</code><br>
+      <code>R²   = 1 - SS_res / SS_tot</code>  onde SS_res = Σ(y-ŷ)², SS_tot = Σ(y-ȳ)²
+    </div>
+
+    <h3>Interpretação de R²</h3>
+    <div class="progress-row">
+      <div class="progress-label"><span>R² = 0.90+</span><span>Excelente</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label"><span>R² = 0.75-0.90</span><span>Bom</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label"><span>R² = 0.50-0.75</span><span>Aceitável</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+    </div>
+    <div class="progress-row">
+      <div class="progress-label"><span>R² &lt; 0.50</span><span>Fraco</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+    </div>
+
+    <h3>Métricas de Clustering</h3>
+    <div class="box box-purple">
+      <strong>Silhouette Score</strong> — Mede quão bem cada ponto está no seu cluster.<br>
+      <code>s = (b - a) / max(a, b)</code><br>
+      onde: <code>a</code> = distância média ao cluster próprio; <code>b</code> = distância média ao cluster mais próximo.<br>
+      Range: <strong>[-1, 1]</strong> — quanto mais alto melhor. Valores negativos indicam ponto no cluster errado.
+    </div>
+
+    <table>
+      <tr><th>Valor Silhouette</th><th>Interpretação</th></tr>
+      <tr><td>0.70 – 1.00</td><td>Clusters muito bem definidos</td></tr>
+      <tr><td>0.50 – 0.70</td><td>Clusters razoáveis</td></tr>
+      <tr><td>0.25 – 0.50</td><td>Clusters fracos (pode haver sobreposição)</td></tr>
+      <tr><td>&lt; 0.25</td><td>Sem estrutura clara nos dados</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════════════════════════════════ 13. O QUE ESPERAR -->
+  <section id="results">
+    <h2 class="section-title"><span class="section-number">13</span> O que Esperar dos Resultados</h2>
+
+    <div class="box box-warning">
+      <strong>⚠️ Importante:</strong> Os dados são sintéticos (gerados por <code>generate_data.py</code>).
+      Os segmentos foram atribuídos aleatoriamente, sem relação real com o comportamento de compra.
+      Por isso a accuracy de classificação será próxima do aleatório (~25% para 4 classes).
+      Em dados reais, seria muito mais alto.
+    </div>
+
+    <h3>Regressão (prever net_amount)</h3>
+    <table>
+      <tr><th>Modelo</th><th>R² esperado</th><th>Porquê</th></tr>
+      <tr><td>Linear Regression</td><td>~0.85–0.92</td><td>net_amount = qty × price × (1-discount) — relação quase linear!</td></tr>
+      <tr><td>Decision Tree</td><td>~0.88–0.94</td><td>Captura interacções não-lineares entre qty e price</td></tr>
+      <tr><td>Random Forest</td><td>~0.92–0.97</td><td>Ensemble reduz variância, muito bom neste tipo de dado</td></tr>
+      <tr><td>Gradient Boosting</td><td>~0.93–0.98</td><td>Ligeiramente melhor que RF, mas mais lento</td></tr>
+    </table>
+
+    <div class="box box-success">
+      <strong>Porquê R² tão alto na regressão?</strong> Porque <code>net_amount = quantity × unit_price × (1 - discount/100)</code>
+      é uma fórmula determinística que o modelo pode aprender quase perfeitamente com as features certas (qty, price, discount).
+      Nos dados reais, R² de 0.7-0.85 já é considerado muito bom.
+    </div>
+
+    <h3>Classificação (prever segmento)</h3>
+    <table>
+      <tr><th>Modelo</th><th>Accuracy esperada</th><th>Porquê</th></tr>
+      <tr><td>Logistic Regression</td><td>~25–35%</td><td>Segmentos aleatórios — pouco sinal nas features</td></tr>
+      <tr><td>Decision Tree</td><td>~28–38%</td><td>Ligeiramente melhor, captura interacções</td></tr>
+      <tr><td>Random Forest</td><td>~30–40%</td><td>O melhor dos três, mas ainda limitado pelos dados</td></tr>
+    </table>
+
+    <h3>Clustering</h3>
+    <table>
+      <tr><th>Modelo</th><th>Resultado esperado</th></tr>
+      <tr><td>K-Means (k=4)</td><td>Silhouette ~0.20–0.40 (clusters sobrepostos porque segmentos são aleatórios)</td></tr>
+      <tr><td>DBSCAN</td><td>Vários clusters pequenos + muitos pontos como noise (-1)</td></tr>
+    </table>
+
+    <h3>PCA</h3>
+    <table>
+      <tr><th>Componente</th><th>Variância esperada</th></tr>
+      <tr><td>PC1</td><td>~40–50% (dominado por total_spent + avg_basket)</td></tr>
+      <tr><td>PC2</td><td>~20–30%</td></tr>
+      <tr><td>PC1 + PC2</td><td>~60–75% do total</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════════════════════════════════ 14. OLAP vs OLTP -->
+  <section id="olap">
+    <h2 class="section-title"><span class="section-number">14</span> OLAP vs OLTP — Diferenças e Quando Usar</h2>
+
+    <div class="compare">
+      <div class="compare-col">
+        <h4>🏪 OLTP — Online Transaction Processing</h4>
+        <ul>
+          <li><strong>Schema:</strong> Normalizado (3NF)</li>
+          <li><strong>Operações:</strong> INSERT, UPDATE, DELETE rápidos</li>
+          <li><strong>Utilizadores:</strong> Milhares simultâneos</li>
+          <li><strong>Queries:</strong> Simples, poucas linhas</li>
+          <li><strong>Exemplo:</strong> POS de caixa, e-commerce checkout</li>
+          <li><strong>Neste projecto:</strong> SQLite com <code>transactions</code>, <code>sales_items</code></li>
+        </ul>
+      </div>
+      <div class="compare-col">
+        <h4>📊 OLAP — Online Analytical Processing</h4>
+        <ul>
+          <li><strong>Schema:</strong> Desnormalizado (Star/Snowflake)</li>
+          <li><strong>Operações:</strong> SELECT com GROUP BY, WINDOW FUNCTIONS</li>
+          <li><strong>Utilizadores:</strong> Poucos analistas</li>
+          <li><strong>Queries:</strong> Complexas, varrem milhões de linhas</li>
+          <li><strong>Exemplo:</strong> Data Warehouse, relatórios BI</li>
+          <li><strong>Neste projecto:</strong> DuckDB com <code>fct_sales</code>, <code>dim_products</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Star Schema do nosso projecto</h3>
+    <div class="diagram">
+                    ┌─────────────────┐
+                    │    dim_date     │
+                    │  date_id (PK)   │
+                    │  year_num       │
+                    │  month_name     │
+                    │  is_weekend     │
+                    └────────┬────────┘
+                             │ FK
+  ┌──────────────┐           │           ┌──────────────────┐
+  │  customers   │           ▼           │   dim_products   │
+  │  customer_id │   ┌─────────────┐    │   product_id     │
+  │  segment     ├──▶│  fct_sales  │◀───│   category       │
+  │  city        │   │  (facts)    │    │   unit_price     │
+  └──────────────┘   │  net_amount │    └──────────────────┘
+                     │  quantity   │
+  ┌──────────────┐   │  discount   │
+  │    stores    │   └──────┬──────┘
+  │  store_id    │          │ FK
+  │  region      │◀─────────┘
+  └──────────────┘
+    </div>
+
+    <h3>ETL — O elo entre OLTP e OLAP</h3>
+    <div class="box box-info">
+      <strong>ETL = Extract, Transform, Load</strong><br>
+      É o processo que move dados do OLTP (SQLite) para o OLAP (DuckDB).
+      No nosso projecto, o <code>setup_duckdb.py</code> faz exactamente isto:
+      lê do SQLite, transforma (join + cálculos), carrega no DuckDB.
+      Em empresas grandes, isto corre em batch nocturnamente.
+    </div>
+
+    <h3>Funções Analíticas OLAP (Window Functions)</h3>
+    <pre><code><span class="cmt">-- Running total de receita por mês (YTD)</span>
+<span class="kw">SELECT</span>
+    month_date,
+    revenue,
+    <span class="fn">SUM</span>(revenue) <span class="kw">OVER</span> (
+        <span class="kw">ORDER BY</span> month_date
+        <span class="kw">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>
+    ) <span class="kw">AS</span> ytd_revenue,
+    revenue - <span class="fn">LAG</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> month_date) <span class="kw">AS</span> mom_delta,
+    <span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> revenue <span class="kw">DESC</span>) <span class="kw">AS</span> revenue_rank
+<span class="kw">FROM</span> monthly_revenue;</code></pre>
+
+    <table>
+      <tr><th>Window Function</th><th>O que faz</th></tr>
+      <tr><td><code>LAG(col, n)</code></td><td>Valor da linha N posições atrás</td></tr>
+      <tr><td><code>LEAD(col, n)</code></td><td>Valor da linha N posições à frente</td></tr>
+      <tr><td><code>SUM() OVER (...)</code></td><td>Soma acumulada ou por janela</td></tr>
+      <tr><td><code>RANK() OVER (...)</code></td><td>Ranking com saltos em empates</td></tr>
+      <tr><td><code>DENSE_RANK() OVER (...)</code></td><td>Ranking sem saltos em empates</td></tr>
+      <tr><td><code>NTILE(n) OVER (...)</code></td><td>Divide em N buckets iguais (usado no RFM)</td></tr>
+      <tr><td><code>ROW_NUMBER() OVER (...)</code></td><td>Número sequencial único por janela</td></tr>
+    </table>
+  </section>
+
+  <!-- ══════════════════════════════════════ 15. PL/SQL -->
+  <section id="plsql">
+    <h2 class="section-title"><span class="section-number">15</span> PL/SQL Avançado — Packages, ETL, RFM</h2>
+
+    <p>
+      O ficheiro <code>sql/oracle_plsql_concepts/02_olap_oltp_plsql.sql</code> contém PL/SQL conceptual
+      que integra todos os conceitos estudados.
+    </p>
+
+    <h3>O que é PL/SQL?</h3>
+    <div class="box box-info">
+      <strong>PL/SQL = Procedural Language / SQL</strong><br>
+      Extensão procedural do SQL da Oracle. Permite variáveis, loops, condições, excepções, cursores —
+      tudo dentro do servidor de base de dados. Ideal para:
+      <ul>
+        <li>Stored Procedures — lógica de negócio no servidor</li>
+        <li>Triggers — código que corre automaticamente em INSERT/UPDATE/DELETE</li>
+        <li>Packages — agrupar procedures + functions + tipos numa unidade</li>
+        <li>Cursors — iterar sobre resultados de queries linha a linha</li>
+      </ul>
+    </div>
+
+    <h3>Anatomia de um Package PL/SQL</h3>
+    <pre><code><span class="cmt">-- SPEC = interface pública (o que é visível externamente)</span>
+<span class="kw">CREATE OR REPLACE PACKAGE</span> pkg_retail_analytics <span class="kw">AS</span>
+    c_rfm_threshold <span class="kw">CONSTANT INTEGER</span> := <span class="num">13</span>;          <span class="cmt">-- constante</span>
+    <span class="kw">TYPE</span> t_rfm <span class="kw">IS RECORD</span> (customer_id <span class="kw">INTEGER</span>, label <span class="kw">VARCHAR2</span>(<span class="num">20</span>));  <span class="cmt">-- tipo personalizado</span>
+
+    <span class="kw">PROCEDURE</span> <span class="fn">refresh_rfm_scores</span>;                     <span class="cmt">-- declaração</span>
+    <span class="kw">FUNCTION</span>  <span class="fn">get_customer_label</span>(p_id <span class="kw">IN INTEGER</span>) <span class="kw">RETURN VARCHAR2</span>;
+<span class="kw">END</span> pkg_retail_analytics;
+/
+
+<span class="cmt">-- BODY = implementação privada</span>
+<span class="kw">CREATE OR REPLACE PACKAGE BODY</span> pkg_retail_analytics <span class="kw">AS</span>
+    <span class="kw">PROCEDURE</span> <span class="fn">refresh_rfm_scores</span> <span class="kw">AS</span>
+    <span class="kw">BEGIN</span>
+        <span class="kw">INSERT INTO</span> rfm_scores_stage <span class="kw">SELECT</span> ... <span class="kw">FROM</span> fct_sales_olap;
+        <span class="kw">COMMIT</span>;
+    <span class="kw">EXCEPTION</span>
+        <span class="kw">WHEN OTHERS THEN ROLLBACK</span>; <span class="kw">RAISE</span>;
+    <span class="kw">END</span>;
+<span class="kw">END</span> pkg_retail_analytics;
+/</code></pre>
+
+    <h3>RFM Analysis com PL/SQL + OLAP</h3>
+    <div class="box box-success">
+      <strong>RFM = Recency, Frequency, Monetary</strong><br>
+      Método clássico para segmentar clientes com base em 3 dimensões:
+      <ul>
+        <li><strong>Recency:</strong> Há quantos dias foi a última compra? (menos = melhor)</li>
+        <li><strong>Frequency:</strong> Quantas transacções fez? (mais = melhor)</li>
+        <li><strong>Monetary:</strong> Quanto gastou no total? (mais = melhor)</li>
+      </ul>
+      Cada dimensão é pontuada de 1-5 com <code>NTILE(5)</code>. Score total 13-15 = Champion.
+    </div>
+
+    <h3>ABC Analysis (Pareto 80/20)</h3>
+    <table>
+      <tr><th>Classe</th><th>Definição</th><th>Estratégia</th></tr>
+      <tr><td><strong>A</strong></td><td>Top 80% da receita</td><td>Prioridade máxima, nunca deixar sair de stock</td></tr>
+      <tr><td><strong>B</strong></td><td>Próximos 15% da receita</td><td>Gerir com atenção moderada</td></tr>
+      <tr><td><strong>C</strong></td><td>Últimos 5% da receita</td><td>Candidatos a discontinuar ou reduzir stock</td></tr>
+    </table>
+
+    <h3>Materialised Views — Performance OLAP</h3>
+    <div class="box box-warning">
+      <strong>Problema:</strong> Uma query que soma 10M de linhas demora 30 segundos.<br>
+      <strong>Solução:</strong> Materialised View pré-computa o resultado e guarda fisicamente.
+      A query passa a demorar &lt;1 segundo. Actualiza-se em batch (nightly refresh).
+    </div>
+
+    <h3>Partitioning — Escalabilidade OLAP</h3>
+    <pre><code><span class="cmt">-- Sem particionamento: scanneia 10M linhas para encontrar Q4</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> fct_sales_olap <span class="kw">WHERE</span> date_id <span class="kw">BETWEEN</span> <span class="num">20241001</span> <span class="kw">AND</span> <span class="num">20241231</span>;
+
+<span class="cmt">-- COM particionamento: Oracle salta directamente para p_2024_q4</span>
+<span class="cmt">-- Partition pruning: 75% das linhas ignoradas automaticamente!</span>
+<span class="kw">CREATE TABLE</span> fct_sales_partitioned ...
+<span class="kw">PARTITION BY RANGE</span> (date_id) (
+    <span class="kw">PARTITION</span> p_2024_q4 <span class="kw">VALUES LESS THAN</span> (<span class="num">20250101</span>),
+    ...
+);</code></pre>
+  </section>
+
+  <!-- ══════════════════════════════════════ 16. COMO EXECUTAR -->
+  <section id="run">
+    <h2 class="section-title"><span class="section-number">16</span> Como Executar Tudo</h2>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Instalar dependências</strong>
+          <pre><code>python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt</code></pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Gerar dados e popular DuckDB</strong>
+          <pre><code>python python/run_pipeline.py</code></pre>
+          Isto corre: <code>generate_data.py</code> → <code>setup_sqlite.py</code> → <code>setup_duckdb.py</code>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Executar pipeline de Machine Learning</strong>
+          <pre><code>python python/ml_retail.py</code></pre>
+          Outputs em <code>data/ml_outputs/</code>:
+          <ul>
+            <li><code>model_metrics.json</code> — métricas de todos os modelos</li>
+            <li><code>regression_feature_importance.csv</code> — importância de cada feature</li>
+            <li><code>cluster_assignments.csv</code> — cluster K-Means e DBSCAN por cliente</li>
+            <li><code>pca_projections.csv</code> — coordenadas PC1, PC2 por cliente</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Explorar outputs ML</strong>
+          <pre><code><span class="cmt"># Ver métricas</span>
+python -c "import json; print(json.dumps(json.load(open('data/ml_outputs/model_metrics.json')), indent=2))"
+
+<span class="cmt"># Ver feature importance</span>
+python -c "import pandas as pd; print(pd.read_csv('data/ml_outputs/regression_feature_importance.csv').to_string())"
+
+<span class="cmt"># Ver clusters</span>
+python -c "import pandas as pd; print(pd.read_csv('data/ml_outputs/cluster_assignments.csv').head(20).to_string())"</code></pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Lançar Streamlit dashboard</strong>
+          <pre><code>streamlit run streamlit/app.py</code></pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Explorar SQL OLAP/OLTP</strong>
+          <p>Abre o ficheiro <code>sql/oracle_plsql_concepts/02_olap_oltp_plsql.sql</code> e lê
+          cada secção comentada — é um guia conceptual completo com SQL executável.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Servir documentação HTML</strong>
+          <pre><code>npm run docs:serve
+<span class="cmt"># Ou: python -m http.server 8080</span>
+<span class="cmt"># Abre: http://localhost:8080/docs/machine_learning_guide.html</span></code></pre>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Estrutura de ficheiros adicionados</h3>
+    <div class="diagram">
+.
+├── python/
+│   ├── ml_retail.py                    ← NOVO: pipeline ML completo
+│   ├── generate_data.py
+│   ├── setup_sqlite.py
+│   ├── setup_duckdb.py
+│   └── run_pipeline.py
+│
+├── sql/
+│   └── oracle_plsql_concepts/
+│       ├── 01_plsql_study_case.sql     (existente)
+│       └── 02_olap_oltp_plsql.sql      ← NOVO: OLAP/OLTP + ETL + RFM + ABC
+│
+├── data/
+│   └── ml_outputs/                     ← NOVO: criado ao correr ml_retail.py
+│       ├── model_metrics.json
+│       ├── regression_feature_importance.csv
+│       ├── cluster_assignments.csv
+│       └── pca_projections.csv
+│
+└── docs/
+    ├── machine_learning_guide.html     ← ESTE FICHEIRO
+    └── ...
+    </div>
+
+    <h3>Próximos passos de aprendizagem</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>Hyperparameter Tuning</h4>
+        <p>Usa <code>GridSearchCV</code> ou <code>RandomizedSearchCV</code> para encontrar automaticamente os melhores parâmetros para cada modelo.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h4>XGBoost / LightGBM</h4>
+        <p>Instala <code>pip install xgboost lightgbm</code> e compara com Gradient Boosting. Geralmente mais rápidos e precisos.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h4>Neural Networks</h4>
+        <p>Com <code>sklearn.neural_network.MLPRegressor</code> ou PyTorch/TensorFlow. Necessário para dados de imagem, texto, séries temporais complexas.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔮</div>
+        <h4>Time Series Forecasting</h4>
+        <p>Prever receita futura com <code>Prophet</code>, ARIMA, ou LSTM. Os dados deste projecto têm 2 anos de histórico — perfeito para isto.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>SHAP Values</h4>
+        <p>Explica <em>individualmente</em> cada previsão do modelo: "Este cliente tem segmento X porque comprou muito em category=dairy".</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏗️</div>
+        <h4>ML Pipelines</h4>
+        <p>Usa <code>sklearn.pipeline.Pipeline</code> para encadear preprocessing + modelo numa só peça. Evita data leakage e facilita deploy.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- .container -->
+</div><!-- .content-wrapper -->
+
+<!-- ════════════════════════════════════════════════════════ FOOTER -->
+<footer>
+  <p>Retail Analytics Study Case — Machine Learning Guide</p>
+  <p style="margin-top:.5rem">Python · scikit-learn · DuckDB · Oracle PL/SQL · OLAP · OLTP</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+signal,target_window,expected_direction,why
+bf_revenue_spike,2025-11-28 vs baseline 2025-11-01..2025-11-20,up,Black Friday promotions and traffic surge
+discount_ratio_up,2025-11-28..2025-12-01,up,Aggressive campaign discounting
+mobile_payment_share_up,from 2025-11-27 onward,up,Shift from cash/card to mbway during campaign
+category_mix_shift,2025-11-28,snacks_and_cleaning_up,Promoted categories on Black Friday

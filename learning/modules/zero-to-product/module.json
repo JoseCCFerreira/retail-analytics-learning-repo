@@ -1,0 +1,9 @@
+{
+  "title": "Do Zero ao Produto Final: Retail Analytics para Iniciantes",
+  "description": "Guia completo para criar o projeto de raiz, correr o pipeline de dados, ML, dashboards e publicar no GitHub.",
+  "duration": "35 min",
+  "author": "GitHub Copilot",
+  "skills": ["learning-module"],
+  "prerequisites": ["Windows, macOS ou Linux", "Python 3.10+", "Node.js 18+", "Git", "Conta GitHub"],
+  "tags": ["onboarding", "retail-analytics", "python", "dbt", "machine-learning", "streamlit", "github"]
+}

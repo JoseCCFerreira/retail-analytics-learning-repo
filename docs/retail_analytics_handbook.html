@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retail Analytics Handbook</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6b76;
+      --line: #d8dee6;
+      --paper: #ffffff;
+      --soft: #f5f7fa;
+      --soft-2: #eef6ff;
+      --accent: #0f766e;
+      --accent-2: #1d4ed8;
+      --accent-3: #7c3aed;
+      --code-bg: #0f172a;
+      --code-ink: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.58;
+    }
+
+    header {
+      min-height: 78vh;
+      display: grid;
+      align-items: end;
+      padding: 56px 24px 46px;
+      color: #fff;
+      background:
+        linear-gradient(rgba(15, 23, 42, 0.48), rgba(15, 23, 42, 0.76)),
+        url("https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80") center/cover;
+    }
+
+    .hero,
+    main,
+    nav .inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      max-width: 920px;
+      font-size: clamp(2.4rem, 5vw, 4.9rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 850px;
+      margin: 0;
+      color: #eef4ff;
+      font-size: 1.18rem;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    nav .inner {
+      padding: 10px 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: .94rem;
+    }
+
+    nav a:hover {
+      background: var(--soft);
+    }
+
+    main {
+      padding: 32px 24px 72px;
+    }
+
+    section {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 2rem;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 24px 0 10px;
+      font-size: 1.2rem;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .lead {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .callout {
+      margin: 18px 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      background: #ecfdf5;
+    }
+
+    .info {
+      border-left-color: var(--accent-2);
+      background: var(--soft-2);
+    }
+
+    .warning {
+      border-left-color: var(--accent-3);
+      background: #f5f3ff;
+    }
+
+    code {
+      background: #eef2f7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-ink);
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+    }
+
+    ul, ol {
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 7px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <h1>Retail Analytics Handbook</h1>
+      <p class="subtitle">
+        Documento único para construir, entender, executar, estudar e publicar um projeto de retail
+        analytics com OLTP, OLAP, dbt, Streamlit, Machine Learning, Deep Learning, Git, GitHub e PL/SQL.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="inner">
+      <a href="#visao-geral">Visão Geral</a>
+      <a href="#repositorio">Repositório</a>
+      <a href="#estrutura">Estrutura</a>
+      <a href="#instalacao">Instalação</a>
+      <a href="#oltp">OLTP</a>
+      <a href="#olap">OLAP</a>
+      <a href="#dbt">dbt</a>
+      <a href="#streamlit">Streamlit</a>
+      <a href="#ml">Machine Learning</a>
+      <a href="#dl">Deep Learning</a>
+      <a href="#plsql">PL/SQL</a>
+      <a href="#git">Git</a>
+      <a href="#atalhos">Atalhos</a>
+      <a href="#checklist">Checklist</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="visao-geral">
+      <h2>1. Visão Geral</h2>
+      <p class="lead">
+        Este handbook junta num só lugar a construção do projeto, a explicação das tecnologias,
+        a base teórica mínima, os comandos de instalação e os casos práticos que podes executar.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <strong>OLTP</strong>
+          SQLite como base operacional para guardar transações, clientes, produtos e itens vendidos.
+        </div>
+        <div class="card">
+          <strong>OLAP</strong>
+          DuckDB como base analítica para agregações, métricas, dashboards e modelagem.
+        </div>
+        <div class="card">
+          <strong>dbt</strong>
+          Governa a transformação de dados com SQL versionado e testes de qualidade.
+        </div>
+        <div class="card">
+          <strong>Streamlit</strong>
+          Mostra KPIs e gráficos sobre o dataset retail.
+        </div>
+        <div class="card">
+          <strong>Machine Learning</strong>
+          Baselines com scikit-learn para regressão, classificação e clustering.
+        </div>
+        <div class="card">
+          <strong>Deep Learning</strong>
+          Trilhas práticas com PyTorch e TensorFlow sobre o mesmo dataset.
+        </div>
+      </div>
+    </section>
+
+    <section id="repositorio">
+      <h2>2. Criar o Repositório Desde Zero</h2>
+      <p>Se quiseres construir tudo tu mesmo desde uma pasta vazia, a ordem certa é esta:</p>
+      <pre><code>cd /Users/carlosferreira/Projecto
+mkdir retail_case_repo_with_dynamic_beginner_html
+cd retail_case_repo_with_dynamic_beginner_html
+git init</code></pre>
+
+      <p>Quando o projeto já estiver funcional, então crias o remoto:</p>
+      <pre><code>gh auth login
+gh repo create retail-analytics-study-case --public --source . --remote origin</code></pre>
+
+      <div class="callout warning">
+        Não precisas publicar logo no início. O melhor fluxo é montar, testar e só depois fazer o primeiro commit e o push.
+      </div>
+    </section>
+
+    <section id="estrutura">
+      <h2>3. Estrutura do Projeto</h2>
+      <pre><code>.
+├── 01_oltp_database/
+├── 02_olap_database/
+├── 03_visualizations_streamlit/
+├── 04_machine_learning/
+├── 05_governance_dbt/
+├── data/
+├── dbt_retail_analytics/
+├── deep_learning/
+├── docs/
+├── python/
+├── sql/
+│   ├── sqlite/
+│   ├── duckdb/
+│   └── oracle_plsql_concepts/
+├── streamlit/
+├── .gitignore
+├── README.md
+├── requirements.txt
+└── requirements_deep_learning.txt</code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Pasta</th>
+            <th>Função</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>python/</code></td><td>Scripts principais de pipeline e ML.</td></tr>
+          <tr><td><code>sql/sqlite/</code></td><td>Estrutura da base OLTP.</td></tr>
+          <tr><td><code>sql/duckdb/</code></td><td>Consultas analíticas OLAP.</td></tr>
+          <tr><td><code>dbt_retail_analytics/</code></td><td>Modelos dbt, testes e governança.</td></tr>
+          <tr><td><code>streamlit/</code></td><td>Dashboards.</td></tr>
+          <tr><td><code>deep_learning/</code></td><td>Exemplos práticos com PyTorch e TensorFlow.</td></tr>
+          <tr><td><code>docs/</code></td><td>Guias HTML.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="instalacao">
+      <h2>4. Instalação</h2>
+
+      <h3>4.1 Projeto base</h3>
+      <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt</code></pre>
+
+      <h3>4.2 GitHub CLI (`gh`)</h3>
+      <p>Se o comando <code>gh</code> não existir, instala-o antes de tentares criar repositórios via terminal.</p>
+
+      <p>Com Homebrew:</p>
+      <pre><code>brew install gh</code></pre>
+
+      <p>Sem Homebrew, instalação local no utilizador:</p>
+      <pre><code>mkdir -p ~/.local/gh ~/bin
+cd ~/.local/gh
+curl -fL -o gh.zip https://github.com/cli/cli/releases/download/v2.91.0/gh_2.91.0_macOS_arm64.zip
+unzip -o gh.zip
+ln -sf ~/.local/gh/gh_2.91.0_macOS_arm64/bin/gh ~/bin/gh
+printf '\nexport PATH="$HOME/bin:$PATH"\n' >> ~/.zprofile</code></pre>
+
+      <p>Depois abre um novo terminal e valida:</p>
+      <pre><code>gh --version
+gh auth login</code></pre>
+
+      <h3>4.3 Stack opcional de Deep Learning</h3>
+      <pre><code>pip install -r requirements_deep_learning.txt</code></pre>
+
+      <h3>4.4 Ordem inicial recomendada</h3>
+      <pre><code>python python/run_pipeline.py
+python python/ml_retail.py
+streamlit run streamlit/app.py</code></pre>
+
+      <div class="callout info">
+        O projeto base fica leve e funcional com <code>requirements.txt</code>. PyTorch e TensorFlow ficam numa camada opcional para estudo.
+      </div>
+    </section>
+
+    <section id="oltp">
+      <h2>5. OLTP - SQLite</h2>
+      <p>
+        OLTP significa Online Transaction Processing. É a base do dia a dia do negócio, onde cada
+        registo representa uma operação concreta.
+      </p>
+
+      <h3>Objetivo</h3>
+      <ul>
+        <li>guardar clientes, produtos, lojas, transações e itens vendidos;</li>
+        <li>preservar integridade com chaves primárias e estrangeiras;</li>
+        <li>simular uma base de aplicação operacional.</li>
+      </ul>
+
+      <h3>Comandos</h3>
+      <pre><code>python python/generate_data.py
+python python/setup_sqlite.py</code></pre>
+
+      <h3>Exemplo de esquema</h3>
+      <pre><code>CREATE TABLE transactions (
+    transaction_id INTEGER PRIMARY KEY,
+    transaction_date TEXT NOT NULL,
+    customer_id INTEGER NOT NULL,
+    store_id INTEGER NOT NULL,
+    payment_method TEXT NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    FOREIGN KEY (store_id) REFERENCES stores(store_id)
+);</code></pre>
+    </section>
+
+    <section id="olap">
+      <h2>6. OLAP - DuckDB</h2>
+      <p>
+        OLAP significa Online Analytical Processing. Serve para análise, agregações e perguntas de negócio
+        sobre muitos registos ao mesmo tempo.
+      </p>
+
+      <h3>Objetivo</h3>
+      <ul>
+        <li>criar uma tabela de factos <code>fct_sales</code>;</li>
+        <li>juntar transações com linhas de venda;</li>
+        <li>preparar dados para dashboards, dbt e ML.</li>
+      </ul>
+
+      <h3>Comandos</h3>
+      <pre><code>python python/setup_duckdb.py</code></pre>
+
+      <h3>Exemplo de fact table</h3>
+      <pre><code>CREATE OR REPLACE TABLE fct_sales AS
+SELECT
+    si.sales_item_id,
+    t.transaction_id,
+    CAST(t.transaction_date AS DATE) AS transaction_date,
+    t.customer_id,
+    t.store_id,
+    t.payment_method,
+    si.product_id,
+    si.quantity,
+    si.unit_price,
+    si.discount_pct,
+    si.gross_amount,
+    si.discount_amount,
+    si.net_amount
+FROM sales_items si
+INNER JOIN transactions t
+    ON t.transaction_id = si.transaction_id;</code></pre>
+    </section>
+
+    <section id="dbt">
+      <h2>7. dbt - Governança de Dados</h2>
+      <p>
+        dbt organiza as transformações em camadas, mantém SQL versionado e permite testes de qualidade.
+      </p>
+
+      <h3>Camadas</h3>
+      <ul>
+        <li><strong>staging:</strong> limpeza e normalização;</li>
+        <li><strong>marts:</strong> tabelas finais para análise e consumo;</li>
+        <li><strong>schema.yml:</strong> regras e testes.</li>
+      </ul>
+
+      <h3>Executar</h3>
+      <pre><code>cd dbt_retail_analytics
+cp profiles.example.yml profiles.yml
+export DBT_PROFILES_DIR=.
+dbt run
+dbt test</code></pre>
+
+      <h3>Exemplo de teste</h3>
+      <pre><code>- name: transaction_id
+  tests:
+    - not_null
+    - relationships:
+        arguments:
+          to: ref('stg_transactions')
+          field: transaction_id</code></pre>
+    </section>
+
+    <section id="streamlit">
+      <h2>8. Streamlit - Visualização</h2>
+      <p>
+        Streamlit transforma o dataset analítico num dashboard local com KPIs, gráficos e tabelas.
+      </p>
+
+      <h3>Executar</h3>
+      <pre><code>streamlit run streamlit/app.py</code></pre>
+
+      <h3>O que o dashboard faz</h3>
+      <ul>
+        <li>mostra número de transações;</li>
+        <li>mostra receita total;</li>
+        <li>mostra receita por mês;</li>
+        <li>mostra top produtos.</li>
+      </ul>
+    </section>
+
+    <section id="ml">
+      <h2>9. Machine Learning com scikit-learn</h2>
+
+      <h3>Problemas trabalhados</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Problema</th>
+            <th>Tipo</th>
+            <th>Modelos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prever valor da venda</td>
+            <td>Regressão</td>
+            <td>Linear Regression, Decision Tree, Random Forest, Gradient Boosting</td>
+          </tr>
+          <tr>
+            <td>Prever segmento do cliente</td>
+            <td>Classificação</td>
+            <td>Logistic Regression, Decision Tree, Random Forest</td>
+          </tr>
+          <tr>
+            <td>Agrupar clientes</td>
+            <td>Clustering</td>
+            <td>K-Means, DBSCAN, PCA</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Executar</h3>
+      <pre><code>python python/ml_retail.py</code></pre>
+
+      <h3>Saídas</h3>
+      <ul>
+        <li><code>data/ml_outputs/model_metrics.json</code></li>
+        <li><code>data/ml_outputs/regression_feature_importance.csv</code></li>
+        <li><code>data/ml_outputs/cluster_assignments.csv</code></li>
+        <li><code>data/ml_outputs/pca_projections.csv</code></li>
+      </ul>
+
+      <h3>Base teórica mínima</h3>
+      <ul>
+        <li><strong>MAE:</strong> erro médio absoluto;</li>
+        <li><strong>RMSE:</strong> penaliza mais os erros grandes;</li>
+        <li><strong>R2:</strong> quanto da variabilidade é explicada;</li>
+        <li><strong>Accuracy:</strong> percentagem de acertos;</li>
+        <li><strong>Silhouette Score:</strong> qualidade dos clusters.</li>
+      </ul>
+    </section>
+
+    <section id="dl">
+      <h2>10. Deep Learning com PyTorch e TensorFlow</h2>
+      <p>
+        Depois de dominares os baselines com scikit-learn, entra o passo seguinte: redes neuronais
+        sobre os mesmos dados para comparar com honestidade.
+      </p>
+
+      <h3>Metodologia correta</h3>
+      <ol>
+        <li>definir o problema de negócio;</li>
+        <li>criar um baseline simples em scikit-learn;</li>
+        <li>escolher a métrica antes do treino;</li>
+        <li>testar uma MLP pequena;</li>
+        <li>comparar resultados com o baseline;</li>
+        <li>só manter Deep Learning se trouxer valor real.</li>
+      </ol>
+
+      <h3>Ferramentas</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Ferramenta</th>
+            <th>Uso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>PyTorch</td><td>Aprender treino manual, tensores, DataLoader e redes.</td></tr>
+          <tr><td>TensorFlow / Keras</td><td>Treino mais declarativo e rápido de prototipar.</td></tr>
+          <tr><td>JupyterLab</td><td>Experiência de estudo e experimentação.</td></tr>
+          <tr><td>MLflow</td><td>Tracking de experiências e métricas.</td></tr>
+          <tr><td>Optuna</td><td>Tuning de hiperparâmetros.</td></tr>
+          <tr><td>SHAP</td><td>Explicabilidade.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Instalar</h3>
+      <pre><code>pip install -r requirements_deep_learning.txt</code></pre>
+
+      <h3>Scripts criados</h3>
+      <ul>
+        <li><code>deep_learning/common_retail_dl.py</code></li>
+        <li><code>deep_learning/pytorch_retail_examples.py</code></li>
+        <li><code>deep_learning/tensorflow_retail_examples.py</code></li>
+      </ul>
+
+      <h3>Casos práticos já preparados</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Caso</th>
+            <th>Tipo</th>
+            <th>Framework</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Prever <code>net_amount</code></td><td>Regressão</td><td>PyTorch e TensorFlow</td></tr>
+          <tr><td>Prever <code>customer_segment</code></td><td>Classificação</td><td>PyTorch e TensorFlow</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Executar</h3>
+      <pre><code>python deep_learning/pytorch_retail_examples.py
+python deep_learning/tensorflow_retail_examples.py</code></pre>
+
+      <h3>Saídas esperadas</h3>
+      <ul>
+        <li><code>data/deep_learning_outputs/pytorch_metrics.json</code></li>
+        <li><code>data/deep_learning_outputs/tensorflow_metrics.json</code></li>
+        <li>modelos guardados em <code>data/deep_learning_outputs/</code></li>
+      </ul>
+
+      <h3>Próximos casos sugeridos</h3>
+      <ul>
+        <li>forecasting de receita mensal com LSTM ou TCN;</li>
+        <li>recomendação de produto com embeddings;</li>
+        <li>segmentação com autoencoders;</li>
+        <li>ranking de propensão de compra.</li>
+      </ul>
+    </section>
+
+    <section id="plsql">
+      <h2>11. PL/SQL e Oracle</h2>
+      <p>
+        A pasta <code>sql/oracle_plsql_concepts</code> existe para estudo. SQLite e DuckDB não executam
+        PL/SQL, por isso esta parte é teórica ou para usar num ambiente Oracle real.
+      </p>
+
+      <h3>Bloco exemplo</h3>
+      <pre><code>SET SERVEROUTPUT ON;
+
+DECLARE
+    v_total NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_total
+    FROM transactions;
+
+    DBMS_OUTPUT.PUT_LINE('Total de transacoes: ' || v_total);
+END;
+/</code></pre>
+
+      <h3>Objetivos de estudo</h3>
+      <ul>
+        <li>procedures;</li>
+        <li>triggers;</li>
+        <li>exceptions;</li>
+        <li>diferença entre OLTP e OLAP em contexto Oracle.</li>
+      </ul>
+    </section>
+
+    <section id="git">
+      <h2>12. Git e GitHub</h2>
+      <h3>Fluxo básico</h3>
+      <pre><code>git status
+git add .
+git commit -m "Initial retail analytics learning case"
+git push</code></pre>
+
+      <h3>Criar remoto se ainda não existir</h3>
+      <pre><code>gh auth login
+gh repo create retail-analytics-study-case --public --source . --remote origin --push</code></pre>
+    </section>
+
+    <section id="atalhos">
+      <h2>13. Atalhos e Comandos Úteis</h2>
+
+      <h3>SQLite</h3>
+      <pre><code>sqlite3 data/retail_app.db
+.tables
+.schema transactions
+.quit</code></pre>
+
+      <h3>DuckDB</h3>
+      <pre><code>duckdb data/retail_analytics.duckdb
+SHOW TABLES;
+DESCRIBE fct_sales;
+.quit</code></pre>
+
+      <h3>dbt</h3>
+      <pre><code>dbt debug
+dbt run
+dbt test
+dbt docs generate
+dbt docs serve</code></pre>
+
+      <h3>Streamlit</h3>
+      <pre><code>streamlit run streamlit/app.py
+streamlit cache clear</code></pre>
+
+      <h3>Machine Learning</h3>
+      <pre><code>python python/ml_retail.py
+python python/validate_project.py
+cat data/ml_outputs/model_metrics.json</code></pre>
+
+      <h3>Deep Learning</h3>
+      <pre><code>pip install -r requirements_deep_learning.txt
+python deep_learning/pytorch_retail_examples.py
+python deep_learning/tensorflow_retail_examples.py
+jupyter lab
+mlflow ui</code></pre>
+
+      <h3>PL/SQL</h3>
+      <pre><code>SET SERVEROUTPUT ON;
+EXEC procedure_name;
+SHOW ERRORS;
+/</code></pre>
+    </section>
+
+    <section id="checklist">
+      <h2>14. Checklist Final</h2>
+      <ol>
+        <li>criar repositório local;</li>
+        <li>criar estrutura de pastas;</li>
+        <li>instalar dependências base;</li>
+        <li>gerar dados;</li>
+        <li>criar SQLite;</li>
+        <li>criar DuckDB;</li>
+        <li>executar dbt;</li>
+        <li>executar dashboard;</li>
+        <li>executar ML clássico;</li>
+        <li>instalar stack opcional de Deep Learning;</li>
+        <li>executar exemplos PyTorch e TensorFlow;</li>
+        <li>validar tudo;</li>
+        <li>fazer commit e publicar no GitHub.</li>
+      </ol>
+
+      <div class="callout">
+        Se quiseres trabalhar só com um documento, este é agora o teu handbook central.
+      </div>
+    </section>
+  </main>
+</body>
+</html>

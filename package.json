@@ -1,0 +1,26 @@
+{
+  "name": "retail-case-repo-with-dynamic-beginner-html",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Documentação e setup do Retail Analytics Study Case",
+  "scripts": {
+    "docs:serve": "python -m http.server 8080",
+    "docs:start": "python -m http.server 8080",
+    "ml:run": "python python/ml_retail.py",
+    "package:zip": "powershell -ExecutionPolicy Bypass -File scripts/package_release.ps1",
+    "case:dashboard": "streamlit run streamlit/case_black_friday_app.py",
+    "pipeline:full": "python python/run_pipeline.py && python python/ml_retail.py",
+    "case:generate": "python python/generate_test_case_black_friday.py",
+    "case:analyze": "python python/analyze_test_case_black_friday.py",
+    "validate:quick": "python python/validate_project.py",
+    "validate:full": "python python/validate_project.py --include-dbt"
+  },
+  "keywords": [
+    "retail",
+    "analytics",
+    "sql",
+    "dbt",
+    "documentation"
+  ],
+  "license": "UNLICENSED"
+}

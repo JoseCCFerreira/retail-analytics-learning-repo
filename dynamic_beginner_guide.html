@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retail Analytics Guide for Complete Beginners</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel-2: #192347;
+      --text: #edf2ff;
+      --muted: #b8c3e6;
+      --accent: #6ea8fe;
+      --accent-2: #9bdbff;
+      --ok: #64d2a6;
+      --warn: #ffd166;
+      --border: #2a3768;
+      --code: #0c1328;
+      --shadow: 0 12px 30px rgba(0,0,0,.25);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0b1020 0%, #0e1530 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .hero {
+      padding: 48px 20px 28px;
+      background: radial-gradient(circle at top right, rgba(110,168,254,.25), transparent 30%),
+                  radial-gradient(circle at top left, rgba(155,219,255,.18), transparent 25%);
+      border-bottom: 1px solid var(--border);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    h1 { font-size: 2.3rem; margin: 0 0 10px; }
+    h2 { margin: 0 0 10px; font-size: 1.5rem; }
+    h3 { margin: 0 0 8px; font-size: 1.12rem; }
+    p, li { color: var(--muted); }
+    .lead { font-size: 1.08rem; max-width: 920px; }
+    .chipbar { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+    .chip {
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .92rem;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 22px;
+      padding: 24px 20px 40px;
+    }
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      align-self: start;
+      background: rgba(18,25,51,.9);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .sidebar a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 9px 10px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      border: 1px solid transparent;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: var(--text);
+      background: rgba(110,168,254,.12);
+      border-color: var(--border);
+    }
+    .content { display:grid; gap: 20px; }
+    .card {
+      background: linear-gradient(180deg, rgba(18,25,51,.95), rgba(25,35,71,.92));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    .grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+    .mini {
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .big-number { font-size: 2rem; color: var(--accent-2); font-weight: 700; }
+    .tag { color: var(--ok); font-weight: 700; font-size: .9rem; letter-spacing: .02em; }
+    pre {
+      background: var(--code);
+      color: #e6eeff;
+      padding: 16px;
+      border-radius: 14px;
+      overflow:auto;
+      border:1px solid #22315f;
+      margin: 12px 0;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .copy-btn {
+      float: right;
+      margin-top: -4px;
+      background: rgba(110,168,254,.15);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: .85rem;
+    }
+    .copy-btn:hover { background: rgba(110,168,254,.24); }
+    details {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    summary { cursor: pointer; color: var(--text); font-weight: 600; }
+    .flow {
+      display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-top:12px;
+    }
+    .box {
+      background: rgba(110,168,254,.1);
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      min-width: 150px;
+      text-align:center;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .arrow { font-size: 1.5rem; color: var(--accent-2); }
+    .quiz {
+      border:1px solid var(--border); border-radius:14px; padding:14px; background:rgba(255,255,255,.03);
+    }
+    .quiz button, .toggle-tabs button {
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      border:1px solid var(--border);
+      padding:10px 12px;
+      border-radius: 10px;
+      cursor:pointer;
+      margin-right:8px;
+      margin-top:8px;
+    }
+    .quiz button:hover, .toggle-tabs button:hover, .toggle-tabs button.active { background: rgba(110,168,254,.18); }
+    .answer { display:none; margin-top:10px; padding:12px; border-left:4px solid var(--ok); background:rgba(100,210,166,.08); border-radius:10px; }
+    .tabs-panel { display:none; margin-top:12px; }
+    .tabs-panel.active { display:block; }
+    .callout {
+      border-left:4px solid var(--warn);
+      padding:10px 14px;
+      background:rgba(255,209,102,.08);
+      border-radius: 10px;
+      margin: 12px 0;
+    }
+    .good { border-left-color: var(--ok); background:rgba(100,210,166,.08); }
+    table {
+      width:100%; border-collapse: collapse; overflow:hidden; border-radius:12px;
+      border:1px solid var(--border); background: rgba(255,255,255,.03);
+    }
+    th, td { padding: 12px 10px; border-bottom:1px solid var(--border); text-align:left; }
+    th { color: var(--text); }
+    .footer { padding: 10px 20px 40px; color: var(--muted); }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: relative; top: 0; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="wrap">
+      <div class="tag">BEGINNER-FIRST GUIDE</div>
+      <h1>Retail Analytics Project — explained for complete beginners</h1>
+      <p class="lead">
+        This page explains the whole project in very simple language: what each tool does, why it exists, how the data moves,
+        what the SQL is doing, what dbt adds, and how PL/SQL connects to the Bosch role. The goal is not just to copy code.
+        The goal is to understand it well enough to explain it in an interview.
+      </p>
+      <div class="chipbar">
+        <div class="chip">SQLite = app database</div>
+        <div class="chip">DuckDB = analytics database</div>
+        <div class="chip">dbt = transformation layer</div>
+        <div class="chip">PL/SQL = Oracle-style database logic</div>
+        <div class="chip">Supermarket = easy business example</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap layout">
+    <nav class="sidebar">
+      <a href="#start">1. Start here</a>
+      <a href="#big-picture">2. Big picture</a>
+      <a href="#tools">3. What each tool does</a>
+      <a href="#data-model">4. Data model</a>
+      <a href="#flow">5. Data flow</a>
+      <a href="#sql-basics">6. SQL basics</a>
+      <a href="#advanced-sql">7. Advanced SQL</a>
+      <a href="#dbt">8. What dbt adds</a>
+      <a href="#plsql">9. PL/SQL explained</a>
+      <a href="#setup">10. Setup</a>
+      <a href="#interview">11. Interview angle</a>
+      <a href="#practice">12. Mini practice</a>
+    </nav>
+
+    <main class="content">
+      <section id="start" class="card">
+        <h2>1. Start here</h2>
+        <p><strong>If you feel lost, read only these 4 lines first:</strong></p>
+        <div class="grid-2">
+          <div class="mini"><div class="big-number">1</div><p>We simulate a supermarket that stores sales data.</p></div>
+          <div class="mini"><div class="big-number">2</div><p>SQLite stores the operational data, like a simple app database.</p></div>
+          <div class="mini"><div class="big-number">3</div><p>DuckDB is used to analyze the data more easily and more quickly.</p></div>
+          <div class="mini"><div class="big-number">4</div><p>dbt organizes the SQL models, tests, and documentation. PL/SQL shows Oracle-style logic.</p></div>
+        </div>
+        <div class="callout good">
+          You do <strong>not</strong> need to know everything at once. First understand the story. Then understand the tables. Then the SQL. Then dbt. Then PL/SQL.
+        </div>
+      </section>
+
+      <section id="big-picture" class="card">
+        <h2>2. Big picture</h2>
+        <p>Think of this project as a small company data system.</p>
+        <div class="flow">
+          <div class="box">Supermarket sales happen</div>
+          <div class="arrow">→</div>
+          <div class="box">SQLite stores transactions</div>
+          <div class="arrow">→</div>
+          <div class="box">DuckDB analyzes the data</div>
+          <div class="arrow">→</div>
+          <div class="box">dbt organizes models</div>
+          <div class="arrow">→</div>
+          <div class="box">Insights & reporting</div>
+        </div>
+        <div class="callout">
+          Easy way to say this in an interview: <strong>"I built a small end-to-end retail analytics platform, from operational data to analytical modeling and database logic."</strong>
+        </div>
+      </section>
+
+      <section id="tools" class="card">
+        <h2>3. What each tool does</h2>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>SQLite</h3>
+            <p>This is the simple application database. Imagine a small store app saving transactions.</p>
+            <p><strong>Use it for:</strong> tables, inserts, primary keys, foreign keys, indexes, basic SQL.</p>
+          </div>
+          <div class="mini">
+            <h3>DuckDB</h3>
+            <p>This is the analysis engine. It is good for local analytics and larger SQL queries.</p>
+            <p><strong>Use it for:</strong> aggregates, trends, rankings, window functions, analytical SQL.</p>
+          </div>
+          <div class="mini">
+            <h3>dbt</h3>
+            <p>This is the transformation layer. It turns loose SQL files into a structured project.</p>
+            <p><strong>Use it for:</strong> staging models, marts, tests, docs, lineage.</p>
+          </div>
+          <div class="mini">
+            <h3>PL/SQL</h3>
+            <p>This is Oracle-style logic inside the database.</p>
+            <p><strong>Use it for:</strong> procedures, functions, packages, triggers, centralized business logic.</p>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Tool</th><th>Simple explanation</th><th>Why it matters for Bosch</th></tr></thead>
+          <tbody>
+            <tr><td>SQLite</td><td>Simulates operational data storage</td><td>Shows relational foundations</td></tr>
+            <tr><td>DuckDB</td><td>Simulates analytical querying</td><td>Shows analytical SQL thinking</td></tr>
+            <tr><td>dbt</td><td>Structures the transformation layer</td><td>Shows engineering discipline</td></tr>
+            <tr><td>PL/SQL</td><td>Oracle-style logic inside DB</td><td>Directly relevant to the role</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="data-model" class="card">
+        <h2>4. Data model</h2>
+        <p>We use a supermarket because it is easy to understand.</p>
+        <div class="grid-3">
+          <div class="mini"><h3>stores</h3><p>Each row is one shop.</p></div>
+          <div class="mini"><h3>products</h3><p>Each row is one product.</p></div>
+          <div class="mini"><h3>customers</h3><p>Each row is one customer.</p></div>
+          <div class="mini"><h3>transactions</h3><p>Each row is one purchase event.</p></div>
+          <div class="mini"><h3>transaction_items</h3><p>Each row is one product inside one purchase.</p></div>
+          <div class="mini"><h3>fct_sales</h3><p>Analytical fact table created from transaction data.</p></div>
+        </div>
+        <div class="callout good">
+          <strong>Important interview concept:</strong> the grain of <code>transaction_items</code> or <code>fct_sales</code> is <strong>one row per product in one transaction</strong>.
+        </div>
+        <details>
+          <summary>What does “grain” mean?</summary>
+          <p>Grain means the exact level of detail of one row. If you do not know the grain, you can easily duplicate data or calculate metrics incorrectly.</p>
+        </details>
+      </section>
+
+      <section id="flow" class="card">
+        <h2>5. Data flow</h2>
+        <div class="toggle-tabs" data-tabs="flowtabs">
+          <button class="active" data-target="flow1">Very simple</button>
+          <button data-target="flow2">Slightly deeper</button>
+          <button data-target="flow3">Interview wording</button>
+        </div>
+        <div id="flow1" class="tabs-panel active">
+          <p>Sales happen in the store. Those sales are saved into tables. Then we analyze them. Then we organize the analysis with dbt. Then we show database logic with PL/SQL examples.</p>
+        </div>
+        <div id="flow2" class="tabs-panel">
+          <p>Python generates sample data. SQLite stores the operational version. DuckDB is used for analytical SQL. dbt creates cleaned layers and business-ready models. PL/SQL examples show how logic could be pushed into Oracle.</p>
+        </div>
+        <div id="flow3" class="tabs-panel">
+          <p><strong>Interview version:</strong> “I simulated an operational retail database, then separated analytical processing from transactional storage, structured the transformations with dbt, and connected the case to Oracle-style PL/SQL logic.”</p>
+        </div>
+      </section>
+
+      <section id="sql-basics" class="card">
+        <h2>6. SQL basics — explained slowly</h2>
+        <p>SQL is how you ask questions to the database.</p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Question: which products sold most?</h3>
+            <button class="copy-btn" data-copy="code1">Copy</button>
+            <pre><code id="code1">SELECT
+    product_id,
+    SUM(quantity) AS total_quantity_sold
+FROM transaction_items
+GROUP BY product_id
+ORDER BY total_quantity_sold DESC;</code></pre>
+            <p><strong>What this does:</strong> it adds up quantities for each product and shows the biggest sellers first.</p>
+          </div>
+          <div class="mini">
+            <h3>Question: revenue by store</h3>
+            <button class="copy-btn" data-copy="code2">Copy</button>
+            <pre><code id="code2">SELECT
+    t.store_id,
+    SUM(i.quantity * i.unit_price) AS total_revenue
+FROM transactions t
+JOIN transaction_items i
+    ON t.transaction_id = i.transaction_id
+GROUP BY t.store_id
+ORDER BY total_revenue DESC;</code></pre>
+            <p><strong>Why the join?</strong> because one table has the transaction header and the other has the product details.</p>
+          </div>
+        </div>
+        <details>
+          <summary>Beginner explanation of SELECT / FROM / JOIN / GROUP BY</summary>
+          <ul>
+            <li><strong>SELECT</strong> = what columns or calculations you want to see</li>
+            <li><strong>FROM</strong> = which table you are reading</li>
+            <li><strong>JOIN</strong> = combine tables</li>
+            <li><strong>GROUP BY</strong> = summarize rows into groups</li>
+          </ul>
+        </details>
+      </section>
+
+      <section id="advanced-sql" class="card">
+        <h2>7. Advanced SQL — the part that makes you look stronger</h2>
+        <p>This is where you move from “I know SQL” to “I can solve analytical problems.”</p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Top 2 customers per store</h3>
+            <button class="copy-btn" data-copy="code3">Copy</button>
+            <pre><code id="code3">WITH customer_store_spend AS (
+    SELECT
+        t.store_id,
+        t.customer_id,
+        SUM(ti.quantity * ti.unit_price) AS total_spent
+    FROM transactions t
+    JOIN transaction_items ti
+        ON t.transaction_id = ti.transaction_id
+    GROUP BY t.store_id, t.customer_id
+),
+ranked AS (
+    SELECT
+        store_id,
+        customer_id,
+        total_spent,
+        ROW_NUMBER() OVER (
+            PARTITION BY store_id
+            ORDER BY total_spent DESC
+        ) AS rn
+    FROM customer_store_spend
+)
+SELECT *
+FROM ranked
+WHERE rn <= 2;</code></pre>
+            <p><strong>Why this matters:</strong> it uses a CTE plus a window function.</p>
+          </div>
+          <div class="mini">
+            <h3>Daily revenue with running total</h3>
+            <button class="copy-btn" data-copy="code4">Copy</button>
+            <pre><code id="code4">SELECT
+    t.store_id,
+    t.transaction_date,
+    SUM(ti.quantity * ti.unit_price) AS daily_revenue,
+    SUM(SUM(ti.quantity * ti.unit_price)) OVER (
+        PARTITION BY t.store_id
+        ORDER BY t.transaction_date
+    ) AS cumulative_revenue
+FROM transactions t
+JOIN transaction_items ti
+    ON t.transaction_id = ti.transaction_id
+GROUP BY t.store_id, t.transaction_date;</code></pre>
+            <p><strong>Why this matters:</strong> it shows trends over time using a window function.</p>
+          </div>
+        </div>
+        <div class="callout">
+          Interview sentence: <strong>“I use window functions for ranking, trends, cumulative metrics and time-based comparisons.”</strong>
+        </div>
+      </section>
+
+      <section id="dbt" class="card">
+        <h2>8. What dbt adds</h2>
+        <p>Without dbt, you might just have random SQL files. With dbt, the project becomes organized and easier to trust.</p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Staging</h3>
+            <p>This layer cleans raw data. Rename columns, cast types, standardize fields.</p>
+            <button class="copy-btn" data-copy="code5">Copy</button>
+            <pre><code id="code5">select
+    cast(product_id as integer) as product_id,
+    trim(product_name) as product_name,
+    trim(category) as category,
+    cast(price as numeric(10,2)) as price
+from {{ ref('raw_products') }}</code></pre>
+          </div>
+          <div class="mini">
+            <h3>Mart / fact model</h3>
+            <p>This layer creates business-ready models.</p>
+            <button class="copy-btn" data-copy="code6">Copy</button>
+            <pre><code id="code6">select
+    ti.item_id,
+    ti.transaction_id,
+    t.store_id,
+    t.customer_id,
+    ti.product_id,
+    t.transaction_date,
+    ti.quantity,
+    ti.unit_price,
+    ti.quantity * ti.unit_price as total_price
+from {{ ref('stg_transaction_items') }} ti
+join {{ ref('stg_transactions') }} t
+    on ti.transaction_id = t.transaction_id</code></pre>
+          </div>
+        </div>
+        <details>
+          <summary>Why is <code>ref()</code> important?</summary>
+          <p><code>ref()</code> tells dbt that one model depends on another. That gives you lineage, ordering, and safer project structure.</p>
+        </details>
+        <details>
+          <summary>Why are dbt tests useful?</summary>
+          <p>Because they catch problems like missing keys, duplicates, and broken relationships before people trust the analysis.</p>
+        </details>
+      </section>
+
+      <section id="plsql" class="card">
+        <h2>9. PL/SQL explained simply</h2>
+        <p>PL/SQL is Oracle’s procedural language. Think of it as SQL plus logic: variables, conditions, procedures, functions, triggers.</p>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Procedure</h3>
+            <p>A procedure usually performs an action.</p>
+            <button class="copy-btn" data-copy="code7">Copy</button>
+            <pre><code id="code7">CREATE OR REPLACE PROCEDURE pr_calculate_store_revenue (
+    p_store_id IN NUMBER
+) AS
+    v_total_revenue NUMBER(12,2);
+BEGIN
+    SELECT NVL(SUM(ti.quantity * ti.unit_price), 0)
+    INTO v_total_revenue
+    FROM transactions t
+    JOIN transaction_items ti
+        ON t.transaction_id = ti.transaction_id
+    WHERE t.store_id = p_store_id;
+
+    DBMS_OUTPUT.PUT_LINE('Store revenue: ' || v_total_revenue);
+END;
+/</code></pre>
+          </div>
+          <div class="mini">
+            <h3>Function</h3>
+            <p>A function usually returns one value.</p>
+            <button class="copy-btn" data-copy="code8">Copy</button>
+            <pre><code id="code8">CREATE OR REPLACE FUNCTION fn_customer_transaction_count (
+    p_customer_id IN NUMBER
+) RETURN NUMBER AS
+    v_transaction_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_transaction_count
+    FROM transactions
+    WHERE customer_id = p_customer_id;
+
+    RETURN v_transaction_count;
+END;
+/</code></pre>
+          </div>
+        </div>
+        <details>
+          <summary>Very simple difference: procedure vs function</summary>
+          <p><strong>Procedure</strong> = do something. <strong>Function</strong> = give something back.</p>
+        </details>
+        <details>
+          <summary>What is a trigger?</summary>
+          <p>A trigger runs automatically when something happens, for example when a product price changes.</p>
+        </details>
+        <div class="callout good">
+          Easy Bosch connection: <strong>“I used PL/SQL-style procedures, functions and triggers to practice database-side business logic and understand the Oracle mindset.”</strong>
+        </div>
+      </section>
+
+      <section id="setup" class="card">
+        <h2>10. Setup — what you install and why</h2>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Python packages</h3>
+            <button class="copy-btn" data-copy="code9">Copy</button>
+            <pre><code id="code9">python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install dbt-duckdb</code></pre>
+            <p>This gives you Python, dependencies, and dbt for DuckDB.</p>
+          </div>
+          <div class="mini">
+            <h3>Main run order</h3>
+            <button class="copy-btn" data-copy="code10">Copy</button>
+            <pre><code id="code10">python python/generate_data.py
+python python/setup_sqlite.py
+python python/setup_duckdb.py
+cd dbt_retail_analytics
+dbt seed
+dbt run
+dbt test
+dbt docs generate</code></pre>
+            <p>This is the simplest order to get the project running.</p>
+          </div>
+        </div>
+        <div class="callout">
+          If a beginner gets lost, follow this rule: <strong>generate data → create databases → run SQL → run dbt → read docs</strong>.
+        </div>
+      </section>
+
+      <section id="interview" class="card">
+        <h2>11. Interview angle — what you should say</h2>
+        <div class="grid-2">
+          <div class="mini">
+            <h3>Short version</h3>
+            <p>“I built an end-to-end retail analytics project using SQLite, DuckDB, dbt, and Oracle-style PL/SQL concepts to practice data modeling, SQL development, transformation logic, and database-side business rules.”</p>
+          </div>
+          <div class="mini">
+            <h3>What this proves</h3>
+            <ul>
+              <li>Relational modeling</li>
+              <li>Advanced SQL</li>
+              <li>dbt structure and testing</li>
+              <li>PL/SQL mindset</li>
+              <li>Performance awareness</li>
+            </ul>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>What Bosch asks</th><th>What your project shows</th></tr></thead>
+          <tbody>
+            <tr><td>PL/SQL expertise</td><td>Procedure, function, trigger, package examples</td></tr>
+            <tr><td>Oracle objects</td><td>DB-side logic and object thinking</td></tr>
+            <tr><td>Data modeling</td><td>Fact, dimensions, grain, joins</td></tr>
+            <tr><td>Performance</td><td>Indexes, query structure, analytical SQL</td></tr>
+            <tr><td>Collaboration & clarity</td><td>Documentation and explainability</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="practice" class="card">
+        <h2>12. Mini practice — test yourself</h2>
+        <div class="quiz">
+          <h3>Question 1: What is the grain of the sales fact table?</h3>
+          <button onclick="toggleAnswer('a1')">Show answer</button>
+          <div id="a1" class="answer">One row per product inside one transaction.</div>
+        </div>
+        <div class="quiz" style="margin-top:12px;">
+          <h3>Question 2: Why do we use DuckDB if we already have SQLite?</h3>
+          <button onclick="toggleAnswer('a2')">Show answer</button>
+          <div id="a2" class="answer">SQLite simulates operational storage. DuckDB is used as an analytical engine for easier and stronger analysis.</div>
+        </div>
+        <div class="quiz" style="margin-top:12px;">
+          <h3>Question 3: Why use dbt?</h3>
+          <button onclick="toggleAnswer('a3')">Show answer</button>
+          <div id="a3" class="answer">dbt organizes SQL into layers, adds testing, creates documentation, and makes the transformation logic easier to maintain.</div>
+        </div>
+        <div class="quiz" style="margin-top:12px;">
+          <h3>Question 4: What is the difference between a procedure and a function?</h3>
+          <button onclick="toggleAnswer('a4')">Show answer</button>
+          <div id="a4" class="answer">A procedure mainly performs an action. A function returns a value.</div>
+        </div>
+        <div class="quiz" style="margin-top:12px;">
+          <h3>Question 5: What makes SQL “advanced” here?</h3>
+          <button onclick="toggleAnswer('a5')">Show answer</button>
+          <div id="a5" class="answer">Using CTEs, joins, aggregations, and especially window functions like ROW_NUMBER, RANK, LAG and cumulative sums.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="wrap footer">
+    <p>This page was designed to be beginner-friendly and interview-friendly. Read it top to bottom once, then come back and practice the code blocks one by one.</p>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-copy');
+        const text = document.getElementById(id).innerText;
+        try {
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copied';
+          setTimeout(() => btn.textContent = old, 1200);
+        } catch {
+          btn.textContent = 'Copy failed';
+          setTimeout(() => btn.textContent = 'Copy', 1200);
+        }
+      });
+    });
+
+    function toggleAnswer(id) {
+      const el = document.getElementById(id);
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.querySelectorAll('.toggle-tabs').forEach(group => {
+      const buttons = group.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const parent = btn.closest('.card');
+          parent.querySelectorAll('.tabs-panel').forEach(p => p.classList.remove('active'));
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const target = parent.querySelector('#' + btn.getAttribute('data-target'));
+          if (target) target.classList.add('active');
+        });
+      });
+    });
+
+    const links = [...document.querySelectorAll('.sidebar a')];
+    const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+        }
+      });
+    }, { threshold: 0.45 });
+    sections.forEach(s => s && observer.observe(s));
+  </script>
+</body>
+</html>

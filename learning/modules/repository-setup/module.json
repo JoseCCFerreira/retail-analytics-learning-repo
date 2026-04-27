@@ -1,0 +1,9 @@
+{
+  "title": "Criar e Publicar o Repositorio Retail Analytics",
+  "description": "Guia prático para empacotar, criar o repositório no GitHub, subir o projeto e validar tudo localmente.",
+  "duration": "15 min",
+  "author": "GitHub Copilot",
+  "skills": ["learning-module"],
+  "prerequisites": ["Git", "GitHub account", "Python 3.10+"],
+  "tags": ["github", "git", "repository", "packaging", "retail-analytics"]
+}

@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retail Analytics Hub — Tudo Centralizado</title>
+  <style>
+    :root {
+      --bg: #071017;
+      --bg-2: #0f1a24;
+      --card: #122130;
+      --line: #23405a;
+      --text: #ecf6ff;
+      --muted: #b2c6d9;
+      --accent: #4ecdc4;
+      --accent-2: #ffd166;
+      --accent-3: #ff6b6b;
+      --accent-4: #8ecae6;
+      --ok: #7bd88f;
+      --warn: #ffb86b;
+      --err: #ff7676;
+      --shadow: 0 14px 36px rgba(0,0,0,.32);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Segoe UI", "Trebuchet MS", Tahoma, sans-serif;
+      background:
+        radial-gradient(circle at 15% 5%, rgba(78,205,196,.16), transparent 35%),
+        radial-gradient(circle at 90% 10%, rgba(142,202,230,.14), transparent 30%),
+        linear-gradient(180deg, #071017 0%, #0a1520 100%);
+      line-height: 1.65;
+    }
+
+    .wrap { max-width: 1220px; margin: 0 auto; padding: 22px 16px 40px; }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(18,33,48,.96), rgba(14,27,40,.93));
+      box-shadow: var(--shadow);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      top: -90px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(78,205,196,.24), transparent 70%);
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1.2;
+      color: #ddf7ff;
+    }
+
+    .subtitle { margin: 0; color: var(--muted); }
+
+    .chips {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: rgba(255,255,255,.03);
+      color: #cde2f6;
+      font-size: .86rem;
+    }
+
+    .quick-nav {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .quick-nav a {
+      text-decoration: none;
+      color: #05202c;
+      background: var(--accent);
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: 700;
+      font-size: .85rem;
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .quick-nav a:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+    .section {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(18,33,48,.95), rgba(15,28,41,.92));
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.28rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #e6f7ff;
+    }
+
+    h3 {
+      margin: 14px 0 8px;
+      color: var(--accent-4);
+      font-size: 1rem;
+    }
+
+    p { margin: 0 0 8px; color: var(--muted); }
+    ul { margin: 0 0 10px; padding-left: 20px; color: var(--muted); }
+    li { margin: 4px 0; }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+    }
+
+    .card a {
+      color: #aef4ff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .card a:hover { text-decoration: underline; }
+
+    .callout {
+      border-radius: 10px;
+      padding: 11px 12px;
+      margin: 10px 0;
+      border-left: 4px solid;
+      background: rgba(255,255,255,.03);
+      color: #d8ecff;
+    }
+
+    .ok { border-color: var(--ok); }
+    .warn { border-color: var(--warn); }
+    .err { border-color: var(--err); }
+
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+
+    pre {
+      margin: 8px 0 10px;
+      background: #0a1320;
+      border: 1px solid #24415e;
+      border-radius: 10px;
+      padding: 11px;
+      overflow-x: auto;
+      color: #dff4ff;
+      line-height: 1.5;
+    }
+
+    .steps {
+      display: grid;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .step {
+      border: 1px dashed #355777;
+      border-radius: 10px;
+      padding: 9px 10px;
+      background: rgba(142,202,230,.06);
+      color: #d6eaff;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      min-width: 760px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #26425c;
+      text-align: left;
+      padding: 8px 10px;
+      vertical-align: top;
+      color: #d3e6f9;
+      font-size: .92rem;
+    }
+
+    th {
+      color: #e9fbff;
+      background: rgba(78,205,196,.14);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: .76rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .pill-data { color: #b9f7f2; border-color: #3a8e88; background: rgba(78,205,196,.12); }
+    .pill-model { color: #ffe3a8; border-color: #9d7a33; background: rgba(255,209,102,.12); }
+    .pill-ml { color: #ffd1d1; border-color: #9f5151; background: rgba(255,107,107,.12); }
+    .pill-viz { color: #cbe9ff; border-color: #4e7394; background: rgba(142,202,230,.12); }
+    .pill-test { color: #c8ffd9; border-color: #4f8f66; background: rgba(123,216,143,.12); }
+
+    .footer {
+      margin-top: 16px;
+      text-align: center;
+      color: #9ab4cb;
+      font-size: .86rem;
+    }
+
+    @media (max-width: 780px) {
+      .hero, .section { padding: 14px; border-radius: 14px; }
+      .quick-nav a { padding: 6px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <section class="hero">
+      <h1>Retail Analytics Hub — Tudo Centralizado</h1>
+      <p class="subtitle">Guia único com secções práticas para: Data, Data Modeling, Machine Learning, Data Visualization, Testes, e fluxo Git/GitHub.</p>
+
+      <div class="chips">
+        <span class="chip">Data Pipeline</span>
+        <span class="chip">dbt Modeling</span>
+        <span class="chip">Supervised + Unsupervised ML</span>
+        <span class="chip">Streamlit + Plotly</span>
+        <span class="chip">PL/SQL + OLAP/OLTP</span>
+        <span class="chip">Git + GitHub</span>
+      </div>
+
+      <div class="quick-nav">
+        <a href="docs/retail_analytics_handbook.html">Handbook</a>
+        <a href="docs/retail_case_documento_unico.html">Documento Único</a>
+        <a href="docs/criar_tudo_do_zero_retail_case.html">Criar do Zero</a>
+        <a href="docs/aprender_deep_learning_pytorch_tensorflow.html">Deep Learning</a>
+        <a href="#sec-overview">Visão Geral</a>
+        <a href="#sec-git">Git & GitHub</a>
+        <a href="#sec-platform">Windows/macOS/Linux</a>
+        <a href="#sec-case">Caso Realista</a>
+        <a href="#sec-data">Data</a>
+        <a href="#sec-modeling">Data Modeling</a>
+        <a href="#sec-ml">Machine Learning</a>
+        <a href="#sec-viz">Data Visualization</a>
+        <a href="#sec-tests">Testes</a>
+        <a href="#sec-runall">Executar Tudo</a>
+      </div>
+    </section>
+
+    <section id="sec-overview" class="section">
+      <h2>1) Visão Geral do Repositório</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Área</th>
+              <th>Ficheiros Principais</th>
+              <th>Objectivo</th>
+              <th>Output Esperado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-data">Data</span></td>
+              <td>python/generate_data.py, python/setup_sqlite.py, python/setup_duckdb.py, python/run_pipeline.py</td>
+              <td>Gerar dados sintéticos, preparar OLTP em SQLite, carregar camada analítica em DuckDB</td>
+              <td>data/*.csv, data/retail_analytics.duckdb</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-model">Data Modeling</span></td>
+              <td>dbt_retail_analytics/models/**/*.sql, dbt_retail_analytics/models/schema.yml</td>
+              <td>Modelos staging + marts e testes de qualidade em dbt</td>
+              <td>Modelos dbt compilados e testes verdes</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-ml">Machine Learning</span></td>
+              <td>python/ml_retail.py, docs/machine_learning_guide.html</td>
+              <td>Treinar modelos supervisionados e não-supervisionados e medir desempenho</td>
+              <td>data/ml_outputs/*.json, *.csv</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-viz">Data Visualization</span></td>
+              <td>streamlit/app.py</td>
+              <td>Dashboard com KPIs, receita mensal e top produtos</td>
+              <td>App Streamlit em browser</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-model">PL/SQL & OLAP/OLTP</span></td>
+              <td>sql/oracle_plsql_concepts/01_plsql_study_case.sql, sql/oracle_plsql_concepts/02_olap_oltp_plsql.sql</td>
+              <td>Estudar padrões Oracle para ETL, métricas, packages, OLAP vs OLTP</td>
+              <td>Conhecimento e scripts de referência</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-test">Repository Setup</span></td>
+              <td>learning/modules/repository-setup/criar-repositorio-retail-analytics.html, scripts/package_release.ps1</td>
+              <td>Empacotar o projeto, criar o repositório GitHub e validar onboarding técnico</td>
+              <td>ZIP em dist/ e guia HTML passo a passo</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-test">Zero to Product</span></td>
+              <td>learning/modules/zero-to-product/do-zero-ao-produto-final.html</td>
+              <td>Percurso completo para iniciantes: ambiente, pipeline, dbt, ML, dashboards e publicação</td>
+              <td>Produto final funcional + checklist de entrega</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout ok">
+        Recomendação: usar esta página como "cockpit" do projecto e abrir os guias detalhados nas secções abaixo.
+      </div>
+
+      <div class="grid" style="margin-top:12px;">
+        <article class="card">
+          <a href="docs/retail_analytics_handbook.html">Retail Analytics Handbook</a>
+          <p>Documento central único com construção do projeto, teoria, instalação, execução, ML, Deep Learning, Git e PL/SQL.</p>
+        </article>
+        <article class="card">
+          <a href="docs/retail_case_documento_unico.html">Documento único para leigos</a>
+          <p>Guia completo com problema, passos, código, instalação, dbt, PL/SQL, atalhos e Machine Learning explicado.</p>
+        </article>
+        <article class="card">
+          <a href="docs/criar_tudo_do_zero_retail_case.html">Documento para criar tudo do zero</a>
+          <p>Guia para criares tu mesmo as pastas, os ficheiros, o código e o repositório desde uma pasta vazia.</p>
+        </article>
+        <article class="card">
+          <a href="docs/aprender_deep_learning_pytorch_tensorflow.html">Documento de Deep Learning</a>
+          <p>Trilha de aprendizagem com base teórica e prática para PyTorch, TensorFlow e ferramentas de experimentação.</p>
+        </article>
+        <article class="card">
+          <a href="docs/executar_pytorch_tensorflow_retail.html">Guia para executar PyTorch e TensorFlow</a>
+          <p>Passos de instalação, apoio teórico e casos práticos de execução sobre o dataset retail.</p>
+        </article>
+        <article class="card">
+          <a href="learning/modules/repository-setup/criar-repositorio-retail-analytics.html">Guia HTML: criar e publicar o repositório</a>
+          <p>Módulo interativo com todos os passos para empacotar, criar o repo e validar o projeto noutra máquina.</p>
+        </article>
+        <article class="card">
+          <a href="learning/modules/zero-to-product/do-zero-ao-produto-final.html">Guia HTML: do zero ao produto final</a>
+          <p>Percurso completo para iniciantes totais, desde a preparação do ambiente até publicação no GitHub.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="sec-git" class="section">
+      <h2>2) Git e GitHub — Como usar aqui</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Fluxo base para trabalhar com segurança</h3>
+          <div class="steps">
+            <div class="step"><strong>Passo 1:</strong> Actualizar branch principal<br><code>git checkout main</code><br><code>git pull origin main</code></div>
+            <div class="step"><strong>Passo 2:</strong> Criar branch de trabalho<br><code>git checkout -b feat/ml-central-hub</code></div>
+            <div class="step"><strong>Passo 3:</strong> Implementar mudanças e testar</div>
+            <div class="step"><strong>Passo 4:</strong> Adicionar e commitar<br><code>git add .</code><br><code>git commit -m "feat: add centralized project hub and ML workflow"</code></div>
+            <div class="step"><strong>Passo 5:</strong> Publicar branch<br><code>git push -u origin feat/ml-central-hub</code></div>
+            <div class="step"><strong>Passo 6:</strong> Abrir Pull Request no GitHub</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Comandos úteis no dia-a-dia</h3>
+          <pre>git status
+git branch
+git log --oneline --decorate --graph -n 20
+git diff
+git diff --staged
+git restore --staged &lt;ficheiro&gt;    # tirar do stage
+git checkout -- &lt;ficheiro&gt;          # descartar alterações locais</pre>
+          <p>Para reverter um commit já publicado de forma segura:</p>
+          <pre>git revert &lt;hash_do_commit&gt;</pre>
+        </article>
+      </div>
+
+      <div class="grid" style="margin-top:10px;">
+        <article class="card">
+          <h3>Boas práticas de commit</h3>
+          <ul>
+            <li>Um commit = uma intenção clara</li>
+            <li>Mensagens no formato: <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>test:</code>, <code>refactor:</code></li>
+            <li>Executar testes antes de commitar</li>
+            <li>Não misturar mudanças de docs + código crítico no mesmo commit, quando possível</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Modelo de Pull Request (GitHub)</h3>
+          <pre>Título:
+feat: centralize project guide and validation matrix
+
+Descrição:
+- add centralized index with sections for Data/Modeling/ML/Viz/Tests
+- add Git and GitHub workflow instructions
+- include validation commands for each layer
+
+Checklist:
+[ ] Data pipeline executed
+[ ] dbt run and dbt test OK
+[ ] ML pipeline executed and outputs generated
+[ ] Streamlit app opened successfully
+[ ] Docs links verified</pre>
+        </article>
+      </div>
+
+      <div class="callout warn">
+        Se estiveres a aprender, faz commits pequenos e frequentes. É mais fácil perceber erros e voltar atrás sem dor.
+      </div>
+    </section>
+
+    <section id="sec-platform" class="section">
+      <h2>3) Instalação, Running e Testing por Sistema Operativo</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Windows (PowerShell)</h3>
+          <pre># Instalação
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# Running
+python python/run_pipeline.py
+python python/ml_retail.py
+streamlit run streamlit/app.py
+
+# Testing
+python python/validate_project.py
+python python/validate_project.py --include-dbt</pre>
+        </article>
+
+        <article class="card">
+          <h3>macOS (zsh/bash)</h3>
+          <pre># Instalação
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# Running
+python python/run_pipeline.py
+python python/ml_retail.py
+streamlit run streamlit/app.py
+
+# Testing
+python python/validate_project.py
+python python/validate_project.py --include-dbt</pre>
+        </article>
+
+        <article class="card">
+          <h3>Linux (bash)</h3>
+          <pre># Instalação
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# Running
+python python/run_pipeline.py
+python python/ml_retail.py
+streamlit run streamlit/app.py
+
+# Testing
+python python/validate_project.py
+python python/validate_project.py --include-dbt</pre>
+        </article>
+      </div>
+
+      <h3>Teste automatizado no GitHub</h3>
+      <p>CI multi-OS adicionada em <a href=".github/workflows/cross-platform-validate.yml">.github/workflows/cross-platform-validate.yml</a>, executando validação full em ubuntu-latest, windows-latest e macos-latest.</p>
+
+      <div class="callout ok">
+        Com isto tens o mesmo processo em local e no GitHub: instalação, execução da pipeline, treino ML, validação de outputs e validação dbt.
+      </div>
+    </section>
+
+    <section id="sec-case" class="section">
+      <h2>4) Caso Realista de Teste — Black Friday 2025</h2>
+
+      <div class="callout ok">
+        Contexto de negócio: retalho alimentar com campanha forte de Black Friday, aumento de tráfego, descontos agressivos em categorias específicas e mudança no mix de pagamentos.
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>O que pretendemos seguir</h3>
+          <ul>
+            <li><strong>Receita:</strong> pico no dia 2025-11-28 vs baseline de Novembro</li>
+            <li><strong>Desconto:</strong> aumento do discount ratio no período 2025-11-28..2025-12-01</li>
+            <li><strong>Pagamentos:</strong> subida de MBWay após 2025-11-27</li>
+            <li><strong>Mix de categorias:</strong> snacks e cleaning com maior peso na campanha</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>O que esperamos ver</h3>
+          <ul>
+            <li>Black Friday com uplift forte de receita diária</li>
+            <li>Margem pressionada por maior desconto médio</li>
+            <li>Mudança de comportamento no checkout (menos cash, mais mobile)</li>
+            <li>Base ideal para validar modelos de classificação e segmentação</li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Ficheiros do caso</h3>
+      <ul>
+        <li><a href="python/generate_test_case_black_friday.py">python/generate_test_case_black_friday.py</a> — gera dataset e DuckDB do caso</li>
+        <li><a href="python/analyze_test_case_black_friday.py">python/analyze_test_case_black_friday.py</a> — compara baseline vs evento e imprime sinais</li>
+        <li><a href="streamlit/case_black_friday_app.py">streamlit/case_black_friday_app.py</a> — dashboard visual baseline vs campanha</li>
+        <li><a href="data/test_cases/black_friday_2025/expected_signals_case.csv">data/test_cases/black_friday_2025/expected_signals_case.csv</a> — sinais esperados</li>
+      </ul>
+
+      <h3>Como correr</h3>
+      <pre>npm run case:generate
+npm run case:analyze
+npm run case:dashboard</pre>
+
+      <div class="callout warn">
+        Este caso é semi-sintético mas com dinâmica realista de negócio. Serve para experimentar hipóteses e validar se os pipelines e modelos conseguem capturar sinais esperados de campanha.
+      </div>
+    </section>
+
+    <section id="sec-data" class="section">
+      <h2>5) Data — Ingestão e Preparação</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>O que esta secção cobre</h3>
+          <ul>
+            <li>Geração de dados sintéticos (clientes, produtos, lojas, transacções, itens)</li>
+            <li>Carga em SQLite (visão OLTP)</li>
+            <li>Carga em DuckDB e criação de <code>fct_sales</code> (visão analítica)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Scripts principais</h3>
+          <ul>
+            <li><a href="python/generate_data.py">python/generate_data.py</a></li>
+            <li><a href="python/setup_sqlite.py">python/setup_sqlite.py</a></li>
+            <li><a href="python/setup_duckdb.py">python/setup_duckdb.py</a></li>
+            <li><a href="python/run_pipeline.py">python/run_pipeline.py</a></li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Comandos para correr</h3>
+      <pre>python python/run_pipeline.py</pre>
+
+      <h3>Validações Data (sanity checks)</h3>
+      <pre># listar ficheiros gerados
+python -c "from pathlib import Path; p=Path('data'); print([x.name for x in p.glob('*')])"
+
+# contar linhas em CSV principais
+python -c "import pandas as pd; print('customers', len(pd.read_csv('data/customers.csv'))); print('products', len(pd.read_csv('data/products.csv'))); print('transactions', len(pd.read_csv('data/transactions.csv'))); print('sales_items', len(pd.read_csv('data/sales_items.csv')))"
+
+# validar DuckDB e fct_sales
+python -c "import duckdb; con=duckdb.connect('data/retail_analytics.duckdb'); print(con.execute('select count(*) from fct_sales').fetchone()[0]); con.close()"</pre>
+
+      <div class="callout ok">
+        Resultado esperado: sem erros, ficheiro data/retail_analytics.duckdb criado, tabela fct_sales com volume coerente.
+      </div>
+    </section>
+
+    <section id="sec-modeling" class="section">
+      <h2>6) Data Modeling — dbt</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Objectivo</h3>
+          <p>Aplicar modelação com camadas staging e marts usando dbt, garantindo qualidade com testes em schema.yml.</p>
+          <ul>
+            <li>staging: materialized as view</li>
+            <li>marts: materialized as table</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Ficheiros-chave</h3>
+          <ul>
+            <li><a href="dbt_retail_analytics/dbt_project.yml">dbt_retail_analytics/dbt_project.yml</a></li>
+            <li><a href="dbt_retail_analytics/models/schema.yml">dbt_retail_analytics/models/schema.yml</a></li>
+            <li><a href="dbt_retail_analytics/models/marts/fct_sales.sql">dbt_retail_analytics/models/marts/fct_sales.sql</a></li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Comandos dbt</h3>
+      <pre>cd dbt_retail_analytics
+
+# 1) Garantir profile configurado a partir de profiles.example.yml
+# 2) Executar modelos
+dbt run
+
+# 3) Executar testes de qualidade
+dbt test
+
+# 4) Ver documentação (opcional)
+dbt docs generate
+dbt docs serve</pre>
+
+      <h3>Testes de Data Modeling existentes</h3>
+      <ul>
+        <li><strong>not_null + unique</strong> para chaves como transaction_id e sales_item_id</li>
+        <li><strong>relationships</strong> para integridade referencial entre fact e staging</li>
+      </ul>
+
+      <div class="callout warn">
+        Se <code>dbt test</code> falhar, valida upstream data primeiro (CSV/duckdb) antes de mexer em SQL dos modelos.
+      </div>
+    </section>
+
+    <section id="sec-ml" class="section">
+      <h2>7) Machine Learning — Supervised + Unsupervised</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Componentes</h3>
+          <ul>
+            <li>Script principal: <a href="python/ml_retail.py">python/ml_retail.py</a></li>
+            <li>Guia detalhado: <a href="docs/machine_learning_guide.html">docs/machine_learning_guide.html</a></li>
+            <li>Output: <code>data/ml_outputs/</code></li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Modelos incluídos</h3>
+          <ul>
+            <li><strong>Regressão:</strong> Linear Regression, Decision Tree, Random Forest, Gradient Boosting</li>
+            <li><strong>Classificação:</strong> Logistic Regression, Decision Tree, Random Forest</li>
+            <li><strong>Clustering:</strong> K-Means + DBSCAN</li>
+            <li><strong>Redução dimensional:</strong> PCA</li>
+            <li><strong>Validação:</strong> Cross-validation 5-fold</li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Comando para executar ML</h3>
+      <pre>python python/ml_retail.py</pre>
+
+      <h3>Testes e validações ML</h3>
+      <pre># validar sintaxe do script
+python -c "import ast; ast.parse(open('python/ml_retail.py', encoding='utf-8').read()); print('Syntax OK')"
+
+# correr ML e verificar outputs
+python python/ml_retail.py
+python -c "from pathlib import Path; p=Path('data/ml_outputs'); print([x.name for x in p.glob('*')])"
+
+# validar JSON de métricas
+python -c "import json; d=json.load(open('data/ml_outputs/model_metrics.json', encoding='utf-8')); print(d.keys())"</pre>
+
+      <div class="callout ok">
+        Resultado esperado: ficheiros model_metrics.json, regression_feature_importance.csv, cluster_assignments.csv e pca_projections.csv criados sem erros.
+      </div>
+    </section>
+
+    <section id="sec-viz" class="section">
+      <h2>8) Data Visualization — Streamlit + Plotly</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>O que existe no dashboard</h3>
+          <ul>
+            <li>KPIs: total transações, receita total, valor médio por linha</li>
+            <li>Série temporal: receita por mês</li>
+            <li>Top produtos por receita</li>
+          </ul>
+          <p>Fonte: DuckDB via <a href="streamlit/app.py">streamlit/app.py</a></p>
+        </article>
+
+        <article class="card">
+          <h3>Executar visualização</h3>
+          <pre>streamlit run streamlit/app.py</pre>
+          <p>Depois abrir o URL mostrado no terminal (normalmente localhost:8501).</p>
+        </article>
+      </div>
+
+      <h3>Validações de visualização</h3>
+      <pre># smoke test rápido do streamlit script
+python -m py_compile streamlit/app.py
+
+# confirmar db disponível para a app
+python -c "from pathlib import Path; print(Path('data/retail_analytics.duckdb').exists())"</pre>
+
+      <div class="callout warn">
+        Se a app mostrar aviso de base em falta, executa primeiro <code>python python/run_pipeline.py</code>.
+      </div>
+    </section>
+
+    <section id="sec-tests" class="section">
+      <h2>9) Matriz de Testes por Secção</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Secção</th>
+              <th>Teste</th>
+              <th>Comando</th>
+              <th>Critério de Sucesso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data</td>
+              <td>Pipeline end-to-end</td>
+              <td><code>python python/run_pipeline.py</code></td>
+              <td>Sem exceptions; DB criado</td>
+            </tr>
+            <tr>
+              <td>Data</td>
+              <td>Contagem de registos</td>
+              <td><code>python -c "import duckdb; con=duckdb.connect('data/retail_analytics.duckdb'); print(con.execute('select count(*) from fct_sales').fetchone()[0]); con.close()"</code></td>
+              <td>Count &gt; 0</td>
+            </tr>
+            <tr>
+              <td>Data Modeling</td>
+              <td>Build dbt models</td>
+              <td><code>cd dbt_retail_analytics &amp;&amp; dbt run</code></td>
+              <td>Run completed</td>
+            </tr>
+            <tr>
+              <td>Data Modeling</td>
+              <td>dbt tests</td>
+              <td><code>cd dbt_retail_analytics &amp;&amp; dbt test</code></td>
+              <td>All tests pass</td>
+            </tr>
+            <tr>
+              <td>Machine Learning</td>
+              <td>Sintaxe script</td>
+              <td><code>python -c "import ast; ast.parse(open('python/ml_retail.py', encoding='utf-8').read()); print('Syntax OK')"</code></td>
+              <td>Syntax OK</td>
+            </tr>
+            <tr>
+              <td>Machine Learning</td>
+              <td>Execução treino</td>
+              <td><code>python python/ml_retail.py</code></td>
+              <td>Outputs criados em data/ml_outputs</td>
+            </tr>
+            <tr>
+              <td>Data Visualization</td>
+              <td>Compile app</td>
+              <td><code>python -m py_compile streamlit/app.py</code></td>
+              <td>Sem erro de compilação</td>
+            </tr>
+            <tr>
+              <td>Data Visualization</td>
+              <td>Run app</td>
+              <td><code>streamlit run streamlit/app.py</code></td>
+              <td>App abre com gráficos e KPIs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout ok">
+        Esta matriz permite validar cada camada de forma independente, evitando confundir origem de falhas.
+      </div>
+    </section>
+
+    <section id="sec-runall" class="section">
+      <h2>10) Executar Tudo — Ordem Recomendada</h2>
+
+      <div class="steps">
+        <div class="step"><strong>1.</strong> <code>pip install -r requirements.txt</code></div>
+        <div class="step"><strong>2.</strong> <code>python python/run_pipeline.py</code></div>
+        <div class="step"><strong>3.</strong> <code>cd dbt_retail_analytics &amp;&amp; dbt run &amp;&amp; dbt test</code></div>
+        <div class="step"><strong>4.</strong> <code>python python/ml_retail.py</code></div>
+        <div class="step"><strong>5.</strong> <code>streamlit run streamlit/app.py</code></div>
+        <div class="step"><strong>6.</strong> <code>python -m http.server 8080</code> (para navegar docs HTML)</div>
+      </div>
+
+      <h3>Scripts npm disponíveis</h3>
+      <pre>npm run docs:serve
+npm run ml:run
+    npm run package:zip
+    npm run pipeline:full
+    npm run case:generate
+    npm run case:analyze
+    npm run case:dashboard
+    npm run validate:quick
+    npm run validate:full</pre>
+
+      <h3>Links úteis de documentação no projecto</h3>
+      <div class="grid">
+        <article class="card"><a href="README.md">README.md</a><p>Setup geral e visão do projecto.</p></article>
+        <article class="card"><a href="docs/retail_case_documento_unico.html">docs/retail_case_documento_unico.html</a><p>Documento único para iniciantes com OLTP, OLAP, dbt, Streamlit, ML, PL/SQL e atalhos.</p></article>
+        <article class="card"><a href="docs/guia_completo.html">docs/guia_completo.html</a><p>Guia completo end-to-end.</p></article>
+        <article class="card"><a href="docs/machine_learning_guide.html">docs/machine_learning_guide.html</a><p>Guia detalhado de ML e teoria.</p></article>
+        <article class="card"><a href="docs/analise_profunda.html">docs/analise_profunda.html</a><p>Análise técnica aprofundada.</p></article>
+      </div>
+    </section>
+
+    <p class="footer">Retail Analytics Hub — versão centralizada por secções (Data · Modeling · ML · Viz · Tests · Git/GitHub)</p>
+  </div>
+</body>
+</html>

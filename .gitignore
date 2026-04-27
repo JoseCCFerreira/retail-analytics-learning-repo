@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+.venv_mac/
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+# Local packaging / temp
+dist/
+.tmp_dbt_profiles/
+
+# Databases / generated files
+data/*.db
+data/*.duckdb
+data/*.csv
+data/ml_outputs/
+!data/test_cases/
+!data/test_cases/**
+
+# dbt
+dbt_retail_analytics/target/
+dbt_retail_analytics/logs/
+dbt_retail_analytics/dbt_packages/
+
+# Streamlit
+.streamlit/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

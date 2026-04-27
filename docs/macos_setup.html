@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalação macOS — Retail Analytics</title>
+  <style>
+    :root {
+      --bg:#0b1020; --card:#121933; --card2:#192347; --text:#edf2ff; --muted:#b8c3e6;
+      --accent:#6ea8fe; --accent2:#9bdbff; --ok:#64d2a6; --warn:#ffd166;
+      --border:#2a3768; --code:#0c1328; --radius:16px; --shadow:0 10px 32px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0e1530);color:var(--text);line-height:1.65;padding-bottom:60px}
+    .hero{padding:46px 24px 32px;background:radial-gradient(ellipse at top right,rgba(110,168,254,.2),transparent 40%);border-bottom:1px solid var(--border);text-align:center}
+    .hero h1{font-size:2.2rem;color:var(--accent2)}
+    .hero p{color:var(--muted);max-width:720px;margin:12px auto 0;font-size:1.02rem}
+    .badge{display:inline-block;padding:5px 14px;border-radius:999px;font-size:.82rem;font-weight:700;letter-spacing:.04em;background:rgba(155,219,255,.1);color:var(--accent2);border:1px solid rgba(155,219,255,.3);margin-bottom:12px}
+    nav.toc{background:rgba(11,16,32,.9);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;position:sticky;top:0;z-index:99}
+    nav.toc a{color:var(--muted);text-decoration:none;font-size:.82rem;padding:4px 10px;border-radius:8px;border:1px solid transparent}
+    nav.toc a:hover{color:var(--text);background:rgba(110,168,254,.1);border-color:var(--border)}
+    .wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+    .section{margin:24px auto 0;max-width:1000px;padding:0 18px}
+    .card{background:linear-gradient(160deg,rgba(18,25,51,.97),rgba(25,35,71,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 26px;margin-bottom:0}
+    h2{font-size:1.4rem;color:var(--accent2);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+    h3{font-size:1.05rem;color:var(--accent);margin:18px 0 8px}
+    h4{color:var(--ok);font-size:.95rem;margin:12px 0 6px}
+    p,li{color:var(--muted)} li{margin-left:18px;margin-bottom:5px}
+    code,pre{font-family:Consolas,ui-monospace,monospace}
+    pre{background:var(--code);color:#dce7ff;border:1px solid #223060;border-radius:12px;padding:14px 16px;overflow-x:auto;margin:10px 0;font-size:.9rem}
+    code{background:rgba(110,168,254,.1);color:var(--accent2);padding:2px 6px;border-radius:5px;font-size:.9rem}
+    pre code{background:none;color:inherit;padding:0}
+    .callout{border-left:4px solid var(--warn);background:rgba(255,209,102,.07);padding:12px 16px;border-radius:10px;margin:12px 0}
+    .callout.ok{border-color:var(--ok);background:rgba(100,210,166,.07)}
+    .callout.info{border-color:var(--accent);background:rgba(110,168,254,.07)}
+    .step-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+    .step-num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(110,168,254,.18);border:1px solid rgba(110,168,254,.4);color:var(--accent2);font-weight:700;font-size:.88rem;flex-shrink:0}
+    .step-body{flex:1}
+    .divider{margin:24px 18px 0;border:none;border-top:1px solid var(--border)}
+    .tab-bar{display:flex;gap:8px;margin-bottom:12px}
+    .tab-bar button{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);padding:8px 14px;border-radius:10px;cursor:pointer;font-size:.88rem;font-family:inherit}
+    .tab-bar button.on{background:rgba(110,168,254,.15);color:var(--text);border-color:rgba(110,168,254,.4)}
+    .tab-panel{display:none} .tab-panel.on{display:block}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:12px 0}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+    th{color:var(--text);background:rgba(110,168,254,.08);font-size:.88rem}
+    td{color:var(--muted);font-size:.86rem}
+    @media(max-width:720px){nav.toc{display:none}}
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">macOS — GUIA COMPLETO</div>
+  <h1>Instalar e correr no macOS</h1>
+  <p>Tudo o que precisas para ter o projeto a funcionar num Mac — do zero até ao Streamlit a correr no browser, com todos os detalhes específicos do macOS.</p>
+</div>
+
+<nav class="toc">
+  <a href="#m0">Pré-requisitos</a>
+  <a href="#m1">Python</a>
+  <a href="#m2">Homebrew</a>
+  <a href="#m3">Clonar</a>
+  <a href="#m4">venv</a>
+  <a href="#m5">Dependências</a>
+  <a href="#m6">Pipeline</a>
+  <a href="#m7">dbt</a>
+  <a href="#m8">Streamlit</a>
+  <a href="#m9">Docs</a>
+  <a href="#m10">Troubleshooting</a>
+</nav>
+
+
+<!-- ══ SECÇÃO 0 — PRÉ-REQUISITOS ══ -->
+<div class="section" id="m0">
+  <div class="card">
+    <h2>0. Pré-requisitos</h2>
+    <table>
+      <tr><th>Componente</th><th>Versão mínima</th><th>Como verificar</th></tr>
+      <tr><td>macOS</td><td>12 Monterey+</td><td><code>sw_vers</code></td></tr>
+      <tr><td>Python</td><td>3.10+</td><td><code>python3 --version</code></td></tr>
+      <tr><td>pip</td><td>23+</td><td><code>pip3 --version</code></td></tr>
+      <tr><td>Git</td><td>qualquer</td><td><code>git --version</code></td></tr>
+      <tr><td>Xcode CLI Tools</td><td>—</td><td><code>xcode-select -p</code></td></tr>
+    </table>
+    <div class="callout info">
+      <strong>Nota macOS:</strong> no macOS o comando é quase sempre <code>python3</code> e <code>pip3</code>
+      em vez de <code>python</code> e <code>pip</code>. Dentro do ambiente virtual, ambos ficam disponíveis como
+      <code>python</code> e <code>pip</code>.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 1 — PYTHON ══ -->
+<hr class="divider">
+<div class="section" id="m1">
+  <div class="card">
+    <h2>1. Instalar Python 3.10+</h2>
+
+    <h3>Opção A — Homebrew (recomendado)</h3>
+    <p>Se ainda não tens Homebrew, instala primeiro (ver secção 2). Depois:</p>
+    <pre>brew install python@3.12</pre>
+    <p>Adiciona ao PATH (coloca no final do teu <code>~/.zshrc</code> ou <code>~/.bash_profile</code>):</p>
+    <pre>export PATH="$(brew --prefix python@3.12)/bin:$PATH"</pre>
+    <p>Aplica as alterações:</p>
+    <pre>source ~/.zshrc</pre>
+    <p>Confirma:</p>
+    <pre>python3 --version
+# Python 3.12.x</pre>
+
+    <h3>Opção B — Instalador oficial</h3>
+    <p>Download em <a href="https://www.python.org/downloads/macos/" style="color:var(--accent)">python.org/downloads/macos</a>. Corre o <code>.pkg</code> e segue o instalador. Depois confirma:</p>
+    <pre>python3 --version</pre>
+
+    <h3>Opção C — pyenv (melhor para múltiplas versões)</h3>
+    <pre>brew install pyenv
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+source ~/.zshrc
+
+pyenv install 3.12.3
+pyenv global 3.12.3
+python3 --version</pre>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 2 — HOMEBREW ══ -->
+<hr class="divider">
+<div class="section" id="m2">
+  <div class="card">
+    <h2>2. Instalar Homebrew (opcional mas recomendado)</h2>
+    <p>Homebrew é o gestor de pacotes do macOS. Facilita muito a instalação de Python, Git e outras ferramentas.</p>
+    <pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+    <p>Após instalação, em Macs com chip Apple Silicon (M1/M2/M3/M4) adiciona ao PATH:</p>
+    <pre>echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+source ~/.zshrc
+brew --version</pre>
+    <div class="callout info">
+      <strong>Intel vs Apple Silicon:</strong> em Macs Intel, o Homebrew instala em <code>/usr/local</code>.
+      Em Apple Silicon (M1+), instala em <code>/opt/homebrew</code>. O comando acima funciona para ambos.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 3 — CLONAR ══ -->
+<hr class="divider">
+<div class="section" id="m3">
+  <div class="card">
+    <h2>3. Clonar o repositório</h2>
+    <p>Confirma que tens Git:</p>
+    <pre>git --version
+# Se não estiver: xcode-select --install  (instala Xcode CLI Tools com Git incluído)</pre>
+    <p>Clona o repositório:</p>
+    <pre>git clone &lt;URL_DO_REPOSITORIO&gt;
+cd retail_case_repo_with_dynamic_beginner_html</pre>
+    <div class="callout ok">
+      <strong>Se já tens a pasta localmente</strong>, abre o Terminal, navega até à pasta com <code>cd</code>
+      ou arrasta a pasta para o Terminal para auto-completar o caminho.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 4 — VENV ══ -->
+<hr class="divider">
+<div class="section" id="m4">
+  <div class="card">
+    <h2>4. Criar e ativar ambiente virtual</h2>
+
+    <div class="step-row">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Cria o venv</h4>
+        <pre>python3 -m venv .venv</pre>
+        <p>Cria a pasta <code>.venv/</code> com Python isolado dentro do projeto.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Ativa o venv</h4>
+        <pre>source .venv/bin/activate</pre>
+        <p>O prompt do Terminal passa a mostrar <code>(.venv)</code> no início. Isso confirma que está ativo.</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Confirma Python ativo</h4>
+        <pre>which python
+# deve mostrar: .../retail_case_repo.../`.venv/bin/python`</pre>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Para desativar</strong> o venv quando acabares: <code>deactivate</code>
+      <br><strong>Para reativar</strong> em sessões futuras: <code>source .venv/bin/activate</code>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 5 — DEPENDÊNCIAS ══ -->
+<hr class="divider">
+<div class="section" id="m5">
+  <div class="card">
+    <h2>5. Instalar dependências Python</h2>
+
+    <pre>python -m pip install --upgrade pip
+pip install -r requirements.txt</pre>
+
+    <p>Instala automaticamente:</p>
+    <table>
+      <tr><th>Pacote</th><th>Para quê</th></tr>
+      <tr><td><code>pandas</code></td><td>Manipulação tabular e leitura de CSV</td></tr>
+      <tr><td><code>duckdb</code></td><td>Motor analítico local</td></tr>
+      <tr><td><code>sqlite-utils</code></td><td>Utilitários SQLite</td></tr>
+      <tr><td><code>dbt-core</code> + <code>dbt-duckdb</code></td><td>Transformação SQL com governance</td></tr>
+      <tr><td><code>streamlit</code></td><td>Dashboard de visualização</td></tr>
+      <tr><td><code>plotly</code></td><td>Gráficos interativos no Streamlit</td></tr>
+      <tr><td><code>faker</code></td><td>Geração de dados sintéticos</td></tr>
+      <tr><td><code>pyarrow</code></td><td>Suporte a formatos colunares</td></tr>
+    </table>
+
+    <div class="callout ok">
+      <strong>Sem erros?</strong> Estás pronto para executar o pipeline.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 6 — PIPELINE ══ -->
+<hr class="divider">
+<div class="section" id="m6">
+  <div class="card">
+    <h2>6. Executar o pipeline de dados</h2>
+
+    <h3>Tudo de uma vez</h3>
+    <pre>python python/run_pipeline.py</pre>
+
+    <h3>Ou passo a passo</h3>
+    <div class="step-row">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Gerar CSVs com dados simulados</h4>
+        <pre>python python/generate_data.py</pre>
+        <p>Cria <code>data/customers.csv</code>, <code>products.csv</code>, <code>stores.csv</code>, <code>transactions.csv</code>, <code>sales_items.csv</code>.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Criar base SQLite</h4>
+        <pre>python python/setup_sqlite.py</pre>
+        <p>Resultado: <code>data/retail_app.db</code></p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Criar base DuckDB</h4>
+        <pre>python python/setup_duckdb.py</pre>
+        <p>Resultado: <code>data/retail_analytics.duckdb</code></p>
+      </div>
+    </div>
+
+    <h3>Validar</h3>
+    <pre>ls -lh data/
+# Deves ver retail_app.db e retail_analytics.duckdb</pre>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 7 — DBT ══ -->
+<hr class="divider">
+<div class="section" id="m7">
+  <div class="card">
+    <h2>7. Configurar e executar dbt</h2>
+
+    <div class="step-row">
+      <span class="step-num">1</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Cria o diretório de perfis dbt</h4>
+        <pre>mkdir -p ~/.dbt</pre>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">2</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Cria o ficheiro profiles.yml</h4>
+        <pre>cat &lt;&lt; 'EOF' &gt; ~/.dbt/profiles.yml
+retail_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /CAMINHO/ABSOLUTO/data/retail_analytics.duckdb
+      threads: 4
+EOF</pre>
+        <p>Substitui <code>/CAMINHO/ABSOLUTO</code> pelo caminho real. Para o saber:</p>
+        <pre>pwd
+# copia o resultado e substitui acima</pre>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <span class="step-num">3</span>
+      <div class="step-body">
+        <h4 style="margin-top:0">Executa dbt</h4>
+        <pre>cd dbt_retail_analytics
+dbt run
+dbt test
+dbt docs generate && dbt docs serve</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 8 — STREAMLIT ══ -->
+<hr class="divider">
+<div class="section" id="m8">
+  <div class="card">
+    <h2>8. Executar o Streamlit</h2>
+    <pre>streamlit run streamlit/app.py</pre>
+    <p>Abre automaticamente o browser em <strong style="color:var(--text)">http://localhost:8501</strong>.</p>
+    <p>Para parar: <code>Ctrl + C</code> no Terminal.</p>
+    <div class="callout ok">
+      <strong>Dica macOS:</strong> para abrir o browser manualmente: <code>open http://localhost:8501</code>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 9 — DOCS ══ -->
+<hr class="divider">
+<div class="section" id="m9">
+  <div class="card">
+    <h2>9. Servir documentação local</h2>
+    <p>Na raiz do projeto:</p>
+    <pre>python -m http.server 8080</pre>
+    <p>Abre: <code>open http://localhost:8080</code></p>
+
+    <p>Com Node.js (opcional):</p>
+    <pre>npm install
+npm run docs:serve</pre>
+  </div>
+</div>
+
+
+<!-- ══ SECÇÃO 10 — TROUBLESHOOTING ══ -->
+<hr class="divider">
+<div class="section" id="m10">
+  <div class="card">
+    <h2>10. Troubleshooting macOS específico</h2>
+
+    <h3><code>python3: command not found</code></h3>
+    <p>Instala Python via Homebrew (<code>brew install python@3.12</code>) ou via instalador oficial.</p>
+
+    <h3><code>pip: command not found</code> dentro do venv</h3>
+    <pre>python -m ensurepip --upgrade</pre>
+
+    <h3>Erro de compilação em dependências</h3>
+    <p>Instala as Xcode Command Line Tools:</p>
+    <pre>xcode-select --install</pre>
+
+    <h3>Apple Silicon (M1/M2/M3/M4): conflitos de arquitetura</h3>
+    <p>Garante que estás a usar Python nativo ARM e não Rosetta:</p>
+    <pre>python3 -c "import platform; print(platform.machine())"
+# deve mostrar: arm64</pre>
+    <p>Se mostrar <code>x86_64</code>, estás em modo Rosetta. Reinstala Python via Homebrew nativo ARM.</p>
+
+    <h3><code>dbt: command not found</code></h3>
+    <p>Confirma que o venv está ativo (<code>source .venv/bin/activate</code>) e corre <code>pip install -r requirements.txt</code>.</p>
+
+    <h3>DuckDB: <code>path does not exist</code></h3>
+    <p>Usa o caminho absoluto no <code>profiles.yml</code> em vez de caminho relativo.</p>
+
+    <h3>Port 8080 ou 8501 já em uso</h3>
+    <pre>lsof -i :8080   # ver o que está a usar a porta
+kill -9 &lt;PID&gt;  # encerrar o processo</pre>
+    <p>Ou usa outra porta: <code>python -m http.server 8090</code></p>
+  </div>
+</div>
+
+<div style="text-align:center;color:var(--muted);font-size:.88rem;margin-top:28px;padding-bottom:20px;">
+  Retail Analytics Study Case · macOS Setup Guide ·
+  <a href="setup_and_installation.html" style="color:var(--accent)">Guia geral</a> ·
+  <a href="guia_completo.html" style="color:var(--accent)">Guia completo</a>
+</div>
+
+<script>
+  document.querySelectorAll('.tab-bar').forEach(bar => {
+    bar.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        const parent = btn.closest('.card') || document.body;
+        bar.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+        parent.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+        btn.classList.add('on');
+        parent.querySelector('#' + target).classList.add('on');
+      });
+    });
+    bar.querySelector('button')?.click();
+  });
+</script>
+
+</body>
+</html>

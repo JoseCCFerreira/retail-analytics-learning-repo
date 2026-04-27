@@ -1,0 +1,14 @@
+-r requirements.txt
+
+# Deep Learning and experimentation
+torch
+torchvision
+torchaudio
+tensorflow
+notebook
+jupyterlab
+mlflow
+optuna
+shap
+polars
+ipywidgets

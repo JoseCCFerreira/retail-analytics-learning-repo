@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Learning Module: Do Zero ao Produto Final</title>
+  <style>
+:root {
+  --brand-primary: #f59e0b;
+  --brand-primary-dim: rgba(245, 158, 11, .14);
+  --brand-primary-border: rgba(245, 158, 11, .35);
+  --brand-secondary: #2563eb;
+  --brand-secondary-dim: rgba(37, 99, 235, .10);
+  --brand-secondary-border: rgba(37, 99, 235, .25);
+  --brand-accent: #16a34a;
+  --brand-accent-dim: rgba(22, 163, 74, .12);
+  --brand-accent-border: rgba(22, 163, 74, .30);
+  --bg: #ffffff;
+  --bg-dark: #111827;
+  --ink: #111827;
+  --ink-secondary: #1f2937;
+  --muted: #4b5563;
+  --line: rgba(17, 24, 39, .12);
+  --font: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: rgba(17, 24, 39, .08);
+  z-index: 100;
+}
+.progress-bar-fill {
+  height: 100%; width: 0%; background: var(--brand-primary); transition: width .3s ease;
+}
+.main { min-height: 100vh; }
+.breadcrumb-nav {
+  padding: 18px 48px 0;
+  background: var(--bg-dark);
+}
+.breadcrumb-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--brand-primary-dim);
+  border: 1px solid var(--brand-primary-border);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.hero {
+  background: var(--bg-dark);
+  padding: 24px 48px 32px;
+  color: #fff;
+  margin-top: 4px;
+}
+.accent-rule {
+  width: 56px; height: 3px; background: var(--brand-primary); border: none; border-radius: 2px; margin-bottom: 14px;
+}
+.hero h1 {
+  font-size: 36px; font-weight: 900; line-height: 1.1; color: var(--brand-primary); margin-bottom: 8px;
+}
+.hero h1 span { color: #fff; font-weight: 500; }
+.tagline {
+  font-size: 17px; color: rgba(255,255,255,.74); max-width: 860px; line-height: 1.5; margin-top: 12px;
+}
+.time-badge {
+  display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+}
+.content-area {
+  max-width: 940px; margin: 0 auto; padding: 32px 48px 80px;
+}
+.intro-block { margin-bottom: 36px; }
+.intro-block .lead {
+  font-size: 16px; color: var(--ink-secondary); line-height: 1.6; margin-bottom: 16px;
+}
+.objectives {
+  padding: 18px 20px; border-radius: 16px; border: 1px solid var(--brand-secondary-border); background: var(--brand-secondary-dim);
+  margin-bottom: 18px;
+}
+.objectives h4 {
+  font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-secondary); margin-bottom: 10px;
+}
+.objectives ul { padding-left: 18px; }
+.objectives li { margin: 6px 0; }
+.expect-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 18px;
+}
+.expect-item {
+  border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #fff;
+}
+.expect-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 6px;
+}
+.expect-value { font-weight: 700; color: var(--ink); }
+.workflow-diagram {
+  border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: #fff; overflow-x: auto;
+}
+.phase-header {
+  display: flex; align-items: center; gap: 12px; margin: 44px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--line);
+}
+.phase-icon { font-size: 22px; flex-shrink: 0; }
+.phase-header h2 { font-size: 22px; font-weight: 800; color: var(--ink); }
+.step-card {
+  margin-bottom: 28px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff; transition: border-color .2s;
+}
+.completed-card { border-color: var(--brand-accent-border); }
+.step-card-header {
+  display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: rgba(17,24,39,.02); border-bottom: 1px solid var(--line);
+}
+.step-checkbox {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(17,24,39,.2);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fff; color: transparent; font-size: 12px; font-weight: 800;
+}
+.step-checkbox.checked {
+  background: var(--brand-accent); border-color: var(--brand-accent); color: #fff;
+}
+.step-card-header h3 { font-size: 17px; font-weight: 800; color: var(--ink); flex: 1; }
+.step-pill {
+  display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.step-pill.setup { background: rgba(107,114,128,.12); color: #4b5563; }
+.step-pill.plan { background: var(--brand-primary-dim); color: #92400e; }
+.step-pill.generate { background: var(--brand-secondary-dim); color: var(--brand-secondary); }
+.step-pill.qa { background: var(--brand-accent-dim); color: var(--brand-accent); }
+.step-card-body { padding: 18px 20px 20px; }
+.step-card-body p { color: var(--ink-secondary); margin-bottom: 12px; }
+.step-card-body h4 {
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 16px 0 8px;
+}
+.prompt-box {
+  border-radius: 14px; overflow: hidden; border: 1px solid rgba(17,24,39,.12); margin: 8px 0 10px;
+}
+.prompt-box-label {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #111827; color: #fff; padding: 10px 12px; font-size: 12px; font-weight: 700;
+}
+.copy-btn {
+  border: 1px solid rgba(255,255,255,.15); border-radius: 999px; background: rgba(255,255,255,.06); color: #fff; padding: 5px 10px; cursor: pointer;
+}
+.prompt-box pre {
+  background: #0f172a; color: #e5f0ff; padding: 14px; overflow-x: auto; white-space: pre-wrap;
+}
+.callout {
+  border-radius: 14px; padding: 12px 14px; margin: 12px 0; border-left: 4px solid;
+}
+.callout.warn { background: rgba(245,158,11,.08); border-color: var(--brand-primary); }
+.callout.tip { background: rgba(22,163,74,.08); border-color: var(--brand-accent); }
+.callout.info { background: rgba(37,99,235,.08); border-color: var(--brand-secondary); }
+.expandable {
+  border: 1px solid var(--line); border-radius: 14px; margin-top: 10px; overflow: hidden;
+}
+.expandable-trigger {
+  width: 100%; border: none; background: #fff; padding: 12px 14px; text-align: left; cursor: pointer; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 10px;
+}
+.expandable-content {
+  display: none; padding: 0 14px 14px; color: var(--ink-secondary);
+}
+.expandable.open .expandable-content { display: block; }
+.arrow { transition: transform .2s ease; }
+.expandable.open .arrow { transform: rotate(90deg); }
+.link-card {
+  display: grid; grid-template-columns: 36px 1fr 22px; gap: 12px; align-items: center; text-decoration: none; color: inherit;
+  border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: #fff; margin: 8px 0;
+}
+.link-icon { font-size: 18px; }
+.link-title { font-weight: 800; color: var(--ink); }
+.link-desc { color: var(--muted); font-size: 14px; }
+.link-arrow { color: var(--brand-secondary); font-weight: 800; }
+.completion-banner, .challenges {
+  display: none;
+}
+.completion-banner.visible, .challenges.visible { display: block; }
+.completion-banner {
+  margin-top: 36px; padding: 24px; background: var(--brand-accent-dim); border: 1px solid var(--brand-accent-border); border-radius: 18px; text-align: center;
+}
+.completion-banner .trophy { font-size: 34px; margin-bottom: 8px; }
+.challenges {
+  margin-top: 18px; border: 1px solid var(--line); border-radius: 18px; padding: 18px;
+}
+.challenge-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.challenge-card { border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.hub-link {
+  margin-top: 24px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; background: var(--brand-primary); color: #111827;
+  font-weight: 800; padding: 12px 16px; border-radius: 999px;
+}
+.module-footer {
+  margin-top: 18px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 13px;
+}
+.reset-btn {
+  border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 8px 12px; cursor: pointer;
+}
+@media (max-width: 720px) {
+  .breadcrumb-nav, .hero, .content-area { padding-left: 18px; padding-right: 18px; }
+  .hero h1 { font-size: 30px; }
+}
+  </style>
+</head>
+<body>
+  <div class="progress-bar"><div class="progress-bar-fill" id="progressBar"></div></div>
+  <main class="main">
+    <div class="breadcrumb-nav">
+      <a href="../../../index.html">Voltar ao hub principal</a>
+    </div>
+
+    <header class="hero">
+      <hr class="accent-rule" />
+      <h1>Do Zero ao Produto Final<br/><span>Retail Analytics para iniciantes</span></h1>
+      <p class="tagline">Segue este percurso para criar o projeto do início, preparar ambiente, correr pipeline de dados, executar dbt, treinar Machine Learning, abrir dashboards e publicar no GitHub. <span class="time-badge">&#9201; 35 min</span></p>
+    </header>
+
+    <div class="content-area">
+      <section class="intro-block">
+        <p class="lead">Este módulo foi escrito para quem está a começar. Cada passo tem comando, verificação e caminho claro para o passo seguinte. Se fizeres os 8 passos por ordem, chegas ao produto final funcional.</p>
+
+        <div class="objectives">
+          <h4>O que vais conseguir fazer</h4>
+          <ul>
+            <li>Preparar o ambiente local em Windows, macOS ou Linux.</li>
+            <li>Gerar dados, criar SQLite, criar DuckDB e validar o pipeline.</li>
+            <li>Executar dbt e confirmar modelos marts com sucesso.</li>
+            <li>Treinar o pipeline de Machine Learning e validar artefactos.</li>
+            <li>Abrir dashboards Streamlit e interpretar os resultados.</li>
+            <li>Empacotar o projeto, criar repositório GitHub e publicar.</li>
+          </ul>
+        </div>
+
+        <div class="workflow-diagram">
+          <svg viewBox="0 0 620 82" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fluxo do módulo">
+            <rect x="20" y="18" rx="16" ry="16" width="250" height="44" fill="rgba(245,158,11,.14)" stroke="rgba(245,158,11,.35)"/>
+            <text x="145" y="45" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">Construir Produto Local</text>
+            <line x1="270" y1="40" x2="350" y2="40" stroke="#94a3b8" stroke-width="2"/>
+            <polygon points="350,40 340,35 340,45" fill="#94a3b8"/>
+            <rect x="350" y="18" rx="16" ry="16" width="250" height="44" fill="rgba(37,99,235,.10)" stroke="rgba(37,99,235,.25)"/>
+            <text x="475" y="45" text-anchor="middle" font-size="15" font-weight="700" fill="#111827">Publicar e Entregar</text>
+          </svg>
+        </div>
+
+        <div class="expect-grid">
+          <div class="expect-item">
+            <div class="expect-label">Ferramentas</div>
+            <div class="expect-value">Python, dbt, Streamlit, Git</div>
+          </div>
+          <div class="expect-item">
+            <div class="expect-label">Tempo</div>
+            <div class="expect-value">35 minutos</div>
+          </div>
+          <div class="expect-item">
+            <div class="expect-label">Output</div>
+            <div class="expect-value">Projeto funcional e publicado</div>
+          </div>
+          <div class="expect-item">
+            <div class="expect-label">Nível</div>
+            <div class="expect-value">Iniciante completo</div>
+          </div>
+        </div>
+
+        <a class="link-card" href="../../../docs/guia_completo.html" target="_blank" rel="noopener">
+          <div class="link-icon">&#128279;</div>
+          <div class="link-text">
+            <div class="link-title">Ler guia completo do projeto</div>
+            <div class="link-desc">Explicação ampla das partes Data, dbt, ML e dashboards.</div>
+          </div>
+          <div class="link-arrow">&rarr;</div>
+        </a>
+        <a class="link-card" href="../../../docs/machine_learning_guide.html" target="_blank" rel="noopener">
+          <div class="link-icon">&#128279;</div>
+          <div class="link-text">
+            <div class="link-title">Aprofundar Machine Learning</div>
+            <div class="link-desc">Referência detalhada para regressão, classificação, clustering e PCA.</div>
+          </div>
+          <div class="link-arrow">&rarr;</div>
+        </a>
+      </section>
+
+      <div class="phase-header" id="phase-0">
+        <span class="phase-icon">&#9881;</span>
+        <h2>Phase 0: Preparar ambiente <span class="time-badge">&#9201; 8 min</span></h2>
+      </div>
+
+      <div class="step-card" id="step-1">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="1" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(1)}">&#10003;</div>
+          <h3>Verificar ferramentas básicas no terminal</h3>
+          <span class="step-pill setup">Setup</span>
+        </div>
+        <div class="step-card-body">
+          <p>Começa por confirmar versões instaladas. Sem este check inicial, os passos seguintes podem falhar sem mensagem clara.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Terminal</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python --version
+git --version
+node --version
+npm --version</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.info"><strong>Verificação comportamental.</strong> O terminal deve devolver uma linha por comando com número de versão. Este retorno confirma que as ferramentas estão acessíveis no PATH.</div>
+          <div class="expandable">
+            <button class="expandable-trigger" onclick="toggleExpand(this)" aria-expanded="false"><span class="arrow">&#9654;</span> Como corrigir se python não for reconhecido</button>
+            <div class="expandable-content">
+              <p>Instala Python 3.10+ e ativa a opção de adicionar Python ao PATH no instalador. Depois fecha e abre o terminal.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" id="step-2">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="2" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(2)}">&#10003;</div>
+          <h3>Criar ambiente virtual e instalar dependências</h3>
+          <span class="step-pill setup">Setup</span>
+        </div>
+        <div class="step-card-body">
+          <p>Agora prepara o ambiente Python local. Este ambiente guarda todas as bibliotecas usadas pelo projeto.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Windows PowerShell</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt</pre>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>macOS / Linux</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.tip"><strong>Confirmar.</strong> O comando <code>pip install -r requirements.txt</code> termina sem erro, e o prompt mostra o prefixo da virtualenv ativa.</div>
+        </div>
+      </div>
+
+      <div class="phase-header" id="phase-1">
+        <span class="phase-icon">&#128736;</span>
+        <h2>Phase 1: Construir produto local <span class="time-badge">&#9201; 17 min</span></h2>
+      </div>
+
+      <div class="step-card" id="step-3">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="3" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(3)}">&#10003;</div>
+          <h3>Gerar dados e montar pipeline base</h3>
+          <span class="step-pill generate">Generate</span>
+        </div>
+        <div class="step-card-body">
+          <p>Este passo cria os dados sintéticos, base SQLite e camada analítica DuckDB.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Terminal</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python python/run_pipeline.py</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.info"><strong>Verificação.</strong> Confirma que existem ficheiros de dados em <code>data/</code> e que o script terminou sem traceback.</div>
+          <a class="link-card" href="../../../docs/setup_and_installation.html" target="_blank" rel="noopener">
+            <div class="link-icon">&#128279;</div>
+            <div class="link-text">
+              <div class="link-title">Consultar setup detalhado</div>
+              <div class="link-desc">Explicação por sistema operativo e comandos de instalação.</div>
+            </div>
+            <div class="link-arrow">&rarr;</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="step-card" id="step-4">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="4" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(4)}">&#10003;</div>
+          <h3>Executar modelagem dbt</h3>
+          <span class="step-pill generate">Generate</span>
+        </div>
+        <div class="step-card-body">
+          <p>A modelagem dbt transforma dados em tabelas de análise. Se não correres este passo, os modelos marts podem não existir.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Terminal</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>cd dbt_retail_analytics
+cp profiles.example.yml profiles.yml
+set DBT_PROFILES_DIR=%cd%   # Windows cmd
+# $env:DBT_PROFILES_DIR = (Get-Location).Path   # PowerShell
+# export DBT_PROFILES_DIR=$(pwd)               # macOS/Linux
+dbt deps
+dbt seed
+dbt run
+dbt test
+cd ..</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.tip"><strong>Confirmar.</strong> O terminal mostra que run e test terminaram com sucesso e sem falhas críticas.</div>
+          <div class="expandable">
+            <button class="expandable-trigger" onclick="toggleExpand(this)" aria-expanded="false"><span class="arrow">&#9654;</span> Como definir DBT_PROFILES_DIR no teu sistema</button>
+            <div class="expandable-content">
+              <p>Em PowerShell usa <code>$env:DBT_PROFILES_DIR = (Get-Location).Path</code>. Em bash usa <code>export DBT_PROFILES_DIR=$(pwd)</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" id="step-5">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="5" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(5)}">&#10003;</div>
+          <h3>Treinar Machine Learning e validar outputs</h3>
+          <span class="step-pill generate">Generate</span>
+        </div>
+        <div class="step-card-body">
+          <p>Com os dados prontos, executa o treino e valida os artefactos de saída.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Terminal</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python python/ml_retail.py
+python python/validate_project.py --include-dbt</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.info"><strong>Verificação.</strong> Confirma a presença de <code>model_metrics.json</code>, <code>regression_feature_importance.csv</code>, <code>cluster_assignments.csv</code> e <code>pca_projections.csv</code> em <code>data/ml_outputs/</code>.</div>
+          <a class="link-card" href="../../../docs/explicacao_codigo.html" target="_blank" rel="noopener">
+            <div class="link-icon">&#128279;</div>
+            <div class="link-text">
+              <div class="link-title">Ler explicação de código</div>
+              <div class="link-desc">Mapeamento das partes principais do pipeline Python.</div>
+            </div>
+            <div class="link-arrow">&rarr;</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="step-card" id="step-6">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="6" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(6)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(6)}">&#10003;</div>
+          <h3>Abrir dashboards do produto final</h3>
+          <span class="step-pill generate">Generate</span>
+        </div>
+        <div class="step-card-body">
+          <p>Este é o ponto onde o produto fica visível. Primeiro abre o dashboard principal, depois o caso Black Friday.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Dashboard principal</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>streamlit run streamlit/app.py</pre>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Caso Black Friday</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python python/generate_test_case_black_friday.py
+python python/analyze_test_case_black_friday.py
+streamlit run streamlit/case_black_friday_app.py</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.tip"><strong>Confirmar.</strong> O browser mostra KPIs e gráficos sem erro, e o caso Black Friday destaca diferença entre período base e campanha.</div>
+        </div>
+      </div>
+
+      <div class="phase-header" id="phase-2">
+        <span class="phase-icon">&#128640;</span>
+        <h2>Phase 2: Publicar e entregar <span class="time-badge">&#9201; 10 min</span></h2>
+      </div>
+
+      <div class="step-card" id="step-7">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="7" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(7)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(7)}">&#10003;</div>
+          <h3>Empacotar e publicar no GitHub</h3>
+          <span class="step-pill generate">Generate</span>
+        </div>
+        <div class="step-card-body">
+          <p>Cria o ZIP de release e publica o repositório com GitHub CLI.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Empacotar</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>powershell -ExecutionPolicy Bypass -File scripts/package_release.ps1</pre>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Publicar</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>gh auth login
+gh auth setup-git
+gh repo create retail-analytics-study-case --public --description "Retail analytics study case with data pipeline, dbt, ML, Streamlit, and realistic Black Friday test case" --source . --remote origin --push</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.info"><strong>Verificação.</strong> O ficheiro ZIP aparece em <code>dist/</code> e o comando <code>gh repo view --web</code> abre o repositório publicado.</div>
+          <a class="link-card" href="../repository-setup/criar-repositorio-retail-analytics.html" target="_blank" rel="noopener">
+            <div class="link-icon">&#128279;</div>
+            <div class="link-text">
+              <div class="link-title">Guia dedicado de publicação</div>
+              <div class="link-desc">Versão curta focada em empacotar e criar repositório.</div>
+            </div>
+            <div class="link-arrow">&rarr;</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="step-card" id="step-8">
+        <div class="step-card-header">
+          <div class="step-checkbox" data-step="8" role="checkbox" aria-checked="false" tabindex="0" onclick="toggleStep(8)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleStep(8)}">&#10003;</div>
+          <h3>Executar checklist final de produto</h3>
+          <span class="step-pill qa">Finish</span>
+        </div>
+        <div class="step-card-body">
+          <p>Fecha o módulo com o check final para garantir que o projeto está pronto para demo, entrega ou onboarding.</p>
+          <h4>Do</h4>
+          <div class="prompt-box">
+            <div class="prompt-box-label">
+              <span>Checklist rápido</span>
+              <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+            </div>
+            <pre>python python/validate_project.py --include-dbt
+npm run package:zip
+git status</pre>
+          </div>
+          <h4>Verify</h4>
+          <div class="callout.tip"><strong>Estado final.</strong> A validação termina com sucesso, o ZIP é recriado e o <code>git status</code> mostra apenas alterações esperadas antes de commit.</div>
+        </div>
+      </div>
+
+      <div class="completion-banner" id="completionBanner">
+        <div class="trophy">&#127942;</div>
+        <h3>Produto final pronto para uso e partilha!</h3>
+        <p>Concluíste o fluxo completo do zero, com dados, modelagem, ML, dashboards e publicação.</p>
+      </div>
+
+      <div class="challenges" id="challengeSection">
+        <h3 style="margin-bottom:12px;">Prática extra</h3>
+        <div class="challenge-grid">
+          <div class="challenge-card">
+            <strong>Starter</strong>
+            <p>Repetir o fluxo numa pasta nova e comparar os outputs de ML.</p>
+          </div>
+          <div class="challenge-card">
+            <strong>Intermediate</strong>
+            <p>Alterar o gerador de dados para criar nova categoria de produto e validar impacto no dashboard.</p>
+          </div>
+          <div class="challenge-card">
+            <strong>Real-world</strong>
+            <p>Publicar o repositório numa organização e configurar revisão por pull request.</p>
+          </div>
+        </div>
+      </div>
+
+      <a class="hub-link" href="../../../index.html">Abrir hub principal &rarr;</a>
+
+      <div class="module-footer">
+        <div>Autor: GitHub Copilot</div>
+        <button class="reset-btn" onclick="resetModule()">Reset progress</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const totalSteps = 8;
+    const storagePrefix = 'zero-product-step-';
+
+    function toggleStep(stepNumber) {
+      const checkbox = document.querySelector(`.step-checkbox[data-step="${stepNumber}"]`);
+      const card = document.getElementById(`step-${stepNumber}`);
+      const isChecked = checkbox.classList.toggle('checked');
+      checkbox.setAttribute('aria-checked', String(isChecked));
+      if (isChecked) {
+        card.classList.add('completed-card');
+      } else {
+        card.classList.remove('completed-card');
+      }
+      localStorage.setItem(`${storagePrefix}${stepNumber}`, isChecked ? '1' : '0');
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let completed = 0;
+      for (let i = 1; i <= totalSteps; i++) {
+        if (localStorage.getItem(`${storagePrefix}${i}`) === '1') completed++;
+      }
+      document.getElementById('progressBar').style.width = `${(completed / totalSteps) * 100}%`;
+      const done = completed === totalSteps;
+      document.getElementById('completionBanner').classList.toggle('visible', done);
+      document.getElementById('challengeSection').classList.toggle('visible', done);
+    }
+
+    function loadProgress() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const checked = localStorage.getItem(`${storagePrefix}${i}`) === '1';
+        const checkbox = document.querySelector(`.step-checkbox[data-step="${i}"]`);
+        const card = document.getElementById(`step-${i}`);
+        if (checked) {
+          checkbox.classList.add('checked');
+          checkbox.setAttribute('aria-checked', 'true');
+          card.classList.add('completed-card');
+        }
+      }
+      updateProgress();
+    }
+
+    function resetModule() {
+      for (let i = 1; i <= totalSteps; i++) {
+        localStorage.removeItem(`${storagePrefix}${i}`);
+      }
+      window.location.reload();
+    }
+
+    function copyPrompt(button) {
+      const text = button.closest('.prompt-box').querySelector('pre').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const original = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(() => { button.textContent = original; }, 1200);
+      });
+    }
+
+    function toggleExpand(button) {
+      const wrapper = button.closest('.expandable');
+      const expanded = wrapper.classList.toggle('open');
+      button.setAttribute('aria-expanded', String(expanded));
+    }
+
+    loadProgress();
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explicação do Código — Retail Analytics</title>
+  <style>
+    :root { --bg:#0b1020; --card:#121933; --line:#2a3768; --text:#edf2ff; --muted:#b8c3e6; --accent:#8ec5ff; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#0f1733);color:var(--text);line-height:1.6;padding:24px 16px 36px}
+    .wrap{max-width:1100px;margin:0 auto}
+    .hero,.section{background:linear-gradient(180deg,rgba(18,25,51,.97),rgba(26,38,77,.93));border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:12px}
+    h1,h2,h3{margin:0 0 8px} p,li{color:var(--muted)}
+    code,pre{font-family:Consolas,monospace}
+    pre{background:#0d1430;border:1px solid #27396c;border-radius:10px;padding:10px;overflow-x:auto;color:#dce7ff}
+    .file{color:var(--accent);font-weight:700}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Explicação do Código — visão completa</h1>
+    <p>Este documento explica o papel de cada ficheiro de código criado no projeto e como tudo se conecta no pipeline.</p>
+  </section>
+
+  <section class="section">
+    <h2>1) Scripts Python</h2>
+    <p class="file">python/generate_data.py</p>
+    <ul>
+      <li>Gera dados sintéticos de lojas, produtos, clientes, transações e itens de venda.</li>
+      <li>Escreve CSVs em <code>data/</code> com seed fixa para reprodutibilidade.</li>
+    </ul>
+    <p class="file">python/setup_sqlite.py</p>
+    <ul>
+      <li>Cria base operacional SQLite.</li>
+      <li>Executa scripts SQL de criação de tabelas e índices.</li>
+      <li>Carrega CSVs para tabelas relacionais.</li>
+    </ul>
+    <p class="file">python/setup_duckdb.py</p>
+    <ul>
+      <li>Cria base analítica DuckDB.</li>
+      <li>Carrega dados de CSV e cria tabela analítica consolidada (<code>fct_sales</code>).</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>2) SQL</h2>
+    <p class="file">sql/sqlite/01_create_tables.sql</p>
+    <p>Define o modelo relacional operacional com PK/FK e integridade básica.</p>
+    <p class="file">sql/sqlite/02_indexes.sql</p>
+    <p>Cria índices para filtros e joins frequentes.</p>
+    <p class="file">sql/sqlite/03_business_queries.sql</p>
+    <p>Consultas de negócio para receita, ticket médio e ranking de produtos.</p>
+    <p class="file">sql/duckdb/01_analytical_queries.sql</p>
+    <p>Consultas analíticas avançadas com CTEs e funções de janela.</p>
+    <p class="file">sql/oracle_plsql_concepts/01_plsql_study_case.sql</p>
+    <p>Exemplos de procedure, function, trigger e package no estilo Oracle PL/SQL.</p>
+  </section>
+
+  <section class="section">
+    <h2>3) dbt</h2>
+    <p>O projeto dbt organiza o pipeline em três níveis:</p>
+    <ul>
+      <li><strong>staging:</strong> normalização inicial dos campos de origem.</li>
+      <li><strong>marts:</strong> fact table e dimensões para consumo analítico.</li>
+      <li><strong>schema tests:</strong> validação de integridade (not_null, unique, relationships).</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>4) Streamlit</h2>
+    <p class="file">streamlit/app.py</p>
+    <ul>
+      <li>Lê a base DuckDB e exibe KPIs principais.</li>
+      <li>Mostra evolução de receita por mês e ranking de produtos.</li>
+      <li>Entrega uma interface simples para validação rápida dos dados.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>5) Como executar ponta a ponta</h2>
+    <pre>pip install -r requirements.txt
+python python/generate_data.py
+python python/setup_sqlite.py
+python python/setup_duckdb.py
+streamlit run streamlit/app.py</pre>
+  </section>
+</div>
+</body>
+</html>
