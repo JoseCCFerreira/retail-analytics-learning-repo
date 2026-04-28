@@ -31,6 +31,10 @@ This repository is meant to help you study and demonstrate:
 
 - Project hub: [index.html](index.html)
 - Handbook: [docs/retail_analytics_handbook.html](docs/retail_analytics_handbook.html)
+- Usage and theory tutorial: [docs/tutorial_utilizacao_teoria_retail.html](docs/tutorial_utilizacao_teoria_retail.html)
+- Theory, code, and outputs: [docs/explicacao_teorica_codigo_outputs.html](docs/explicacao_teorica_codigo_outputs.html)
+- ML experiments, comparison, visualizations, and 2-year data: [docs/ml_experimentos_visualizacoes_2anos.html](docs/ml_experimentos_visualizacoes_2anos.html)
+- Code and documentation uniformization: [docs/uniformizacao_codigo_documentacao.html](docs/uniformizacao_codigo_documentacao.html)
 - Single beginner document: [docs/retail_case_documento_unico.html](docs/retail_case_documento_unico.html)
 - Build-it-yourself document: [docs/criar_tudo_do_zero_retail_case.html](docs/criar_tudo_do_zero_retail_case.html)
 - Deep Learning learning path: [docs/aprender_deep_learning_pytorch_tensorflow.html](docs/aprender_deep_learning_pytorch_tensorflow.html)

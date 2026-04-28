@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
@@ -20,6 +21,8 @@ class GeneratorConfig:
     stores: int = 12
     transactions: int = 2200
     max_items_per_transaction: int = 5
+    start_date: date = date(2024, 1, 1)
+    end_date: date = date(2025, 12, 31)
 
 
 def _random_dates(start: date, end: date, count: int) -> list[date]:
@@ -70,8 +73,14 @@ def build_stores(total: int) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build_transactions(total: int, customer_ids: list[int], store_ids: list[int]) -> pd.DataFrame:
-    transaction_dates = _random_dates(date(2024, 1, 1), date(2025, 12, 31), total)
+def build_transactions(
+    total: int,
+    customer_ids: list[int],
+    store_ids: list[int],
+    start_date: date,
+    end_date: date,
+) -> pd.DataFrame:
+    transaction_dates = _random_dates(start_date, end_date, total)
     rows = []
     for transaction_id in range(1, total + 1):
         rows.append(
@@ -119,11 +128,45 @@ def build_sales_items(transactions_df: pd.DataFrame, products_df: pd.DataFrame, 
     return pd.DataFrame(rows)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Generate synthetic retail source data.")
+    parser.add_argument("--customers", type=int, default=GeneratorConfig.customers)
+    parser.add_argument("--products", type=int, default=GeneratorConfig.products)
+    parser.add_argument("--stores", type=int, default=GeneratorConfig.stores)
+    parser.add_argument("--transactions", type=int, default=GeneratorConfig.transactions)
+    parser.add_argument("--max-items-per-transaction", type=int, default=GeneratorConfig.max_items_per_transaction)
+    parser.add_argument("--start-date", default=GeneratorConfig.start_date.isoformat())
+    parser.add_argument("--end-date", default=GeneratorConfig.end_date.isoformat())
+    parser.add_argument(
+        "--years",
+        type=int,
+        default=None,
+        help="Generate a rolling range ending today. Example: --years 2.",
+    )
+    parser.add_argument("--seed", type=int, default=SEED)
+    return parser.parse_args()
+
+
 def main() -> None:
-    random.seed(SEED)
+    args = parse_args()
+    random.seed(args.seed)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    config = GeneratorConfig()
+    end_date = date.fromisoformat(args.end_date)
+    start_date = date.fromisoformat(args.start_date)
+    if args.years is not None:
+        end_date = date.today()
+        start_date = end_date - timedelta(days=365 * args.years)
+
+    config = GeneratorConfig(
+        customers=args.customers,
+        products=args.products,
+        stores=args.stores,
+        transactions=args.transactions,
+        max_items_per_transaction=args.max_items_per_transaction,
+        start_date=start_date,
+        end_date=end_date,
+    )
 
     customers_df = build_customers(config.customers)
     products_df = build_products(config.products)
@@ -132,6 +175,8 @@ def main() -> None:
         config.transactions,
         customer_ids=customers_df["customer_id"].tolist(),
         store_ids=stores_df["store_id"].tolist(),
+        start_date=config.start_date,
+        end_date=config.end_date,
     )
     sales_items_df = build_sales_items(
         transactions_df=transactions_df,
@@ -145,7 +190,10 @@ def main() -> None:
     transactions_df.to_csv(DATA_DIR / "transactions.csv", index=False)
     sales_items_df.to_csv(DATA_DIR / "sales_items.csv", index=False)
 
-    print("CSV files generated in data/")
+    print(
+        "CSV files generated in data/ "
+        f"({config.transactions} transactions from {config.start_date} to {config.end_date})"
+    )
 
 
 if __name__ == "__main__":

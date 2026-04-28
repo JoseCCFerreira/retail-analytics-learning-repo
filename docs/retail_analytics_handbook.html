@@ -240,6 +240,7 @@
       <div class="hero-actions">
         <a class="primary" href="../index.html">Abrir Hub do Projeto</a>
         <a href="../README.md">Abrir README</a>
+        <a href="ml_experimentos_visualizacoes_2anos.html">ML + Comparação</a>
         <a href="https://github.com/JoseCCFerreira/retail-analytics-learning-repo">Ver GitHub</a>
       </div>
     </div>
@@ -529,8 +530,25 @@ dbt test</code></pre>
         <li>mostra número de transações;</li>
         <li>mostra receita total;</li>
         <li>mostra receita por mês;</li>
-        <li>mostra top produtos.</li>
+        <li>mostra top produtos;</li>
+        <li>compara receita por categoria;</li>
+        <li>mostra comparação de modelos de regressão e classificação;</li>
+        <li>mostra importância das variáveis e clusters de clientes via PCA.</li>
       </ul>
+
+      <h3>Como analisar no dashboard</h3>
+      <table>
+        <thead>
+          <tr><th>Bloco</th><th>O que observar</th><th>Decisão analítica</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Receita mensal</td><td>Tendência, sazonalidade e quebras.</td><td>Decidir se faz sentido testar forecast ou campanhas por mês.</td></tr>
+          <tr><td>Produtos e categorias</td><td>Concentração de receita e mix comercial.</td><td>Escolher features e filtros para modelos comerciais.</td></tr>
+          <tr><td>Comparação de regressão</td><td>R2, MAE e RMSE por modelo.</td><td>Escolher modelo preditivo com melhor equilíbrio entre erro e explicabilidade.</td></tr>
+          <tr><td>Comparação de classificação</td><td>Accuracy por modelo de segmento.</td><td>Perceber se as features atuais explicam bem os segmentos.</td></tr>
+          <tr><td>PCA e clusters</td><td>Separação visual entre grupos de clientes.</td><td>Validar se a segmentação parece útil para análise de negócio.</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section id="ml">
@@ -583,6 +601,48 @@ dbt test</code></pre>
         <li><strong>Accuracy:</strong> percentagem de acertos;</li>
         <li><strong>Silhouette Score:</strong> qualidade dos clusters.</li>
       </ul>
+
+      <h3>Entender, aplicar e analisar</h3>
+      <table>
+        <thead>
+          <tr><th>Etapa</th><th>O que fazer</th><th>Como interpretar</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Entender</td>
+            <td>Definir o problema antes do modelo: prever valor, classificar segmento ou agrupar clientes.</td>
+            <td>Um bom modelo começa com uma pergunta de negócio clara, não com o algoritmo.</td>
+          </tr>
+          <tr>
+            <td>Aplicar</td>
+            <td>Correr <code>python python/ml_retail.py</code> e abrir <code>streamlit run streamlit/app.py</code>.</td>
+            <td>O dashboard mostra métricas lado a lado, permitindo comparar modelos sem abrir ficheiros manualmente.</td>
+          </tr>
+          <tr>
+            <td>Analisar</td>
+            <td>Comparar R2/MAE/RMSE na regressão, Accuracy na classificação, e separação visual nos clusters.</td>
+            <td>O melhor modelo não é só o maior score: deve ser estável, explicável e útil para a decisão.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Experiências adicionais recomendadas</h3>
+      <ul>
+        <li>prever probabilidade de desconto com classificação binária;</li>
+        <li>detetar anomalias de venda com Isolation Forest;</li>
+        <li>fazer forecast de receita mensal com validação temporal;</li>
+        <li>testar Gaussian Mixture ou Agglomerative Clustering para segmentação;</li>
+        <li>comparar modelos sempre com a mesma janela temporal e a mesma seed.</li>
+      </ul>
+
+      <h3>Dados de dois anos</h3>
+      <pre><code>python python/run_pipeline.py --years 2 --transactions 25000
+python python/ml_retail.py
+streamlit run streamlit/app.py</code></pre>
+
+      <div class="callout info">
+        A página complementar <a href="ml_experimentos_visualizacoes_2anos.html">ML, comparação, visualizações e dados de 2 anos</a> lista mais casos de teste, métricas e gráficos recomendados.
+      </div>
     </section>
 
     <section id="dl">

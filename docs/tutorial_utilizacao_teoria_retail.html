@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tutorial de Utilizacao e Teoria - Retail Analytics</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #122130;
+      --line: #26435d;
+      --text: #eef7ff;
+      --muted: #b8cbdd;
+      --accent: #4ecdc4;
+      --accent-2: #ffd166;
+      --ok: #8ee39a;
+      --soft: rgba(255,255,255,.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0b1220 0%, #101a28 100%);
+      color: var(--text);
+      line-height: 1.62;
+    }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 24px 16px 48px; }
+    .hero, .section {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(18,33,48,.96), rgba(15,27,40,.94));
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    h1, h2, h3 { margin: 0 0 10px; }
+    h1 { font-size: clamp(1.9rem, 4vw, 3rem); }
+    h2 { font-size: 1.35rem; color: #ecfbff; }
+    h3 { font-size: 1.02rem; color: #bfefff; margin-top: 18px; }
+    p, li { color: var(--muted); }
+    .actions, .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .actions a, .toc a {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: .9rem;
+      border: 1px solid var(--line);
+    }
+    .actions a {
+      background: var(--accent-2);
+      color: #15202b;
+    }
+    .toc a {
+      background: var(--soft);
+      color: var(--text);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft);
+      padding: 14px;
+    }
+    .card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #ecfbff;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: rgba(78,205,196,.08);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 12px 0;
+    }
+    .ok {
+      border-left-color: var(--ok);
+      background: rgba(142,227,154,.08);
+    }
+    code, pre { font-family: Consolas, "Courier New", monospace; }
+    code {
+      background: rgba(255,255,255,.06);
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    pre {
+      background: #09121d;
+      border: 1px solid #274764;
+      border-radius: 12px;
+      padding: 12px;
+      overflow-x: auto;
+      color: #def1ff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border-bottom: 1px solid #274764;
+      text-align: left;
+      padding: 9px 10px;
+      vertical-align: top;
+      color: var(--muted);
+    }
+    th { color: #eefcff; background: rgba(255,255,255,.04); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Tutorial de Utilizacao e Teoria do Caso Retail</h1>
+      <p>Este tutorial foi pensado para te ajudar a perceber o projeto como utilizador e como estudante: o que correr, porque cada ficheiro existe, como os dados mudam de camada, como ler os outputs e que perguntas analiticas podes explorar a seguir.</p>
+      <div class="actions">
+        <a href="../index.html">Voltar ao Hub</a>
+        <a href="../README.md">Abrir README</a>
+        <a href="retail_analytics_handbook.html">Abrir Handbook</a>
+        <a href="explicacao_teorica_codigo_outputs.html">Codigo + Outputs</a>
+      </div>
+      <div class="toc">
+        <a href="#visao">Visao Geral</a>
+        <a href="#execucao">Execucao</a>
+        <a href="#codigo">Codigo</a>
+        <a href="#teoria">Teoria</a>
+        <a href="#outputs">Outputs</a>
+        <a href="#analises">Mais Analises</a>
+      </div>
+    </section>
+
+    <section class="section" id="visao">
+      <h2>1. Visao Geral do que esta por tras</h2>
+      <p>Este repositório simula uma empresa de retail e usa essa simulacao para ensinar arquitetura de dados, analise, governanca e Machine Learning. O valor do projeto nao esta so em "ter um dashboard". O valor esta em perceber o fluxo inteiro:</p>
+      <div class="grid">
+        <div class="card"><strong>Geracao de dados</strong>Cria um dataset sintético reproduzível com clientes, lojas, produtos, transacoes e linhas de venda.</div>
+        <div class="card"><strong>OLTP</strong>Guarda o estado operacional em SQLite, com chaves e tabelas relacionais.</div>
+        <div class="card"><strong>OLAP</strong>Consolida dados em DuckDB para perguntas analíticas rápidas.</div>
+        <div class="card"><strong>dbt</strong>Aplica modelacao e testes na camada analítica.</div>
+        <div class="card"><strong>ML</strong>Treina modelos de regressao, classificacao e clustering.</div>
+        <div class="card"><strong>Streamlit</strong>Mostra sinais do negocio num dashboard consumível.</div>
+      </div>
+      <div class="callout ok">
+        Em termos mentais, pensa nisto como uma linha: <code>gerar</code> -> <code>organizar</code> -> <code>modelar</code> -> <code>analisar</code> -> <code>explicar</code>.
+      </div>
+    </section>
+
+    <section class="section" id="execucao">
+      <h2>2. Como usar o projeto passo a passo</h2>
+      <h3>2.1 Preparar ambiente</h3>
+      <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt</code></pre>
+
+      <h3>2.2 Correr a pipeline de dados</h3>
+      <pre><code>python python/run_pipeline.py</code></pre>
+      <p>Este comando chama internamente:</p>
+      <ul>
+        <li><code>python/generate_data.py</code></li>
+        <li><code>python/setup_sqlite.py</code></li>
+        <li><code>python/setup_duckdb.py</code></li>
+      </ul>
+
+      <h3>2.3 Correr dbt</h3>
+      <pre><code>cd dbt_retail_analytics
+dbt run
+dbt test</code></pre>
+
+      <h3>2.4 Correr Machine Learning</h3>
+      <pre><code>python python/ml_retail.py</code></pre>
+
+      <h3>2.5 Abrir dashboard</h3>
+      <pre><code>streamlit run streamlit/app.py</code></pre>
+
+      <h3>2.6 Fazer uma validacao completa</h3>
+      <pre><code>python python/validate_project.py --include-dbt</code></pre>
+    </section>
+
+    <section class="section" id="codigo">
+      <h2>3. Explicacao teorica do codigo</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Ficheiro</th>
+            <th>O que faz</th>
+            <th>Porque existe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>python/generate_data.py</code></td>
+            <td>Gera CSVs sinteticos para clientes, produtos, lojas, transacoes e linhas de venda.</td>
+            <td>Sem uma origem reproduzível, não conseguirias testar pipeline e ML sempre da mesma forma.</td>
+          </tr>
+          <tr>
+            <td><code>python/setup_sqlite.py</code></td>
+            <td>Cria a base SQLite e carrega os CSVs para tabelas relacionais.</td>
+            <td>Representa a camada operacional, onde o negocio seria gravado num sistema transacional.</td>
+          </tr>
+          <tr>
+            <td><code>python/setup_duckdb.py</code></td>
+            <td>Lê a base operacional e cria a camada analítica em DuckDB.</td>
+            <td>Separa armazenamento operacional de consumo analítico, que é um padrão real de arquitetura.</td>
+          </tr>
+          <tr>
+            <td><code>dbt_retail_analytics/models/</code></td>
+            <td>Cria modelos staging e marts com SQL versionado.</td>
+            <td>Ajuda-te a governar transformações e a testar relações entre tabelas.</td>
+          </tr>
+          <tr>
+            <td><code>python/ml_retail.py</code></td>
+            <td>Prepara features e treina modelos supervisionados e não supervisionados.</td>
+            <td>Transforma a camada analítica em experiência de ciência de dados.</td>
+          </tr>
+          <tr>
+            <td><code>streamlit/app.py</code></td>
+            <td>Lê o DuckDB e apresenta KPIs e gráficos.</td>
+            <td>Fecha o ciclo entre dados técnicos e leitura de negócio.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.1 Leitura conceptual do fluxo</h3>
+      <p>Quando leres o código, tenta separar sempre <strong>origem</strong>, <strong>transformação</strong> e <strong>consumo</strong>:</p>
+      <ul>
+        <li><strong>origem</strong>: CSVs sintéticos;</li>
+        <li><strong>transformação</strong>: SQLite -> DuckDB -> dbt;</li>
+        <li><strong>consumo</strong>: ML outputs + Streamlit.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="teoria">
+      <h2>4. Teoria por tras das camadas</h2>
+      <h3>4.1 OLTP</h3>
+      <p>OLTP significa <em>Online Transaction Processing</em>. Aqui guardas eventos pequenos, frequentes e detalhados. No teu caso: uma transacao, um item vendido, um cliente, uma loja. OLTP privilegia integridade e granularidade.</p>
+
+      <h3>4.2 OLAP</h3>
+      <p>OLAP significa <em>Online Analytical Processing</em>. Aqui já não pensas em "gravar uma compra". Pensas em "quanto vendi por mês", "qual categoria gera mais receita", "que clientes parecem premium". Por isso a modelação muda para ser mais rápida para agregações.</p>
+
+      <h3>4.3 dbt</h3>
+      <p>dbt transforma SQL em ativo de engenharia: modular, testável e versionado. O ganho não é só técnico. É também organizacional, porque defines uma camada de verdade mais clara.</p>
+
+      <h3>4.4 Machine Learning</h3>
+      <p>Este projeto usa três famílias de modelos:</p>
+      <ul>
+        <li><strong>Regressão</strong>: prever valores contínuos, como <code>net_amount</code>.</li>
+        <li><strong>Classificação</strong>: prever classes, como <code>customer_segment</code>.</li>
+        <li><strong>Clustering</strong>: encontrar grupos sem rótulo prévio.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="outputs">
+      <h2>5. Como interpretar os outputs</h2>
+      <h3>5.1 Base de dados</h3>
+      <ul>
+        <li><code>data/retail_app.db</code>: estado operacional.</li>
+        <li><code>data/retail_analytics.duckdb</code>: estado analítico.</li>
+      </ul>
+
+      <h3>5.2 Outputs de ML</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Ficheiro</th>
+            <th>O que significa</th>
+            <th>Como ler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>model_metrics.json</code></td>
+            <td>Resumo numérico dos modelos.</td>
+            <td>Olha para <code>MAE</code>, <code>RMSE</code>, <code>R2</code> e <code>Accuracy</code>.</td>
+          </tr>
+          <tr>
+            <td><code>regression_feature_importance.csv</code></td>
+            <td>Peso relativo das features na regressão.</td>
+            <td>Ajuda a perceber que variáveis mais influenciam o valor líquido.</td>
+          </tr>
+          <tr>
+            <td><code>cluster_assignments.csv</code></td>
+            <td>Cluster atribuído a cada observação.</td>
+            <td>Podes estudar perfis típicos de compra por grupo.</td>
+          </tr>
+          <tr>
+            <td><code>pca_projections.csv</code></td>
+            <td>Dados projetados em componentes principais.</td>
+            <td>Serve para visualização e redução de dimensionalidade.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        Um <code>R2</code> muito alto num dataset sintético pode ser ótimo para aprendizagem, mas não significa automaticamente que o modelo seria tão forte em produção. Isso também é uma boa lição.
+      </div>
+    </section>
+
+    <section class="section" id="analises">
+      <h2>6. O que mais podes analisar</h2>
+      <div class="grid">
+        <div class="card"><strong>Cliente</strong>Ticket médio por segmento, cidade e frequência de compra.</div>
+        <div class="card"><strong>Produto</strong>Elasticidade ao desconto, categorias dominantes e mix por campanha.</div>
+        <div class="card"><strong>Loja</strong>Comparação entre regiões, sazonalidade e performance relativa.</div>
+        <div class="card"><strong>Operação</strong>Pagamentos, descontos, volume de itens por transação.</div>
+        <div class="card"><strong>ML</strong>Novas features temporais, validação temporal, tuning e explicabilidade.</div>
+        <div class="card"><strong>BI</strong>Adicionar filtros no Streamlit e drill-down por loja, categoria e mês.</div>
+      </div>
+
+      <h3>6.1 Perguntas de negocio úteis</h3>
+      <ul>
+        <li>Que categorias reagem melhor a desconto?</li>
+        <li>Que regiões têm maior valor por transação?</li>
+        <li>Que segmentos de cliente parecem mais previsíveis?</li>
+        <li>Há padrões semanais claros no volume de compra?</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>7. Como estudar este projeto sem te perderes</h2>
+      <ol>
+        <li>Corre a pipeline e confirma os ficheiros gerados.</li>
+        <li>Abre o SQLite e vê as tabelas base.</li>
+        <li>Abre o DuckDB e compara com a camada analítica.</li>
+        <li>Lê os modelos dbt e os testes.</li>
+        <li>Corre o ML e abre os outputs.</li>
+        <li>Abre o Streamlit e compara o dashboard com as tabelas.</li>
+      </ol>
+      <div class="callout ok">
+        Se fizeres este percurso 2 ou 3 vezes, deixas de ver o projeto como "muitos ficheiros" e começas a vê-lo como sistema.
+      </div>
+    </section>
+  </div>
+</body>
+</html>

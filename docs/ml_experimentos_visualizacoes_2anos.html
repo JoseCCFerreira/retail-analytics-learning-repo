@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ML, Comparacao, Visualizacoes e Dados 2 Anos - Retail</title>
+  <style>
+    :root { --bg:#071017; --panel:#122130; --line:#23405a; --text:#ecf6ff; --muted:#b2c6d9; --accent:#4ecdc4; --accent2:#ffd166; --soft:rgba(255,255,255,.04); }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:"Segoe UI", Tahoma, sans-serif; color:var(--text); background:linear-gradient(180deg,var(--bg),#0a1520); line-height:1.65; }
+    .wrap { max-width:1180px; margin:0 auto; padding:24px 16px 44px; }
+    header, section { border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg,rgba(18,33,48,.96),rgba(15,28,41,.93)); padding:18px; margin-bottom:16px; }
+    h1,h2,h3 { margin:0 0 10px; line-height:1.25; }
+    h1 { font-size:clamp(1.7rem,4vw,2.6rem); }
+    h2 { color:var(--accent); font-size:1.25rem; }
+    h3 { color:var(--accent2); font-size:1rem; margin-top:14px; }
+    p,li,td { color:var(--muted); }
+    a { color:#aef4ff; font-weight:700; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    code,pre { font-family:Consolas,"Courier New",monospace; }
+    code { background:rgba(255,255,255,.06); padding:2px 5px; border-radius:4px; }
+    pre { background:#0a1320; border:1px solid #24415e; border-radius:10px; color:#dff4ff; overflow-x:auto; padding:12px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:12px; background:var(--soft); padding:12px; }
+    .card strong { display:block; color:#f2fbff; margin-bottom:6px; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; min-width:900px; border-collapse:collapse; margin-top:8px; }
+    th,td { border-bottom:1px solid #26425c; padding:9px 10px; text-align:left; vertical-align:top; }
+    th { background:rgba(78,205,196,.14); color:#e9fbff; }
+    .callout { border-left:4px solid var(--accent); border-radius:10px; background:rgba(78,205,196,.08); padding:11px 13px; margin-top:12px; color:#d8ecff; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>Retail: ML, Comparacao, Visualizacoes e Dados de 2 Anos</h1>
+      <p>Guia para expandir o caso Retail com mais experiencias de Machine Learning, validacao comparavel e novas visualizacoes no dashboard.</p>
+      <p><a href="../index.html">Hub</a> · <a href="explicacao_teorica_codigo_outputs.html">Codigo + outputs</a> · <a href="uniformizacao_codigo_documentacao.html">Uniformizacao</a></p>
+    </header>
+
+    <section>
+      <h2>1. Gerar dados dos ultimos 2 anos</h2>
+      <p>No Retail os dados sao sinteticos, portanto "descarregar" equivale a gerar uma janela temporal de 2 anos terminando na data atual da maquina.</p>
+      <pre><code>python python/run_pipeline.py --years 2 --transactions 25000
+python python/ml_retail.py
+streamlit run streamlit/app.py</code></pre>
+      <div class="callout">Para validacao rapida usa 5.000 a 25.000 transacoes. Para stress test podes subir para 100.000, mas o ML e o dashboard ficam mais pesados.</div>
+    </section>
+
+    <section>
+      <h2>2. Casos de ML que podes testar e comparar</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Caso</th><th>Objetivo</th><th>Modelos candidatos</th><th>Metricas</th><th>Visualizacao</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Prever valor liquido da venda</td>
+              <td>Estimar <code>net_amount</code> por linha de venda.</td>
+              <td>Linear Regression, Random Forest, Gradient Boosting, XGBoost/LightGBM se adicionares dependencias.</td>
+              <td>MAE, RMSE, R2, cross-validation.</td>
+              <td>Feature importance, erro real vs previsto, residuos por categoria.</td>
+            </tr>
+            <tr>
+              <td>Classificar segmento de cliente</td>
+              <td>Prever <code>customer_segment</code> com comportamento de compra.</td>
+              <td>Logistic Regression, Random Forest, Gradient Boosting, SVM.</td>
+              <td>Accuracy, macro F1, confusion matrix.</td>
+              <td>Matriz de confusao e barras por segmento.</td>
+            </tr>
+            <tr>
+              <td>Segmentar clientes</td>
+              <td>Descobrir grupos sem usar label.</td>
+              <td>K-Means, DBSCAN, Gaussian Mixture, Agglomerative Clustering.</td>
+              <td>Silhouette, Davies-Bouldin, estabilidade por seed.</td>
+              <td>PCA/UMAP scatter com cor por cluster.</td>
+            </tr>
+            <tr>
+              <td>Prever probabilidade de desconto</td>
+              <td>Estimar se uma linha tem desconto.</td>
+              <td>Logistic Regression, Random Forest, Gradient Boosting.</td>
+              <td>ROC AUC, Precision, Recall, F1.</td>
+              <td>Curva ROC, precision-recall e importancia das features.</td>
+            </tr>
+            <tr>
+              <td>Forecast de receita mensal</td>
+              <td>Projetar receita futura por mes.</td>
+              <td>Moving average, Exponential Smoothing, Prophet/ARIMA se adicionares dependencias.</td>
+              <td>MAE temporal, MAPE, backtesting.</td>
+              <td>Linha historico vs forecast com intervalo.</td>
+            </tr>
+            <tr>
+              <td>Anomalias comerciais</td>
+              <td>Detetar vendas fora do padrao.</td>
+              <td>Isolation Forest, Local Outlier Factor, z-score por categoria.</td>
+              <td>Taxa de outliers, inspecao manual, estabilidade.</td>
+              <td>Scatter quantidade vs valor com outliers destacados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. O que ja ficou integrado no dashboard</h2>
+      <div class="grid">
+        <article class="card"><strong>Receita por categoria</strong>Compara categorias alem do top produtos.</article>
+        <article class="card"><strong>Feature importance</strong>Mostra quais variaveis explicam melhor a regressao.</article>
+        <article class="card"><strong>PCA de clusters</strong>Mostra segmentos de clientes em 2 dimensoes.</article>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Como validar e comparar</h2>
+      <pre><code>python python/run_pipeline.py --years 2 --transactions 25000
+python python/ml_retail.py
+python python/validate_project.py
+streamlit run streamlit/app.py</code></pre>
+      <p>Guarda os outputs de <code>data/ml_outputs/</code> por experiencia. Compara sempre a mesma janela temporal, mesmas features e mesma seed antes de decidir que um modelo e melhor.</p>
+    </section>
+  </main>
+</body>
+</html>
